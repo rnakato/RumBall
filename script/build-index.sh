@@ -1,10 +1,11 @@
 #!/bin/bash
 cmdname=`basename $0`
+pwd=`pwd`
 function usage()
 {
     echo "$cmdname <build> <outprefix>" 1>&2
     echo "  Example:" 1>&2
-    echo "  $cmdname GRCh38 $(pwd)/Ensembl-GRCh38" 1>&2
+    echo "  $cmdname GRCh38 $pwd/Ensembl-GRCh38" 1>&2
 }
 
 while getopts a option
