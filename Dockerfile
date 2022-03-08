@@ -77,12 +77,7 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v1.7.0/salmon-1
     && rm salmon-1.7.0_linux_x86_64.tar.gz
 
 COPY Database Database
+COPY NCBI NCBI
 COPY script script
 
 WORKDIR /work
-
-#RUN echo "ja_JP.UTF-8 UTF-8" >> /etc/locale.gen
-#RUN locale-gen
-#ENV LANG ja_JP.UTF-8
-#ENV LANGUAGE ja_JP.UTF-8
-#ENV LC_ALL ja_JP.UTF-8

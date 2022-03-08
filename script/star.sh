@@ -62,19 +62,17 @@ if [ "`echo $fastq | grep '.gz'`" ] ; then
     pzip="--readFilesCommand zcat"
 fi
 
-STARdir=$pwd/../binaries/STAR-2.7.3a/bin/Linux_x86_64_static
-
-$STARdir/STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate --quantMode TranscriptomeSAM \
-    --runThreadN 12 --outSAMattributes All $pzip \
-    --genomeDir $index_star --readFilesIn $fastq $parstr \
-    --outFileNamePrefix $odir/$prefix.$build.
+STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
+     --quantMode TranscriptomeSAM \
+     --runThreadN 12 --outSAMattributes All $pzip \
+     --genomeDir $index_star --readFilesIn $fastq $parstr \
+     --outFileNamePrefix $odir/$prefix.$build.
 
 log=log/star-$prefix.$build.txt
 echo -en "$prefix\t" > $log
-$pwd/parse_starlog.pl $odir/$prefix.$build.Log.final.out >> $log
+parse_starlog.pl $odir/$prefix.$build.Log.final.out >> $log
 
-RSEMdir=$(cd $(dirname $0) && pwd)/../binaries/RSEM-1.3.3/
-$RSEMdir/rsem-calculate-expression $pair --alignments --estimate-rspd --strandedness $strand --no-bam-output -p 12 $odir/${prefix}.$build.Aligned.toTranscriptome.out.bam $index_rsem $odir/$prefix.$build
+rsem-calculate-expression $pair --alignments --estimate-rspd --strandedness $strand --no-bam-output -p 12 $odir/${prefix}.$build.Aligned.toTranscriptome.out.bam $index_rsem $odir/$prefix.$build
 
-#$RSEMdir/rsem-plot-transcript-wiggles --gene-list --show-unique mmliver_single_quals gene_ids.txt output.pdf
-$RSEMdir/rsem-plot-model $odir/$prefix.$build $odir/$prefix.$build.quals.pdf
+#rsem-plot-transcript-wiggles --gene-list --show-unique mmliver_single_quals gene_ids.txt output.pdf
+rsem-plot-model $odir/$prefix.$build $odir/$prefix.$build.quals.pdf
