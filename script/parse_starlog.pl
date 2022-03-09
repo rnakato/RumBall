@@ -44,8 +44,12 @@ while(<File>){
 
 }
 
-print STDERR "Sequenced\tUniquely mapped\t(%)\tMapped to multiple loci\t(%)\tMapped to too many loci\t(%)\tUnmapped (too many mismatches)\tUnmapped (too short)\tUnmapped (other)\tchimeric reads\t(%)\t";
-print STDERR "Splices total\tAnnotated\t(%)\tNon-canonical\t(%)\tMismatch rate per base (%)\tDeletion rate per base (%)\tInsertion rate per base (%)\n";
+print "Sample\tSequenced\tUniquely mapped\t(%)\tMapped to multiple loci\t(%)\tMapped to too many loci\t(%)\tUnmapped (too many mismatches)\tUnmapped (too short)\tUnmapped (other)\tchimeric reads\t(%)\t";
+print "Splices total\tAnnotated\t(%)\tNon-canonical\t(%)\tMismatch rate per base (%)\tDeletion rate per base (%)\tInsertion rate per base (%)\n";
 
-print "$total\t$uniq\t$runiq\t$multi\t$rmulti\t$multi2\t$rmulti2\t$runmap\t$runmap2\t$runmap3\t$chim\t$rchim\t";
+$samplename = $ARGV[0];
+$samplename =~ s/.Log.final.out//;
+$samplename =~ s/star\///;
+
+print "$samplename\t$total\t$uniq\t$runiq\t$multi\t$rmulti\t$multi2\t$rmulti2\t$runmap\t$runmap2\t$runmap3\t$chim\t$rchim\t";
 printf("%d\t%d\t%.2f\t%d\t%.2f\t%.2f\t%.2f\t%.2f\n", $nspl, $nsplanno, $nsplanno*100/$nspl, $nsplun, $nsplun*100/$nspl, $rms, $rdel, $rins);

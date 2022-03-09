@@ -70,15 +70,15 @@ fi
 
 ex(){ echo $1; eval $1; }
 
-ex "STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
+STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
      --quantMode TranscriptomeSAM \
      --runThreadN $ncore --outSAMattributes All $pzip \
      --genomeDir $index_star --readFilesIn $fastq $parstr \
-     --outFileNamePrefix $odir/$prefix.$build."
+     --outFileNamePrefix $odir/$prefix.$build.
 
 log=log/star-$prefix.$build.txt
-echo -en "$prefix\t" > $log
-ex "parse_starlog.pl $odir/$prefix.$build.Log.final.out >> $log"
+#echo -en "$prefix\t" > $log
+ex "parse_starlog.pl $odir/$prefix.$build.Log.final.out > $log"
 
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \
                           --strandedness $strand \
