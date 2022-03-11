@@ -80,10 +80,10 @@ if test $db = "Ensembl"; then
     for str in $strs; do
     if test $str = "genes"; then
 	    nline=0
-	    refFlat=`ls $Ddir/$db/$d/release1*/gtf_chrUCSC/*.$build.1*.chr.gene.refFlat | tail -n1`
+	    refFlat=$Ddir/$db-$build/gtf_chrUCSC/chr.gene.refFlat
     else
 	    nline=0
-	    refFlat=`ls $Ddir/$db/$d/release1*/gtf_chrUCSC/*.$build.1*.chr.transcript.refFlat | tail -n1`
+	    refFlat=$Ddir/$db-$build/gtf_chrUCSC/chr.transcript.refFlat
     fi
     for tp in count TPM; do
 	    head=$outname.$str.$tp.$build
