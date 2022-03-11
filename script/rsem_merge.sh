@@ -2,10 +2,9 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname <files> <output> <Ensembl|UCSC> <build> <gtf> <strings for sed>" 1>&2
+    echo "$cmdname <files> <output> <Ddir> <Ensembl|UCSC> <build> <strings for sed>" 1>&2
 }
 
-name=0
 while getopts n option
 do
     case ${option} in
@@ -27,12 +26,12 @@ fi
 
 files=$1
 outname=$2
-db=$3
-build=$4
-gtf=$5
+Ddir=$3
+db=$4
+build=$5
 str_sed=$6
 
-Ddir=`database.sh`
+gtf=$Ddir/$db-$build/gtf_chrUCSC/chr.gtf
 
 if test $db = "Ensembl"; then
     strs="genes isoforms"
