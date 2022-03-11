@@ -2,7 +2,7 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname [-a] <Matrix> <Ensembl|UCSC> <build> <num of reps> <groupname> <FDR>" 1>&2
+    echo "$cmdname [-a] <Matrix> <build> <num of reps> <groupname> <FDR>" 1>&2
     echo "  Example:" 1>&2
     echo "  $cmdname Matrix GRCh38 2:2 WT:KD 0.05" 1>&2
 }
@@ -22,24 +22,23 @@ do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 6 ]; then
+if [ $# -ne 5 ]; then
   usage
   exit 1
 fi
 
 outname=$1
-db=$2
-build=$3
-n=$4
-gname=$5
-p=$6
+build=$2
+n=$3
+gname=$4
+p=$5
 
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
 
 R="Rscript /opt/script/edgeR.R"
 
-ex(){ echo $1; eval $1}
+ex(){ echo $1; eval $1; }
 
 postfix=count.$build
 ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1"
@@ -75,3 +74,4 @@ for str in genes isoforms; do
 
     csv2xlsx.pl $s -o $outname.$str.$postfix.edgeR.xlsx
 done
+

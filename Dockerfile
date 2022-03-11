@@ -45,8 +45,6 @@ RUN git clone --recursive https://github.com/rnakato/ChIPseqTools.git \
     && cd ChIPseqTools \
     && make
 
-RUN R -e "BiocManager::install(c('multtest', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq'))"
-
 RUN wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz \
     && tar xzvf 2.7.10a.tar.gz \
     && cd STAR-2.7.10a/source \
@@ -76,10 +74,11 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v1.7.0/salmon-1
     && tar zxvf salmon-1.7.0_linux_x86_64.tar.gz \
     && rm salmon-1.7.0_linux_x86_64.tar.gz
 
-COPY Database Database
-COPY NCBI NCBI
-COPY script script
+RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq'))"
+RUN R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
 
-RUN R -e "install.packages(c('som'))"
+COPY NCBI NCBI
+COPY Database Database
+COPY script script
 
 WORKDIR /work
