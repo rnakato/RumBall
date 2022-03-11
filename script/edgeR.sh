@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 cmdname=`basename $0`
 function usage()
 {
@@ -37,15 +37,9 @@ p=$6
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
 
-Ddir=`database.sh`
+R="Rscript /opt/script/edgeR.R"
 
-Rdir=$(cd $(dirname $0) && pwd)
-R="Rscript $Rdir/edgeR.R"
-
-ex(){
-    echo $1
-    eval $1
-}
+ex(){ echo $1; eval $1}
 
 postfix=count.$build
 ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1"

@@ -80,4 +80,6 @@ COPY Database Database
 COPY NCBI NCBI
 COPY script script
 
+RUN R -e "install.packages(c('som'))"
+
 WORKDIR /work
