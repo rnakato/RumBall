@@ -151,18 +151,24 @@ if (ncolskip==1) {
 
 name <- colnames(data)
 counts <- as.matrix(data)
-
 colnames(counts)
 
+library(edgeR)
+d <- DGEList(counts = counts, group = group)
 cat('\ndim(', filename, ')\n',file=stdout())
 dim(counts)
 
-### omit 0 rows
-cat('\ndim(', filename, ') after omitting non-expressed transcripts\n',file=stdout())
-dim(counts)
+### filter lowly expressed genes
+keep <- filterByExpr(d, group=group)
+d <- d[keep, , keep.lib.sizes=FALSE]
+counts <- counts[keep,]
+genename <- genename[keep]
+annotation <- annotation[keep,]
+cat('\nThe number of transcripts after filtering lowly expressed ones by filterByExpr\n',file=stdout())
+sum(keep)
 
 ### log and z_score
-cat('\nlog(count+1) and z-scored\n',file=stdout())
+cat('\nlog(count+1) and z-scored\n', file=stdout())
 library(som)
 logcounts <- log2(counts+1)
 zlog <- normalize(logcounts, byrow=T)  # logcountsを元にしたz-score
@@ -170,8 +176,6 @@ zlog[which(is.na(zlog))] <- 0          # 欠損値(全サンプルで同じ値)�
 colnames(zlog) <- colnames(logcounts)
 
 ### fitted count
-library(edgeR)
-d <- DGEList(counts = counts, group = group)
 d <- calcNormFactors(d)  # TMM norm factor
 d$samples$scaling_factor = d$samples$lib.size * d$samples$norm.factors / mean(d$samples$lib.size)  # fittedcount補正係数
 d$samples
