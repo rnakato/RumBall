@@ -46,13 +46,13 @@ ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoform
 
 for str in genes isoforms; do
     # short gene, nonsense geneを除去 (all除く)
-    if test $all = 0; then
-	    for ty in DEGs upDEGs downDEGs; do
-	        head=$outname.$str.$postfix.edgeR.$ty
-	        filter_short_or_nonsense_genes.pl $head.tsv -l 1000 > $head.temp
-	        mv $head.temp $head.tsv
-	    done
-    fi
+#    if test $all = 0; then
+#	    for ty in DEGs upDEGs downDEGs; do
+#	        head=$outname.$str.$postfix.edgeR.$ty
+#	        filter_short_or_nonsense_genes.pl $head.tsv -l 1000 > $head.temp
+#	        mv $head.temp $head.tsv
+#	    done
+ #   fi
 
     for ty in DEGs upDEGs downDEGs; do
        head=$outname.$str.$postfix.edgeR.$ty
@@ -74,4 +74,3 @@ for str in genes isoforms; do
 
     csv2xlsx.pl $s -o $outname.$str.$postfix.edgeR.xlsx
 done
-
