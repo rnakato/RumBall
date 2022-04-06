@@ -267,39 +267,44 @@ volc = ggplot(volcanoData, aes(logFC, FDR)) +
     geom_point(aes(col=significant)) +
     scale_color_manual(values=c("black", "red")) +
     ggtitle(paste("Volcano plot (", gname1, ", ", gname2, ")", sep=""))
-volc = volc + geom_text_repel(data=head(volcanoData[order(volcanoData$FDR, decreasing=T),], 20), aes(label=Gene))
+    volc = volc + geom_text_repel(data=head(volcanoData[order(volcanoData$FDR, decreasing=T),], 20), aes(label=Gene))
 ggsave(paste(output, ".edgeR.Volcano.pdf", sep=""), plot=volc, device="pdf")
 
 # DEGsのクラスタリング
-logt <- apply(fittedcount_norm[significant,]+1, c(1,2), log2)
-logt.z <- normalize(logt, byrow=T)
-colnames(logt.z) <- colnames(logt)
-dist.z <- dist(logt.z)
-tdist.z <- dist(t(logt.z))
-rlt.z <- hclust(dist.z, method="ward.D2")
-trlt.z <- hclust(tdist.z, method="ward.D2")
+if(sum(significant) > 0){
+    cat('\ncluster DEGs\n',file=stdout())
+    logt <- apply(fittedcount_norm[significant,]+1, c(1,2), log2)
+    logt.z <- normalize(logt, byrow=T)
+    colnames(logt.z) <- colnames(logt)
+    dist.z <- dist(logt.z)
+    tdist.z <- dist(t(logt.z))
+    rlt.z <- hclust(dist.z, method="ward.D2")
+    trlt.z <- hclust(tdist.z, method="ward.D2")
 
-pdf(paste(output, ".samplesCluster.inDEGs.pdf", sep=""), height=7, width=7)
-plot(trlt.z)
-dev.off()
+    pdf(paste(output, ".samplesCluster.inDEGs.pdf", sep=""), height=7, width=7)
+    plot(trlt.z)
+    dev.off()
 
-#heatmap
-cat('\nmake heatmap\n',file=stdout())
-library("RColorBrewer")
-library("gplots")
+    #heatmap
+    cat('\nmake heatmap\n',file=stdout())
+    library("RColorBrewer")
+    library("gplots")
 
-if(color=="blue"){
-    hmcol <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
-}else if(color=="green"){
-    hmcol <- colorRampPalette(brewer.pal(9, "YlGn"))(100)
-}else if(color=="orange"){
-    hmcol <- colorRampPalette(brewer.pal(9, "OrRd"))(100)
-}else if(color=="purple"){
-    hmcol <- colorRampPalette(brewer.pal(9, "Purples"))(100)
+    if(color=="blue"){
+        hmcol <- colorRampPalette(brewer.pal(9, "GnBu"))(100)
+    }else if(color=="green"){
+        hmcol <- colorRampPalette(brewer.pal(9, "YlGn"))(100)
+    }else if(color=="orange"){
+        hmcol <- colorRampPalette(brewer.pal(9, "OrRd"))(100)
+    }else if(color=="purple"){
+        hmcol <- colorRampPalette(brewer.pal(9, "Purples"))(100)
+    }
+
+    png(paste(output, ".heatmap.", p,".png", sep=""), h=1000, w=1000, pointsize=20)
+    heatmap.2(logt.z, scale = "none",
+              dendrogram="both", Rowv=as.dendrogram(rlt.z), Colv=as.dendrogram(trlt.z), trace="none",
+              col=hmcol, key.title="Color Key", key.xlab="Z score", key.ylab=NA)
+    dev.off()
+} else {
+    cat('\nNo DEGs identified. Quit.\n',file=stdout())
 }
-
-png(paste(output, ".heatmap.", p,".png", sep=""), h=1000, w=1000, pointsize=20)
-heatmap.2(logt.z, scale = "none",
-          dendrogram="both", Rowv=as.dendrogram(rlt.z), Colv=as.dendrogram(trlt.z), trace="none",
-          col=hmcol, key.title="Color Key", key.xlab="Z score", key.ylab=NA)
-dev.off()
