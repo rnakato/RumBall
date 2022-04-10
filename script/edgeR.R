@@ -10,6 +10,7 @@ print.usage <- function() {
 	cat('      -ncolskip=<int> , colmun num to be skiped (default: 0) \n',file=stderr())
 	cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
 	cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
+	cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
 	cat('      -color=<color>  , heatmap color (blue|orange|purple|green , default: blue) \n',file=stderr())
 	cat('   OUTPUT ARGUMENTS\n',file=stderr())
 	cat('      -o=<output> , prefix of output file \n',file=stderr())
@@ -31,6 +32,8 @@ p <- 0.01
 color <- "blue"
 gname1 <- "group1"
 gname2 <- "group2"
+lfcthre <- 0
+
 for (each.arg in args) {
     if (grepl('^-i=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
@@ -91,7 +94,13 @@ for (each.arg in args) {
         }
         else { stop('No value provided for parameter -ncolskip=')}
     }
-
+    else if (grepl('^-lfcthre=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            lfcthre <- as.numeric(arg.split[2])
+        }
+        else { stop('No value provided for parameter -lfcthre=')}
+    }
     else if (grepl('^-p=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
@@ -110,6 +119,7 @@ filename
 color
 nrowname
 p
+lfcthre
 num1
 num2
 output
@@ -181,19 +191,33 @@ d$samples$scaling_factor = d$samples$lib.size * d$samples$norm.factors / mean(d$
 d$samples
 
 d <- estimateDisp(d, design)
-#d <- estimateGLMCommonDisp(d, design)  # variance  μ(1 + μφ)  for all genes
-#d <- estimateGLMTrendedDisp(d, design)
-#d <- estimateGLMTagwiseDisp(d, design) # variance  μ(1 + μφ)  for each gene
+### d <- estimateGLMCommonDisp(d, design)  # variance  μ(1 + μφ)  for all genes
+### d <- estimateGLMTrendedDisp(d, design)
+### d <- estimateGLMTagwiseDisp(d, design) # variance  μ(1 + μφ)  for each gene
 
 fit <- glmQLFit(d, design)
-qlf <- glmQLFTest(fit, coef=2)
-fittedcount <- qlf$fitted.values
-tt <- topTags(qlf, sort.by="none", n=nrow(data))
+if (lfcthre > 0) {
+   # Option to use foldchange threhold
+   qlf <- glmTreat(fit, coef=2, lfc=1)
+} else {
+   # The quasi-likelihood F-tests (recommended for bulk RNA-seq)
+   qlf <- glmQLFTest(fit, coef=2)
+}
 
+fittedcount <- qlf$fitted.values
+tt <- topTags(qlf, sort.by="none", n=sum(keep))
+
+# The likelihood ratio tests (recommended for scRNA-seq or RNA-seq without replicates)
 #fit <- glmFit(d, design)
 #lrt <- glmLRT(fit, coef = 2)
 #tt <- topTags(lrt, sort.by="none", n=nrow(data))
 #fittedcount <- lrt$fitted.values
+
+# GO/Pathway analysis
+#go <- goana(qlf, species="Mm")
+#topGO(go, sort="up")
+#keg <- kegga(qlf, species="Mm")
+#topKEGG(keg, sort="up")
 
 fittedcount_norm <- t(t(fittedcount) / d$samples$scaling_factor)
 
