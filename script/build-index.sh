@@ -87,19 +87,25 @@ elif test $program = "hisat2"; then
     # genome_tran: HISAT2 Graph index for reference plus transcripts
     # genome_snp_tran: HISAT2 Graph index for reference plus SNPs and transcripts
     if test $build = "GRCh38"; then
-	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz  -O $dir/grch38_genome.tar.gz
-	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_snp.tar.gz     -O $dir/grch38_snp.tar.gz
-	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_tran.tar.gz    -O $dir/grch38_tran.tar.gz
+#	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_genome.tar.gz  -O $dir/grch38_genome.tar.gz
+#	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_snp.tar.gz     -O $dir/grch38_snp.tar.gz
+#	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_tran.tar.gz    -O $dir/grch38_tran.tar.gz
+#	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_rep.tar.gz     -O $dir/grch38_rep.tar.gz
+#	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_snprep.tar.gz  -O $dir/grch38_snprep.tar.gz
 	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_snptran.tar.gz -O $dir/grch38_snptran.tar.gz
-	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_rep.tar.gz     -O $dir/grch38_rep.tar.gz
-	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch38_snprep.tar.gz  -O $dir/grch38_snprep.tar.gz
+	tar zxvf $dir/grch38_snptran.tar.gz -C $dir
+	rm $dir/grch38_snptran.tar.gz
     elif test $build = "GRCh37"; then
 	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/grch37_snptran.tar.gz -O $dir/grch37_snptran.tar.gz
+	tar zxvf $dir/grch37_snptran.tar.gz -C $dir
+	rm $dir/grch37_snptran.tar.gz
     elif test $build = "GRCm38"; then
-	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38/download          -O $dir/grcm38_genome.tar.gz
-	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_snp/download      -O $dir/grcm38_snp.tar.gz
-	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_tran/download     -O $dir/grcm38_tran.tar.gz
+#	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38/download          -O $dir/grcm38_genome.tar.gz
+#	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_snp/download      -O $dir/grcm38_snp.tar.gz
+#	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_tran/download     -O $dir/grcm38_tran.tar.gz
 	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_snp_tran/download -O $dir/grcm38_snptran.tar.gz
+	tar zxvf $dir/grcm38_snptran.tar.gz -C $dir
+	rm $dir/grcm38_snptran.tar.gz
     else
 	echo "Specify the correct build."
 	usage
