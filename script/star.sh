@@ -43,11 +43,11 @@ pwd=$(cd $(dirname $0) && pwd)
 mkdir -p log $odir
 
 if test $build = "S_pombe" -o $build = "S_cerevisiae"; then
-    index_star=$Ddir/$build
-    index_rsem=$Ddir/$build/$build
+    index_star=$Ddir/$build/rsem-star-indexes/
+    index_rsem=$Ddir/$build/rsem-star-indexes/$build
 else
-    index_star=$Ddir/$db-$build
-    index_rsem=$Ddir/$db-$build/$build
+    index_star=$Ddir/$db-$build/rsem-star-indexes/
+    index_rsem=$Ddir/$db-$build/rsem-star-indexes/$build
 fi
 
 if test $readtype = "paired"; then pair="--paired-end"
@@ -79,6 +79,7 @@ STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
 log=log/star-$prefix.$build.txt
 #echo -en "$prefix\t" > $log
 ex "parse_starlog.pl $odir/$prefix.$build.Log.final.out > $log"
+ex "rm -rf $odir/$prefix.$build._STARtmp"
 
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \
                           --strandedness $strand \

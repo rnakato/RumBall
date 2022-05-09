@@ -5,9 +5,16 @@ function usage()
 {
     echo "$cmdname [-p ncore] <program> <build> <outprefix>" 1>&2
     echo "  program: data, rsem-star, rsem-bowtie2, hisat2, kallisto, salmon" 1>&2
-    echo "  build: GRCh38, GRCh37, GRCm39, GRCm38, BDGP6.32, GRCz11, WBcel235, mRatBN7.2" 1>&2
+    echo "  build:" 1>&2
+    echo "         human (GRCh38, GRCh37)" 1>&2
+    echo "         mouse (GRCm39, GRCm38)" 1>&2
+    echo "         rat (mRatBN7.2)" 1>&2
+    echo "         fly (BDGP6)" 1>&2
+    echo "         zebrafish (GRCz11)" 1>&2
+    echo "         C. elegans (WBcel235)" 1>&2
+    echo "         S. serevisiae (R64-1-1)" 1>&2
     echo "  Example:" 1>&2
-    echo "  $cmdname rsem-star GRCh38 $pwd/Ensembl-GRCh38" 1>&2
+    echo "         $cmdname rsem-star GRCh38 $pwd/Ensembl-GRCh38" 1>&2
 }
 
 ncore=4
@@ -106,6 +113,18 @@ elif test $program = "hisat2"; then
 	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/grcm38_snp_tran/download -O $dir/grcm38_snptran.tar.gz
 	tar zxvf $dir/grcm38_snptran.tar.gz -C $dir
 	rm $dir/grcm38_snptran.tar.gz
+    elif test $build = "BDGP6"; then
+	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/bdgp6_tran.tar.gz -O $dir/bdgp6_tran.tar.gz
+	tar zxvf $dir/bdgp6_tran.tar.gz -C $dir
+	rm $dir/bdgp6_tran.tar.gz
+    elif test $build = "WBcel235"; then
+	wget --timestamping https://genome-idx.s3.amazonaws.com/hisat/wbcel235_tran.tar.gz -O $dir/wbcel235_tran.tar.gz
+	tar zxvf $dir/wbcel235_tran.tar.gz -C $dir
+	rm $dir/wbcel235_tran.tar.gz
+    elif test $build = "R64-1-1"; then
+	wget --timestamping https://cloud.biohpc.swmed.edu/index.php/s/akeiMrGGtt5KoJY/download -O $dir/R64-1-1_tran.tar.gz
+	tar zxvf $dir/R64-1-1_tran.tar.gz -C $dir
+	rm $dir/R64-1-1_tran.tar.gz
     else
 	echo "Specify the correct build."
 	usage
