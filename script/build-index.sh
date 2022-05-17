@@ -3,7 +3,8 @@ cmdname=`basename $0`
 pwd=`pwd`
 function usage()
 {
-    echo "$cmdname [-p ncore] <program> <build> <odir>" 1>&2
+    echo "$cmdname [-p ncore] -a <program> <build> <odir>" 1>&2
+    echo "  -a: use genome_full.fa" 1>&2
     echo "  program: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon" 1>&2
     echo "  build (only for hisat2):" 1>&2
     echo "         human (GRCh38, GRCh37)" 1>&2
@@ -18,16 +19,16 @@ function usage()
 }
 
 ncore=4
-while getopts p: option
+full=0
+while getopts ap: option
 do
     case ${option} in
-	p)
-            ncore=${OPTARG}
+        a) full=1 ;;
+        p) ncore=${OPTARG} ;;
+        *)
+            usage
+            exit 1
             ;;
-	*)
-	    usage
-	    exit 1
-	    ;;
     esac
 done
 shift $((OPTIND - 1))
@@ -46,15 +47,23 @@ ex(){
     eval $1
 }
 
-genome="$odir/genome.fa"
-gt="$odir/genometable.txt"
+if test $full = 1 ; then
+    genome="$odir/genome_full.fa"
+    gt="$odir/genometable_full.txt"
+    name=genome_full
+else
+    genome="$odir/genome_full.fa"
+    gt="$odir/genometable_full.txt"
+    name=genome
+fi
+
 gtf="$odir/gtf_chrUCSC/chr.gtf"
 mkdir -p $odir/log
-log="$odir/log/build-index.$program.genome.log"
+log="$odir/log/build-index.$program.$name.log"
 
 # reference data generation
 if test $program = "rsem-star"; then
-    indexdir=$odir/rsem-star-indexes/genome
+    indexdir=$odir/rsem-star-indexes/$name
     mkdir -p $indexdir
     STAR --version > $log
     glen=`cat $gt | awk '{sum+=$2} END {print sum}'`
@@ -62,23 +71,23 @@ if test $program = "rsem-star"; then
     if test $k -gt 14; then k=14; fi
     ex "STAR --runThreadN $ncore --runMode genomeGenerate --genomeSAindexNbases $k \
         --genomeDir $odir/rsem-star-indexes --genomeFastaFiles $genome --sjdbGTFfile $gtf --sjdbOverhang 100 \
-        --outFileNamePrefix $indexdir" >> $log
-    ex "rsem-prepare-reference -p $ncore --gtf $gtf $genome $indexdir" >> $log 2>&1
+        --outFileNamePrefix $indexdir/$name" >> $log
+    ex "rsem-prepare-reference -p $ncore --gtf $gtf $genome $indexdir/$name" >> $log 2>&1
 elif test $program = "rsem-bowtie2"; then
-    indexdir=$odir/rsem-bowtie2-indexes/genome
+    indexdir=$odir/rsem-bowtie2-indexes/$name
     mkdir -p $indexdir
-    bowtie2 --version > $log
-    ex "rsem-prepare-reference --bowtie2 -p $ncore --gtf $gtf $genome $indexdir" >> $log
+    bowtie2 --version > $log 2>&1
+    ex "rsem-prepare-reference --bowtie2 -p $ncore --gtf $gtf $genome $indexdir/$name" >> $log 2>&1
 elif test $program = "salmon" ; then
-    indexdir=$odir/salmon-indexes/genome
+    indexdir=$odir/salmon-indexes/
     mkdir -p $indexdir
-    salmon --version > $log
-    ex "salmon index -p $ncore -t $genome -i $indexdir" >> $log
+    salmon --version > $log 2>&1
+    ex "salmon index -p $ncore -t $genome -i $indexdir/$name" >> $log 2>&1
 elif test $program = "kallisto" ; then
-    indexdir=$odir/kallisto-indexes/genome
+    indexdir=$odir/kallisto-indexes
     mkdir -p $indexdir
-    kallisto version > $log
-    ex "kallisto index -i $indexdir $genome" >> $log
+    kallisto version > $log 2>&1
+    ex "kallisto index -i $indexdir/$name $genome" >> $log 2>&1
 elif test $program = "hisat2"; then
     indexdir=$odir/hisat2-indexes
     mkdir -p $indexdir
