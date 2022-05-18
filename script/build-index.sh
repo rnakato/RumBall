@@ -64,15 +64,15 @@ log="$odir/log/build-index.$program.$name.log"
 # reference data generation
 if test $program = "rsem-star"; then
     indexdir=$odir/rsem-star-indexes/$name
-    mkdir -p $indexdir
+    mkdir -p $indexdir/star $indexdir/rsem
     STAR --version > $log
     glen=`cat $gt | awk '{sum+=$2} END {print sum}'`
     k=`echo $glen | awk '{printf "%d\n",log($1)/log(2)/2-1}'`
     if test $k -gt 14; then k=14; fi
     ex "STAR --runThreadN $ncore --runMode genomeGenerate --genomeSAindexNbases $k \
-        --genomeDir $odir/rsem-star-indexes --genomeFastaFiles $genome --sjdbGTFfile $gtf --sjdbOverhang 100 \
-        --outFileNamePrefix $indexdir/$name" >> $log
-    ex "rsem-prepare-reference -p $ncore --gtf $gtf $genome $indexdir/$name" >> $log 2>&1
+        --genomeDir $indexdir/star --genomeFastaFiles $genome --sjdbGTFfile $gtf --sjdbOverhang 100 \
+        --outFileNamePrefix $indexdir/star" >> $log
+    ex "rsem-prepare-reference -p $ncore --gtf $gtf $genome $indexdir/rsem/index" >> $log 2>&1
 elif test $program = "rsem-bowtie2"; then
     indexdir=$odir/rsem-bowtie2-indexes/$name
     mkdir -p $indexdir
