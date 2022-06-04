@@ -1,4 +1,4 @@
-# docker_rnaseq
+# RumBall: Docker image for RNA-seq analysis
 
 ## Scripts for RNA-seq analysis
 ---
