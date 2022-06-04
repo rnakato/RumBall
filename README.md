@@ -1,5 +1,7 @@
 # RumBall: Docker image for RNA-seq analysis
 
+Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumball).
+
 ## Scripts for RNA-seq analysis
 ---
 ### csv2xlsx.pl
