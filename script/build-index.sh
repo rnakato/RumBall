@@ -71,7 +71,7 @@ if test $program = "rsem-star"; then
     if test $k -gt 14; then k=14; fi
     ex "STAR --runThreadN $ncore --runMode genomeGenerate --genomeSAindexNbases $k \
         --genomeDir $indexdir/star --genomeFastaFiles $genome --sjdbGTFfile $gtf --sjdbOverhang 100 \
-        --outFileNamePrefix $indexdir/star" >> $log
+        --limitGenomeGenerateRAM 96000000000 --outFileNamePrefix $indexdir/star" >> $log
     ex "rsem-prepare-reference -p $ncore --gtf $gtf $genome $indexdir/rsem/index" >> $log 2>&1
 elif test $program = "rsem-bowtie2"; then
     indexdir=$odir/rsem-bowtie2-indexes/$name
