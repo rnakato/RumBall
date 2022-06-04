@@ -1,5 +1,5 @@
-for tag in latest 2022.05 #2022.04
+for tag in latest 2022.05
 do
-    docker build -t rnakato/rna-seq:$tag .
-    docker push rnakato/rna-seq:$tag
+    docker build -t rnakato/rumball:$tag .
+    docker push rnakato/rumball:$tag
 done

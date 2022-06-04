@@ -1,4 +1,4 @@
-### Docker image for RNA-seq analysis
+### RumBall: Docker image for RNA-seq analysis
 # Installed tools:
 # STAR v2.7.10a
 # RSEM v1.3.3
@@ -97,9 +97,6 @@ RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2
 RUN R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
 
 COPY NCBI NCBI
-#COPY Database Database
 COPY script script
 
 ENV PATH ${PATH}:/opt/RSEM-1.3.3:/opt/STAR-2.7.10a/bin/Linux_x86_64:/opt/kallisto:/opt/salmon-1.8.0_linux_x86_64/bin/:/opt/hisat2-2.2.1:/opt/stringtie-2.2.1.Linux_x86_64:/opt/script:/opt/ChIPseqTools/bin/:/opt:/opt/bwa-0.7.17:/opt/bowtie-1.3.1-linux-x86_64:/opt/bowtie2-2.4.5-linux-x86_64
-
-WORKDIR /work
