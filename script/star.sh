@@ -2,21 +2,17 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname [-d outputdir] [-p ncore] <single|paired> <output prefix> <fastq> <Ddir> <Ensembl|UCSC> <build> <--strandedness [none|forward|reverse]>" 1>&2
-    echo "Example: star.sh single HeLa_rep1 HeLa_rep1.fastq.gz /work/Database Ensembl GRCh38 reverse" 1>&2
+    echo "$cmdname [-d outputdir] [-p ncore] <single|paired> <output prefix> <fastq> <Ddir> <--strandedness [none|forward|reverse]>" 1>&2
+    echo "Example: star.sh single HeLa_rep1 HeLa_rep1.fastq.gz /work/Database/Database_fromDocker/Ensembl-GRCh38 reverse" 1>&2
 }
 
 odir=star
 ncore=12
-while getopts d: option
+while getopts d:p: option
 do
     case ${option} in
-        d)
-            odir=${OPTARG}
-            ;;
-        p)
-            ncore==${OPTARG}
-            ;;
+        d) odir=${OPTARG};;
+        p) ncore=${OPTARG};;
         *)
             usage
             exit 1
@@ -25,7 +21,7 @@ do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 7 ]; then
+if [ $# -ne 5 ]; then
   usage
   exit 1
 fi
@@ -34,27 +30,19 @@ readtype=$1
 prefix=$2
 fastq=$3
 Ddir=$4
-db=$5
-build=$6
-strand=$7
+strand=$5
 
 pwd=$(cd $(dirname $0) && pwd)
 
-mkdir -p log $odir
+index_star=$Ddir/rsem-star-indexes/genome/star/
+index_rsem=$Ddir/rsem-star-indexes/genome/rsem/index
 
-if test $build = "S_pombe" -o $build = "S_cerevisiae"; then
-    index_star=$Ddir/$build/rsem-star-indexes/
-    index_rsem=$Ddir/$build/rsem-star-indexes/$build
-else
-    index_star=$Ddir/$db-$build/rsem-star-indexes/
-    index_rsem=$Ddir/$db-$build/rsem-star-indexes/$build
-fi
-
-if test $readtype = "paired"; then pair="--paired-end"
+if test $readtype = "paired"; then
+    pair="--paired-end"
 elif ! test $readtype = "single"; then
     echo "Error: specify [single|paired]"
-  usage
-  exit 1
+    usage
+    exit 1
 fi
 
 if test $strand = "none"; then  # unstraned
@@ -70,23 +58,24 @@ fi
 
 ex(){ echo $1; eval $1; }
 
+ex "mkdir -p $odir/log"
+
 STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
      --quantMode TranscriptomeSAM \
      --runThreadN $ncore --outSAMattributes All $pzip \
      --genomeDir $index_star --readFilesIn $fastq $parstr \
-     --outFileNamePrefix $odir/$prefix.$build.
+     --outFileNamePrefix $odir/$prefix.
 
-log=log/star-$prefix.$build.txt
-#echo -en "$prefix\t" > $log
-ex "parse_starlog.pl $odir/$prefix.$build.Log.final.out > $log"
-ex "rm -rf $odir/$prefix.$build._STARtmp"
+log=$odir/log/star-$prefix.txt
+ex "parse_starlog.pl $odir/$prefix.Log.final.out > $log"
+ex "rm -rf $odir/$prefix._STARtmp"
 
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \
                           --strandedness $strand \
                           --no-bam-output \
-                          $odir/${prefix}.$build.Aligned.toTranscriptome.out.bam \
+                          $odir/${prefix}.Aligned.toTranscriptome.out.bam \
                           $index_rsem \
-                          $odir/$prefix.$build"
+                          $odir/$prefix"
 
-#ex "rsem-plot-transcript-wiggles --gene-list --show-unique $odir/${prefix}.$build gene_ids.txt output.pdf"
-ex "rsem-plot-model $odir/$prefix.$build $odir/$prefix.$build.quals.pdf"
+#ex "rsem-plot-transcript-wiggles --gene-list --show-unique $odir/${prefix} gene_ids.txt output.pdf"
+ex "rsem-plot-model $odir/$prefix $odir/$prefix.quals.pdf"

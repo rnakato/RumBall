@@ -2,18 +2,22 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "DESeq2.sh <Matrix> <build> <num of reps> <groupname> <FDR>" 1>&2
-    echo "  Example:" 1>&2
-    echo "  DESeq2.sh star/Matrix GRCh38 2:2 WT:KD 0.05" 1>&2
+    echo "$cmdname [Options] <Matrix> <num of reps> <group names>" 1>&2
+    echo '   <Matrix>: input matrix file' 1>&2
+    echo '   <Ddir>: directory of gene annotation files' 1>&2
+    echo '   <num of reps>: number of replicates (quated by ":")' 1>&2
+    echo '   <group name>: labels of two groups compared (quated by ":")' 1>&2
+    echo '   Options:' 1>&2
+    echo '      -t <FDR>: FDR threshould (default: 0.05)' 1>&2
+    echo "   Example:" 1>&2
+    echo "      $cmdname star/Matrix GRCh38 2:2 WT:KD" 1>&2
 }
 
-all=0
-while getopts a option
+p=0.05
+while getopts t: option
 do
     case ${option} in
-        a)
-            all=1
-            ;;
+        t) p=${OPTARG};;
         *)
             usage
             exit 1
@@ -22,16 +26,14 @@ do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 5 ]; then
+if [ $# -ne 3 ]; then
   usage
   exit 1
 fi
 
 outname=$1
-build=$2
-n=$3
-gname=$4
-p=$5
+n=$2
+gname=$3
 
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
@@ -39,27 +41,16 @@ n2=$(cut -d':' -f2 <<<${n})
 Rdir=$(cd $(dirname $0) && pwd)
 R="Rscript $Rdir/DESeq2.R"
 
-Ddir=`database.sh`
-
 ex(){
     echo $1
     eval $1
 }
 
-postfix=count.$build
+postfix=count
 ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1"
 ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1"
 
 for str in genes isoforms; do
-     # short gene, nonsense geneを除去 (all除く)
-#    if test $all = 0; then
-#        for ty in DEGs upDEGs downDEGs; do
-#            head=$outname.$str.$postfix.DESeq2.$ty
-#            filter_short_or_nonsense_genes.pl $head.tsv -l 1000 > $head.temp
-#            mv $head.temp $head.tsv
-#        done
-#    fi
-
     for ty in DEGs upDEGs downDEGs; do
         head=$outname.$str.$postfix.DESeq2.$ty
         ncol=`head -n1 $head.tsv | awk '{print NF}'`
