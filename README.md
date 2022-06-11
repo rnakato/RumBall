@@ -57,6 +57,46 @@ Command example (assuming the comparison of "Ctrl" and "siCTCF" with two replica
 
 ## 3. Commands in RumBall
 
+### download_genomedata.sh
+
+`download_genomedata.sh` downloads the genome and gene annotation files of the genome build specified.
+**RumBall** assumes the reference data is downloaded bu this command.
+
+    download_genomedata.sh <build> <outputdir>
+      build:
+             human (GRCh38, GRCh37)
+             mouse (GRCm39, GRCm38)
+             rat (mRatBN7.2)
+             fly (BDGP6)
+             zebrafish (GRCz11)
+             chicken (GRCg6a)
+             African clawed frog (xenLae2)
+             C. elegans (WBcel235)
+             S. serevisiae (R64-1-1)
+             S. pombe (SPombe)
+      Example:
+             download_genomedata.sh GRCh38 Ensembl-GRCh38
+
+
+### build-index.sh: build index for RNA-seq
+
+`build-index.sh` builds index files of the tools specified. `<odir>` should be the same with `<outputdir>` directory provided in `download_genomedata.sh`. 
+This `<odir>` is used in the **RumBall** commands below.
+
+    build-index.sh [-p ncore] -a <program> <build> <odir>
+      -a: use genome_full.fa
+      program: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon
+      build (only for hisat2):
+             human (GRCh38, GRCh37)
+             mouse (GRCm39, GRCm38)
+             rat (mRatBN7.2)
+             fly (BDGP6)
+             zebrafish (GRCz11)
+                 C. elegans (WBcel235)
+             S. serevisiae (R64-1-1)
+      Example:
+             build-index.sh rsem-star GRCh38 Ensembl-GRCh38
+
 ### star.sh: execute STAR and RSEM
 
     star.sh [Options] <single|paired> <prefix> <fastq> <Ddir> <strandedness>
