@@ -134,16 +134,26 @@ Output
 * merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
 
 
-### 3.5 Utility scripts in RumBall
-    
-#### csv2xlsx.pl
-merge csv/tsv files to a single xlsx file
+## 4. Utility scripts in RumBall
+   
+### check_stranded.sh
+           
+In case that it is not clear whether the input samples are stranded or not, use `check_stranded.sh` for the quick check.
+
+    check_stranded.sh [human|mouse] <fastq>
+
+This command runs bowtie to map reads onto the NCBI allrna. If the samples are reverse-straned, the most reads will be mapped to the reverse strand.
+If fifty-fifty, the samples are unstranded.
+
+           
+### csv2xlsx.pl
+This command merges csv/tsv files to a single xlsx file.
 
     csv2xlsx.pl -i file1.tsv -n tabname1 [-i file2.tsv -n tabname2 ...] -o output.xlsx
     Options:
           -d --delim=<str>: delimiter of input files (default:\t)
-
-## 4. Build Docker image from Dockerfile
+           
+## 5. Build Docker image from Dockerfile
 
 First clone and move to the repository
 
@@ -154,6 +164,6 @@ Then type:
 
     docker build -t <account>/rumball
 
-## 5. Contact
+## 6. Contact
 
 Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
