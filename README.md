@@ -97,26 +97,10 @@ log example:
           rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/HEK293
 
 Output:
-* gene expression data: *.genes.<TPM|count>.<build>.txt
-* transcript expression data: *.isoforms.<TPM|count>.<build>.txt
-* merged xlsx file: *.<build>.xlsx 
+* gene expression data: *.genes.<TPM|count>.txt
+* transcript expression data: *.isoforms.<TPM|count>.txt
+* merged xlsx file: *.xlsx 
 
-### edgeR.sh: differential expression analysis for two groups by edgeR
-
-    edgeR.sh [Options] <inputfile> <num of reps> <groupname>
-       <inputfile>: prefix of input matrix file
-       <Ddir>: directory of gene annotation files
-       <num of reps>: number of replicates (quated by ":")
-       <group name>: labels of two groups compared (quated by ":")
-       Options:
-          -t <FDR>: FDR threshould (default: 0.05)
-      Example:
-       edgeR.sh Matrix 2:2 WT:KD
-
-Output
-* merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
-* BCV/MDS plot: *.<genes|isoforms>.count.<build>.BCV-MDS.pdf
-* MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
 
 ### DESeq2.sh: differential expression analysis for two groups by DESeq2
 
@@ -130,10 +114,52 @@ Output
        Example:
           DESeq2.sh star/Matrix 2:2 WT:KD
 
+Output:
+* Matrix.*.count.DESeq2.all.tsv ... list of all genes
+* Matrix.*.count.DESeq2.DEGs.tsv ... list of all DEGs
+* Matrix.*.count.DESeq2.upDEGs.tsv ... list of all upregulated DEGs
+* Matrix.*.count.DESeq2.downDEGs.tsv ... list of all upregulated DEGs
+* Matrix.*.count.DESeq2.xlsx ... xlsx file that include all .tsv files above
+* Matrix.*.count.DEGs.bed ... BED file of DEGs
+* Matrix.*.count.DEGs.bed6 ... BED6 file of DEGs that contain gene name, length and strand information
+
+* Matrix.*.count.DESeq2.Dispersionplot.pdf ... Dispersion plot of log-scale gene expression before and after dispersion fitting
+* Matrix.*.count.DESeq2.MAplot.pdf ... MA plot of all genes. Significantly differential genes are highlighted in red. "shrunken apeglm" removes the high variance of low expression genes.
+* Matrix.*.count.DESeq2.Volcano.pdf ... Volcano plot of all genes. Top-ranked genes are labeled.
+* Matrix.*.count.DESeq2.HighlyExpressedGenes.pdf ... Heatmap of top-ranked DEGs
+* Matrix.*.count.DESeq2.sampleClustering.pdf ... Clustering results of sample-wide comparison
+* Matrix.*.count.DESeq2.samplePCA.pdf ... PCA plot of samples based on gene expression level
+    
+### edgeR.sh: differential expression analysis for two groups by edgeR
+
+    edgeR.sh [Options] <inputfile> <num of reps> <groupname>
+       <inputfile>: prefix of input matrix file
+       <Ddir>: directory of gene annotation files
+       <num of reps>: number of replicates (quated by ":")
+       <group name>: labels of two groups compared (quated by ":")
+       Options:
+          -t <FDR>: FDR threshould (default: 0.05)
+      Example:
+       edgeR.sh Matrix 2:2 WT:KD
+
 Output
-* merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
+* Matrix.*.count.edgeR.all.tsv ... list of all genes
+* Matrix.*.count.edgeR.DEGs.tsv ... list of all DEGs
+* Matrix.*.count.edgeR.upDEGs.tsv ... list of all upregulated DEGs
+* Matrix.*.count.edgeR.downDEGs.tsv ... list of all downregulated DEGs
+* Matrix.*.count.edgeR.xlsx ... xlsx file that include all .tsv files above
+* Matrix.*.count.DEGs.bed ... BED file of DEGs
+* Matrix.*.count.DEGs.bed6 ... BED6 file of DEGs that contain gene name, length and strand information
 
-
+* Matrix.*.count.density.png ... Gene expression distribution (log scale)
+* Matrix.*.count.QQplot.1stSample.pdf ... QQplot of the 1st sample
+* Matrix.*.count.edgeR.BCV-MDS.pdf ... BCV and MDS plots for estimating variance among input samples
+* Matrix.*.count.edgeR.MAplot.pdf ... MA plot of all genes. Significantly differential genes are highlighted in red. "shrunken apeglm" removes the high variance of low expression genes.
+* Matrix.*.count.heatmap.0.01.png ... Heatmap of DEGs
+* Matrix.*.count.samplesCluster.inDEGs.pdf ... Hierarchical tree of samples obtained the heatmap above
+* Matrix.*.count.edgeR.Volcano.pdf ... Volcano plot of all genes. Top-ranked genes are labeled.
+* Matrix.*.count.samplePCA.pdf ... PCA plot of samples based on gene expression level
+          
 ## 4. Utility scripts in RumBall
    
 ### check_stranded.sh
