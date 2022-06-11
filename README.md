@@ -2,27 +2,62 @@
 
 Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumball).
 
-## Scripts for RNA-seq analysis
----
-### csv2xlsx.pl
-merge csv/tsv files to a single xlsx file
+## 1. Installation
 
-    csv2xlsx.pl -i file1.tsv -n tabname1 [-i file2.tsv -n tabname2 ...] -o output.xlsx
-    Options:
-          -d --delim=<str>: delimiter of input files (default:\t)
+### 1.1 Docker 
+To use docker command, type:
 
----
-## RNA-seq pipeline
+    docker pull rnakato/rumball
+    docker run -it --rm rnakato/rumball <command>
+
+### 1.2 Singularity
+
+Singularity can also be used to execute the docker image:
+
+    singularity build rumball.sif docker://rnakato/rumball
+    singularity exec rumball.sif <command>
+
+Singularity mounts the current directory automatically. If you access the files in the other directory, please mount by `--bind` option, for instance:
+
+    singularity exec --bind /work rumball.sif <command>
+    
+This command mounts `/work` directory.
+
+## 2. Tutorial
+
+Generate the database (genome, gene annotation and index file):
+
+    build=GRCh38  # specify the build (Ensembl) that you need
+    Ddir=Ensembl-$build/
+    mkdir -p log
+    # Download genome and gtf
+    download_genomedata.sh $build $Ddir 2>&1 | tee log/Ensembl-$build
+    # make index for STAR-RSEM 
+    build-index.sh rsem-star $build $Ddir
+
 Command example:
 
-    for prefix in CDLS1 CDLS2 WT1 WT2; do
-       star.sh paired $prefix "fastq/${prefix}_R1.fq.gz fastq/${prefix}_R2.fq.gz" Ensembl GRCh38 0
+    # mapping reads by STAR-RSEM 
+    for prefix in Ctrl1 Ctrl2 siCTCF1 siCTCF2; do
+       fq1=fastq/${prefix}_1.fq.gz
+       fq2=fastq/${prefix}_2.fq.gz
+       star.sh paired $prefix "$fq1 $fq2" $Ddir reverse > log/$prefix.star.sh
     done
     
-    rsem_merge.sh "WT1 WT2 CDLS1 CDLS2" Matrix.CdLS Ensembl GRCh38 "2015_001"
-    edgeR.sh Matrix.CdLS Ensembl GRCh38 2:2 0.05
+    # For DESeq2
+    mkdir -p Matrix_deseq2
+    rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_deseq2/siCTCF $Ddir "XXX"
+    edgeR.sh Matrix_deseq2/siCTCF 2:2 Control:siCTCF
+    
+    # For edgeR
+    mkdir -p Matrix_edgeR
+    rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/siCTCF $Ddir "XXX"
+    edgeR.sh Matrix_edgeR/siCTCF 2:2 Control:siCTCF
 
-### star.sh: execute STAR and RSEM
+## 3. Commands in RumBall
+
+### 3.1 star.sh: execute STAR and RSEM
+
 #### Usage
 
     star.sh <single|paired> <output prefix> <fastq> <Ensembl|UCSC> <build> <--forward-prob>
@@ -42,23 +77,42 @@ log example:
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 |29446992	|27430449	|93.15	|1012811	|3.44	|5253	|0.02	|0%|	3%	|0%	|0	|0	|18960488	|18725703	|98.76	|30590	|0.16	|0.19	|0.01	|0.01|
 
-### rsem_merge.sh: merge expression data of multiple samples
+### 3.2 rsem_merge.sh: merge expression data of multiple samples
 
-    rsem_merge.sh <files> <output> <Ensembl|UCSC> <build> <strings for removal>
+    rsem_merge.sh <files> <output> <Ddir> <strings for removal>
 
 Output:
 * gene expression data: *.genes.<TPM|count>.<build>.txt
 * transcript expression data: *.isoforms.<TPM|count>.<build>.txt
 * merged xlsx file: *.<build>.xlsx 
 
-### edgeR.sh: differential expression analysis for two groups by edgeR
+### 3.3 edgeR.sh: differential expression analysis for two groups by edgeR
 
-    edgeR.sh [-a] <Matrix> <Ensembl|UCSC> <build> <num of reps> <groupname>  <FDR>
+    edgeR.sh <Matrix> <num of reps> <groupname>
 
 Output
 * merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
 * BCV/MDS plot: *.<genes|isoforms>.count.<build>.BCV-MDS.pdf
 * MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
 
-* DEGのリストからは1kbpより短い遺伝子は除かれます。また、出力されるのはprotein_coding、antisense, lincRNAのみです。ALLには全て含まれます。
-* DEGにこれらの遺伝子を含めたい場合は-aオプションを指定します。
+### 3.4 DESeq2.sh: differential expression analysis for two groups by DESeq2
+
+    DESeq2.sh [-a] <Matrix><num of reps> <groupname>
+
+Output
+* merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
+* BCV/MDS plot: *.<genes|isoforms>.count.<build>.BCV-MDS.pdf
+* MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
+
+
+## 4. Utility scripts in RumBall
+    
+---
+### csv2xlsx.pl
+merge csv/tsv files to a single xlsx file
+
+    csv2xlsx.pl -i file1.tsv -n tabname1 [-i file2.tsv -n tabname2 ...] -o output.xlsx
+    Options:
+          -d --delim=<str>: delimiter of input files (default:\t)
+
+---
