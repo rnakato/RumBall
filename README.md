@@ -208,7 +208,7 @@ In case that it is not clear whether the input samples are stranded or not, use 
 
     check_stranded.sh [human|mouse] <fastq>
 
-This command runs bowtie to map reads onto the NCBI allrna. If the samples are reverse-straned, the most reads will be mapped to the reverse strand.
+This command runs bowtie to map reads onto the mRNA sequences obtained from NCBI. If the samples are reverse-straned, the most reads will be mapped to the reverse strand.
 If fifty-fifty, the samples are unstranded.
 
            
