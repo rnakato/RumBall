@@ -35,9 +35,10 @@ Generate the database (genome, gene annotation and index file):
     # make index for STAR-RSEM 
     build-index.sh rsem-star $build $Ddir
 
-Command example:
+Command example (assuming the comparison of "Ctrl" and "siCTCF" with two replicates):
 
     # mapping reads by STAR-RSEM 
+    # output directory is "star/"
     for prefix in Ctrl1 Ctrl2 siCTCF1 siCTCF2; do
        fq1=fastq/${prefix}_1.fq.gz
        fq2=fastq/${prefix}_2.fq.gz
@@ -56,13 +57,20 @@ Command example:
 
 ## 3. Commands in RumBall
 
-### 3.1 star.sh: execute STAR and RSEM
+### star.sh: execute STAR and RSEM
 
-#### Usage
-
-    star.sh <single|paired> <output prefix> <fastq> <Ensembl|UCSC> <build> <--forward-prob>
-
-For `--forward-prob`, supply 0 for stranded RNA-seq and 0.5 for unstranded RNA-seq.
+    star.sh [Options] <single|paired> <prefix> <fastq> <Ddir> <strandedness>
+       <single|paired>: single-end or paired-end reads
+       <prefix>: prefix of output files
+       <fastq>: fastq files (should be quoted if paired-end)
+       <Ddir>: directory of index and gtf files
+       <strandedness [none|forward|reverse]>: strandedness of input fastq files ("reverse" in the most cases)
+      Options:
+          -d outputdir: Output directory (default: "star/")
+          -p ncore: number of CPUs (default: 12, note that large number (e.g., 64) may cause an error in STAR)
+       Example:
+          star.sh single HeLa_rep1 HeLa_rep1.fastq.gz Ensembl-GRCh38 reverse
+          star.sh paired HeLa_rep1 "HeLa_rep1_1.fastq.gz HeLa_rep1_2.fastq.gz" Ensembl-GRCh38 reverse
 
 Output:
 * mapfile for a genome (star/*.Aligned.sortedByCoord.out.bam)
@@ -77,32 +85,53 @@ log example:
 ----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----
 |29446992	|27430449	|93.15	|1012811	|3.44	|5253	|0.02	|0%|	3%	|0%	|0	|0	|18960488	|18725703	|98.76	|30590	|0.16	|0.19	|0.01	|0.01|
 
-### 3.2 rsem_merge.sh: merge expression data of multiple samples
+### rsem_merge.sh: merge expression data of multiple samples
 
-    rsem_merge.sh <files> <output> <Ddir> <strings for removal>
+    rsem_merge.sh [-s <strings for sed>] <inputdirs> <prefix> <Ddir>
+       <inputdirs>: directories of samples (should be quoted)
+       <prefix>: prefix of output files
+       <Ddir>: directory of index and gtf files
+       Options:
+          -s <strings for sed>: specify strings that you want to remove from sample labels (e.g., "HeLa_", multiple strings should be separated by spaces)
+       Example:
+          rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/HEK293
 
 Output:
 * gene expression data: *.genes.<TPM|count>.<build>.txt
 * transcript expression data: *.isoforms.<TPM|count>.<build>.txt
 * merged xlsx file: *.<build>.xlsx 
 
-### 3.3 edgeR.sh: differential expression analysis for two groups by edgeR
+### edgeR.sh: differential expression analysis for two groups by edgeR
 
-    edgeR.sh <Matrix> <num of reps> <groupname>
+    edgeR.sh [Options] <inputfile> <num of reps> <groupname>
+       <inputfile>: prefix of input matrix file
+       <Ddir>: directory of gene annotation files
+       <num of reps>: number of replicates (quated by ":")
+       <group name>: labels of two groups compared (quated by ":")
+       Options:
+          -t <FDR>: FDR threshould (default: 0.05)
+      Example:
+       edgeR.sh Matrix 2:2 WT:KD
 
 Output
 * merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
 * BCV/MDS plot: *.<genes|isoforms>.count.<build>.BCV-MDS.pdf
 * MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
 
-### 3.4 DESeq2.sh: differential expression analysis for two groups by DESeq2
+### DESeq2.sh: differential expression analysis for two groups by DESeq2
 
-    DESeq2.sh [-a] <Matrix><num of reps> <groupname>
+    DESeq2.sh [Options] <inputfile> <num of reps> <groupname>
+       <inputfile>: prefix of input matrix file
+       <Ddir>: directory of gene annotation files
+           <num of reps>: number of replicates (quated by ":")
+       <group name>: labels of two groups compared (quated by ":")
+       Options:
+          -t <FDR>: FDR threshould (default: 0.05)
+       Example:
+          DESeq2.sh star/Matrix 2:2 WT:KD
 
 Output
 * merged xlsx: *.<genes|isoforms>.count.<build>.edgeR.xlsx
-* BCV/MDS plot: *.<genes|isoforms>.count.<build>.BCV-MDS.pdf
-* MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
 
 
 ### 3.5 Utility scripts in RumBall
