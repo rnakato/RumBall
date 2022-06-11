@@ -53,18 +53,6 @@ COPY bowtie2-2.4.5-linux-x86_64.zip bowtie2-2.4.5-linux-x86_64.zip
 RUN unzip bowtie2-2.4.5-linux-x86_64.zip \
     && rm bowtie2-2.4.5-linux-x86_64.zip
 
-# Samtools 1.15.1
-#COPY samtools-1.15.1.tar.bz2 samtools-1.15.1.tar.bz2
-#RUN tar xvfj samtools-1.15.1.tar.bz2 \
-#    && cd samtools-1.15.1 \
-#    && ./configure \
-#    && make && make install \
-#    && rm /opt/samtools-1.15.1.tar.bz2
-
-#RUN git clone --recursive https://github.com/rnakato/ChIPseqTools.git \
-#    && cd ChIPseqTools \
-#    && make
-
 RUN wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz \
     && tar xzvf 2.7.10a.tar.gz \
     && cd STAR-2.7.10a/source \
