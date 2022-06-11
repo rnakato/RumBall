@@ -2,13 +2,21 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname <files> <output> <Ddir> <strings for sed>" 1>&2
+    echo "$cmdname [-s <strings for sed>] <inputdirs> <prefix> <Ddir>" 1>&2
+    echo '   <inputdirs>: directories of samples (should be quoted)' 1>&2
+    echo '   <prefix>: prefix of output files' 1>&2
+    echo '   <Ddir>: directory of index and gtf files' 1>&2
+    echo '   Options:' 1>&2
+    echo '      -s <strings for sed>: specify strings that you want to remove from sample labels (e.g., "HeLa_", multiple strings should be separated by spaces)' 1>&2
+    echo "   Example:" 1>&2
+    echo "      $cmdname \"star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2\" Matrix_edgeR/HEK293 $Ddir" 1>&2
 }
 
-while getopts n option
+str_sed=""
+while getopts s: option
 do
     case ${option} in
-        n) name=1;;
+        s) str_sed=${OPTARG};;
         *)
             usage
             exit 1
@@ -17,7 +25,7 @@ do
 done
 shift $((OPTIND - 1))
 
-if [ $# -ne 4 ]; then
+if [ $# -ne 3 ]; then
   usage
   exit 1
 fi
@@ -25,7 +33,6 @@ fi
 files=$1
 outname=$2
 Ddir=$3
-str_sed=$4
 
 gtf=$Ddir/gtf_chrUCSC/chr.gtf
 
@@ -49,21 +56,7 @@ for str in genes isoforms; do
     done
 done
 
-# isoformのファイルにgene idを追加
-#if test $db = "Ensembl"; then
-#    for tp in count TPM
-#    do
-#        head=$outname.isoforms.$tp
-#        echo "add geneID to $head.txt..."
-        #    add_genename_fromgtf.pl $head.txt $gtf > $head.addname.txt
-#        convert_genename_fromgtf.pl --type=isoforms -f $head.txt -g $gtf --nline=0 > $head.addname.txt
-
-#        mv $head.addname.txt $head.txt
-#    done
-#fi
-
-# IDから遺伝子情報を追加
-
+# Add gene annotation from geneid
 for str in genes isoforms; do
     if test $str = "genes"; then
 	nline=0
@@ -81,7 +74,7 @@ for str in genes isoforms; do
     done
 done
 
-# xlsxファイル作成
+# generate xlsx file
 echo "generate xlsx..."
 s=""
 for str in genes isoforms; do

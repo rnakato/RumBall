@@ -10,7 +10,8 @@
 # kallisto v0.46.1
 # sleuth 0.30.0
 
-FROM rnakato/r_python:20.04
+FROM rnakato/database:Ensembl106
+#FROM rnakato/r_python:20.04
 MAINTAINER Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
 
 WORKDIR /opt
@@ -53,16 +54,16 @@ RUN unzip bowtie2-2.4.5-linux-x86_64.zip \
     && rm bowtie2-2.4.5-linux-x86_64.zip
 
 # Samtools 1.15.1
-COPY samtools-1.15.1.tar.bz2 samtools-1.15.1.tar.bz2
-RUN tar xvfj samtools-1.15.1.tar.bz2 \
-    && cd samtools-1.15.1 \
-    && ./configure \
-    && make && make install \
-    && rm /opt/samtools-1.15.1.tar.bz2
+#COPY samtools-1.15.1.tar.bz2 samtools-1.15.1.tar.bz2
+#RUN tar xvfj samtools-1.15.1.tar.bz2 \
+#    && cd samtools-1.15.1 \
+#    && ./configure \
+#    && make && make install \
+#    && rm /opt/samtools-1.15.1.tar.bz2
 
-RUN git clone --recursive https://github.com/rnakato/ChIPseqTools.git \
-    && cd ChIPseqTools \
-    && make
+#RUN git clone --recursive https://github.com/rnakato/ChIPseqTools.git \
+#    && cd ChIPseqTools \
+#    && make
 
 RUN wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz \
     && tar xzvf 2.7.10a.tar.gz \

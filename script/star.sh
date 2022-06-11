@@ -2,8 +2,18 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname [-d outputdir] [-p ncore] <single|paired> <output prefix> <fastq> <Ddir> <--strandedness [none|forward|reverse]>" 1>&2
-    echo "Example: star.sh single HeLa_rep1 HeLa_rep1.fastq.gz /work/Database/Database_fromDocker/Ensembl-GRCh38 reverse" 1>&2
+    echo "$cmdname [Options] <single|paired> <prefix> <fastq> <Ddir> <strandedness>" 1>&2
+    echo '   <single|paired>: single-end or paired-end reads' 1>&2
+    echo '   <prefix>: prefix of output files' 1>&2
+    echo '   <fastq>: fastq files (should be quoted if paired-end)' 1>&2
+    echo '   <Ddir>: directory of index and gtf files' 1>&2
+    echo '   <strandedness [none|forward|reverse]>: strandedness of input fastq files ("reverse" in the most cases)' 1>&2
+    echo '   Options:' 1>&2
+    echo '      -d outputdir: Output directory (default: "star/")' 1>&2
+    echo '      -p ncore: number of CPUs (default: 12, note that large number (e.g., 64) may cause an error in STAR)' 1>&2
+    echo "   Example:" 1>&2
+    echo "      $cmdname single HeLa_rep1 HeLa_rep1.fastq.gz Ensembl-GRCh38 reverse" 1>&2
+    echo "      $cmdname paired HeLa_rep1 \"HeLa_rep1_1.fastq.gz HeLa_rep1_2.fastq.gz\" Ensembl-GRCh38 reverse" 1>&2
 }
 
 odir=star

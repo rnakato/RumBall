@@ -2,15 +2,15 @@
 cmdname=`basename $0`
 function usage()
 {
-    echo "$cmdname [Options] <Matrix> <num of reps> <groupname>" 1>&2
-    echo '   <Matrix>: input matrix file' 1>&2
+    echo "$cmdname [Options] <inputfile> <num of reps> <groupname>" 1>&2
+    echo '   <inputfile>: prefix of input matrix file' 1>&2
     echo '   <Ddir>: directory of gene annotation files' 1>&2
     echo '   <num of reps>: number of replicates (quated by ":")' 1>&2
     echo '   <group name>: labels of two groups compared (quated by ":")' 1>&2
     echo '   Options:' 1>&2
     echo '      -t <FDR>: FDR threshould (default: 0.05)' 1>&2
     echo "  Example:" 1>&2
-    echo "  $cmdname Matrix GRCh38 2:2 WT:KD 0.05" 1>&2
+    echo "   $cmdname Matrix 2:2 WT:KD" 1>&2
 }
 
 p=0.05
