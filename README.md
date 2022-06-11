@@ -1,8 +1,8 @@
 # RumBall: Docker image for RNA-seq analysis
 
-Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumball).
-
 ## 1. Installation
+
+Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumball).
 
 ### 1.1 Docker 
 To use docker command, type:
@@ -105,14 +105,26 @@ Output
 * MA plot:  *.<genes|isoforms>.count.<build>.MAplot.pdf
 
 
-## 4. Utility scripts in RumBall
+### 3.5 Utility scripts in RumBall
     
----
-### csv2xlsx.pl
+#### csv2xlsx.pl
 merge csv/tsv files to a single xlsx file
 
     csv2xlsx.pl -i file1.tsv -n tabname1 [-i file2.tsv -n tabname2 ...] -o output.xlsx
     Options:
           -d --delim=<str>: delimiter of input files (default:\t)
 
----
+## 4. Build Docker image from Dockerfile
+
+First clone and move to the repository
+
+    git clone https://github.com/rnakato/RumBall.git
+    cd RumBall
+
+Then type:
+
+    docker build -t <account>/rumball
+
+## 5. Contact
+
+Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
