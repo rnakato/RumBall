@@ -53,4 +53,4 @@ ex "mkdir -p $odir/log"
 log=$odir/log/$prefix.txt
 
 index=$Ddir/kallisto-indexes/genome
-ex " kallisto quant -i $index $strand -t $ncore -b 100 -o $odir/$prefix $fastq > $log"
+ex " kallisto quant -i $index $strand -t $ncore -b 100 -o $odir/$prefix $fastq"

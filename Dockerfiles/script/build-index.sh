@@ -58,6 +58,7 @@ else
 fi
 
 gtf="$odir/gtf_chrUCSC/chr.gtf"
+rnafa="$odir/rna.fa"
 mkdir -p $odir/log
 log="$odir/log/build-index.$program.$name.log"
 
@@ -82,12 +83,12 @@ elif test $program = "salmon" ; then
     indexdir=$odir/salmon-indexes/
     mkdir -p $indexdir
     salmon --version > $log 2>&1
-    ex "salmon index -p $ncore -t $genome -i $indexdir/$name" >> $log 2>&1
+    ex "salmon index -p $ncore -t $rnafa -i $indexdir/$name" >> $log 2>&1
 elif test $program = "kallisto" ; then
     indexdir=$odir/kallisto-indexes
     mkdir -p $indexdir
     kallisto version > $log 2>&1
-    ex "kallisto index -i $indexdir/$name $genome" >> $log 2>&1
+    ex "kallisto index -i $indexdir/$name $rnafa" >> $log 2>&1
 elif test $program = "hisat2"; then
     indexdir=$odir/hisat2-indexes
     mkdir -p $indexdir

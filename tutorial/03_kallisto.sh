@@ -13,8 +13,6 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-db=Ensembl
-build=GRCh38
 sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0.sif"
 Ddir=/work/Database/Database_fromDocker/Ensembl-GRCh38/
 
@@ -27,3 +25,11 @@ do
     index=$Ddir/kallisto-indexes/genome
     $sing kallisto.sh -p 64 ${NAME[$i]} "$fq1 $fq2" $Ddir reverse
 done
+
+s=""
+for ((i=0; i<${#ID[@]}; i++))
+do
+    s="$s kallisto/${NAME[$i]}/abundance.h5"
+done
+
+$sing kallisto_merge.sh "$s" kallisto/Matrix $Ddir

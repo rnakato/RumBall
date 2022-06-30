@@ -11,16 +11,15 @@
 # sleuth 0.30.0
 
 FROM rnakato/database:Ensembl106
-#FROM rnakato/r_python:20.04
-MAINTAINER Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>
+LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 WORKDIR /opt
 
 ENV DEBIAN_FRONTEND=noninteractive
 SHELL ["/bin/bash", "-c"]
 
-RUN apt update \
-    && apt install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
     build-essential \
     libboost-all-dev \
     libbz2-dev \
@@ -33,7 +32,7 @@ RUN apt update \
     cmake \
     curl \
     pigz \
-    && apt clean \
+    && apt-get clean \
     && rm -rf /var/lib/apt/list
 
 # BWA 0.7.17
@@ -53,7 +52,7 @@ COPY bowtie2-2.4.5-linux-x86_64.zip bowtie2-2.4.5-linux-x86_64.zip
 RUN unzip bowtie2-2.4.5-linux-x86_64.zip \
     && rm bowtie2-2.4.5-linux-x86_64.zip
 
-RUN wget https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz \
+RUN wget --progress=dot:giga https://github.com/alexdobin/STAR/archive/2.7.10a.tar.gz \
     && tar xzvf 2.7.10a.tar.gz \
     && cd STAR-2.7.10a/source \
     && make \
@@ -63,27 +62,27 @@ RUN curl -s https://cloud.biohpc.swmed.edu/index.php/s/oTtGWbWjaxsQ2Ho/download 
     && unzip hisat2-2.2.1-Linux_x86_64.zip \
     && rm hisat2-2.2.1-Linux_x86_64.zip
 
-RUN wget http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.2.1.Linux_x86_64.tar.gz \
+RUN wget --progress=dot:giga http://ccb.jhu.edu/software/stringtie/dl/stringtie-2.2.1.Linux_x86_64.tar.gz \
     && tar zxvf stringtie-2.2.1.Linux_x86_64.tar.gz \
     && rm /opt/stringtie-2.2.1.Linux_x86_64.tar.gz
 
-RUN wget https://github.com/deweylab/RSEM/archive/refs/tags/v1.3.3.tar.gz \
+RUN wget --progress=dot:giga https://github.com/deweylab/RSEM/archive/refs/tags/v1.3.3.tar.gz \
     && tar zxvf v1.3.3.tar.gz \
     && cd RSEM-1.3.3/ \
     && make \
     && rm /opt/v1.3.3.tar.gz
 
-RUN wget https://github.com/pachterlab/kallisto/releases/download/v0.46.1/kallisto_linux-v0.46.1.tar.gz \
+RUN wget --progress=dot:giga https://github.com/pachterlab/kallisto/releases/download/v0.46.1/kallisto_linux-v0.46.1.tar.gz \
     && tar zxvf kallisto_linux-v0.46.1.tar.gz \
     && R -e "devtools::install_github('pachterlab/sleuth')" \
     && rm kallisto_linux-v0.46.1.tar.gz
 
-RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v1.8.0/salmon-1.8.0_linux_x86_64.tar.gz \
+RUN wget --progress=dot:giga https://github.com/COMBINE-lab/salmon/releases/download/v1.8.0/salmon-1.8.0_linux_x86_64.tar.gz \
     && tar zxvf salmon-1.8.0_linux_x86_64.tar.gz \
     && rm salmon-1.8.0_linux_x86_64.tar.gz
 
-RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq'))"
-RUN R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
+RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq', 'GenomicFeatures'))" \
+    && R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
 
 COPY NCBI NCBI
 COPY script script
