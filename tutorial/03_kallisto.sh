@@ -17,7 +17,7 @@ sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0
 Ddir=/work/Database/Database_fromDocker/Ensembl-GRCh38/
 
 mkdir -p log kallisto
-for ((i=0; i<${#ID[@]}; i++))
+for i in #((i=0; i<${#ID[@]}; i++))
 do
     echo ${NAME[$i]}
     fq1=fastq/${ID[$i]}_1.fastq.gz
@@ -29,7 +29,7 @@ done
 s=""
 for ((i=0; i<${#ID[@]}; i++))
 do
-    s="$s kallisto/${NAME[$i]}/abundance.h5"
+    s="$s kallisto/${NAME[$i]}/abundance.tsv"
 done
 
 $sing kallisto_merge.sh "$s" kallisto/Matrix $Ddir
