@@ -48,7 +48,7 @@ Command example (assuming the comparison of "Ctrl" and "siCTCF" with two replica
     # For DESeq2
     mkdir -p Matrix_deseq2
     rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_deseq2/siCTCF $Ddir "XXX"
-    edgeR.sh Matrix_deseq2/siCTCF 2:2 Control:siCTCF
+    DESeq2.sh Matrix_deseq2/siCTCF 2:2 Control:siCTCF
     
     # For edgeR
     mkdir -p Matrix_edgeR
