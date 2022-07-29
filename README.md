@@ -25,15 +25,44 @@ This command mounts `/work` directory.
 
 ## 2. Tutorial
 
-Generate the database (genome, gene annotation and index file):
+This tutorial assumes using singularity image. So please add `singularity exec rumball.sif` before the commands.
+
+### 2.1 Get data
+
+Here we use mRNA-seq data for HEK293 cells:
+
+    mkdir -p fastq
+    for id in SRR710092 SRR710093 SRR710094 SRR710095
+    do
+        fastq-dump --gzip $id --split-files -O fastq
+    done
+
+Then generate the reference dataset (genome, gene annotation and index file):
 
     build=GRCh38  # specify the build (Ensembl) that you need
     Ddir=Ensembl-$build/
+    ncore=24  # number of CPUs 
     mkdir -p log
     # Download genome and gtf
     download_genomedata.sh $build $Ddir 2>&1 | tee log/Ensembl-$build
     # make index for STAR-RSEM 
-    build-index.sh rsem-star $build $Ddir
+    build-index.sh -p $ncore rsem-star $build $Ddir
+
+## 2.1 Check Strandedness
+
+If the strandedness of RNA-seq data is not clear, you can briefly check by this command: 
+
+    $ check_stranded.sh human fastq/SRR710092_1.fastq.gz
+    # reads processed: 56830606
+    # reads with at least one alignment: 27787970 (48.90%)
+    # reads that failed to align: 29042636 (51.10%)
+    Reported 27787970 alignments
+     540264 +
+    27247706 -
+
+In this example, majority of reads were mapped on - strand, so this RNA-seq is stranded.
+
+## 2.2 
 
 Command example (assuming the comparison of "Ctrl" and "siCTCF" with two replicates):
 
@@ -54,6 +83,10 @@ Command example (assuming the comparison of "Ctrl" and "siCTCF" with two replica
     mkdir -p Matrix_edgeR
     rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/siCTCF $Ddir "XXX"
     edgeR.sh Matrix_edgeR/siCTCF 2:2 Control:siCTCF
+
+## 2.3 RumBall with kallisto
+
+   build-index.sh -p $ncore kallisto $build $Ddir
 
 ## 3. Commands in RumBall
 
