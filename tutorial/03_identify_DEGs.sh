@@ -1,4 +1,4 @@
-Ddir=/work/Database/Database_fromDocker/Ensembl-GRCh38/
+Ddir=Ensembl-GRCh38/
 
 sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0.sif"
 
