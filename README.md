@@ -67,14 +67,15 @@ In this example, majority of reads were mapped on - strand, so this RNA-seq is s
 
 ### 2.2 Mapping by STAR
 
-RumBall can allow STAR, bowtie2, kallisto and salmon for mapping. Here we use STAR.
+**RumBall** can allow STAR, bowtie2, kallisto and salmon for mapping. Here we use STAR.
 The reads are then parsed by RSEM:
 
+    Ddir=Ensembl-GRCh38
     mkdir -p log
-    star.sh paired HEK293_Control_rep1 fastq/SRR710092_1.fastq.gz fastq/SRR710092_2.fastq.gz Ensembl-GRCh38/ reverse > log/HEK293_Control_rep1.star.sh
-    star.sh paired HEK293_Control_rep2 fastq/SRR710093_1.fastq.gz fastq/SRR710093_2.fastq.gz Ensembl-GRCh38/ reverse > log/HEK293_Control_rep2.star.sh
-    star.sh paired HEK293_siCTCF_rep1 fastq/SRR710094_1.fastq.gz fastq/SRR710094_2.fastq.gz Ensembl-GRCh38/ reverse > log/HEK293_siCTCF_rep1.star.sh
-    star.sh paired HEK293_siCTCF_rep2 fastq/SRR710095_1.fastq.gz fastq/SRR710095_2.fastq.gz Ensembl-GRCh38/ reverse > log/HEK293_siCTCF_rep2.star.sh
+    star.sh paired HEK293_Control_rep1 fastq/SRR710092_1.fastq.gz fastq/SRR710092_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_Control_rep1
+    star.sh paired HEK293_Control_rep2 fastq/SRR710093_1.fastq.gz fastq/SRR710093_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_Control_rep2
+    star.sh paired HEK293_siCTCF_rep1  fastq/SRR710094_1.fastq.gz fastq/SRR710094_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_siCTCF_rep1
+    star.sh paired HEK293_siCTCF_rep2  fastq/SRR710095_1.fastq.gz fastq/SRR710095_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_siCTCF_rep2
  
  Of course you can also use a shell loop:
  
@@ -106,10 +107,12 @@ The reads are then parsed by RSEM:
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir
     edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF
 
-### 2.4 Analysis with RSEM-bowtie2
+### 2.4 Gene onthology analysis
+
+### 2.5 Analysis with RSEM-bowtie2
 
 STAR requires large memory for mapping. Bowtie2 requires less memory with comparable mapping accuracy. 
-Here we show the example using Bowtie2.:
+Here we show the example using Bowtie2.
 
     # make index for bowtie2-RSEM
     build=GRCh38  # specify the build (Ensembl) that you need
