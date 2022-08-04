@@ -51,7 +51,7 @@ Then download and generate the reference dataset including genome, gene annotati
     ncore=12 # number of CPUs 
     build-index.sh -p $ncore rsem-star $build $Ddir
     
-## 2.1 Check Strandedness
+### 2.1 Check Strandedness
 
 If the strandedness of RNA-seq data is not clear, you can briefly check by this command: 
 
@@ -65,7 +65,7 @@ If the strandedness of RNA-seq data is not clear, you can briefly check by this 
 
 In this example, majority of reads were mapped on - strand, so this RNA-seq is stranded.
 
-## 2.2 Mapping by STAR
+### 2.2 Mapping by STAR
 
 RumBall can allow STAR, bowtie2, kallisto and salmon for mapping. Here we use STAR.
 The reads are then parsed by RSEM:
@@ -90,7 +90,7 @@ The reads are then parsed by RSEM:
         star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.star.sh
     done
  
- ## 2.3 Differential analysis 
+### 2.3 Differential analysis 
  
  `rsem_merge.sh` merges the RSEM output of all samples. The generated matrix can be applied to DESeq2 or edgeR to identify differentially expressed genes between two groups:
 
@@ -106,7 +106,7 @@ The reads are then parsed by RSEM:
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir
     edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF
 
-## 2.4 Analysis with RSEM-bowtie2
+### 2.4 Analysis with RSEM-bowtie2
 
 STAR requires large memory for mapping. Bowtie2 requires less memory with comparable mapping accuracy. 
 Here we show the example using Bowtie2.:
