@@ -37,17 +37,20 @@ Here we use four mRNA-seq samples of HEK293 cells (siCTCF and control from [Zuin
         fastq-dump --gzip $id --split-files -O fastq
     done
 
-Then generate the reference dataset (genome, gene annotation and index file):
+Then download and generate the reference dataset including genome, gene annotation and index files.
+**RumBall** contains several scripts to do that:
 
     build=GRCh38  # specify the build (Ensembl) that you need
     Ddir=Ensembl-$build/
-    ncore=24  # number of CPUs 
     mkdir -p log
+    
     # Download genome and gtf
     download_genomedata.sh $build $Ddir 2>&1 | tee log/Ensembl-$build
+    
     # make index for STAR-RSEM 
+    ncore=12 # number of CPUs 
     build-index.sh -p $ncore rsem-star $build $Ddir
-
+    
 ## 2.1 Check Strandedness
 
 If the strandedness of RNA-seq data is not clear, you can briefly check by this command: 
@@ -102,6 +105,18 @@ The reads are then parsed by RSEM:
     mkdir -p Matrix_edgeR
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir
     edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF
+
+## 2.4 Analysis with RSEM-bowtie2
+
+STAR requires large memory for mapping. Bowtie2 requires less memory with comparable mapping accuracy. 
+Here we show the example using Bowtie2.:
+
+    # make index for bowtie2-RSEM
+    build=GRCh38  # specify the build (Ensembl) that you need
+    Ddir=Ensembl-$build/
+    ncore=12  # number of CPUs 
+    build-index.sh -p $ncore rsem-bowtie2 $build $Ddir
+
 
 ## 3. Commands in RumBall
 
