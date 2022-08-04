@@ -29,7 +29,7 @@ This tutorial assumes using singularity image. So please add `singularity exec r
 
 ### 2.1 Get data
 
-Here we use four mRNA-seq samples for HEK293 cells (siCTCF and control from [Zuin et al., PNAS, 2014](https://pubmed.ncbi.nlm.nih.gov/24335803/)):
+Here we use four mRNA-seq samples of HEK293 cells (siCTCF and control from [Zuin et al., PNAS, 2014](https://pubmed.ncbi.nlm.nih.gov/24335803/)):
 
     mkdir -p fastq
     for id in SRR710092 SRR710093 SRR710094 SRR710095
