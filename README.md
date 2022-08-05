@@ -23,6 +23,10 @@ Singularity mounts the current directory automatically. If you access the files 
     
 This command mounts `/work` directory.
 
+## Usage
+
+See [RumBall Manual](https://rumball.readthedocs.io/en/latest/)
+
 ## 2. Tutorial
 
 This tutorial assumes using singularity image. So please add `singularity exec rumball.sif` before the commands.
