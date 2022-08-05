@@ -3,7 +3,7 @@ Installation
 
 Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumball>`_.
 
-RUN
+Docker
 ++++++++++++++
 
 To use docker command, type:
@@ -15,6 +15,9 @@ To use docker command, type:
    # execute a command
    docker run -it --rm rnakato/rumball <command>
    
+Singularity
++++++++++++++++++++++++
+
 Singularity can also be used to execute the docker image:
 
 .. code-block:: bash
