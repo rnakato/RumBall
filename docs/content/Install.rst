@@ -3,6 +3,16 @@ Installation
 
 Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumball>`_.
 
+**RumBall** internally uses the tools including:
+
+- Bowtie2 version 2.4.5
+- BWA version 0.7.17
+- MACS2 version 2.2.6
+- SAMtools version 1.15.1
+- DROMPA+ version 1.15.1
+- SSP version 1.2.5
+
+
 Docker
 ++++++++++++++
 

@@ -55,7 +55,7 @@ If the strandedness of RNA-seq data is not clear, you can briefly check by ``che
 In this example, majority of reads were mapped on - strand, so this RNA-seq is stranded.
 
 
-Mapping by STAR
+Mapping reads by STAR
 --------------------------------------------------
 
 **RumBall** allows STAR, bowtie2, kallisto and salmon for mapping. Here we use STAR. The reads are then parsed by RSEM:
