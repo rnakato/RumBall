@@ -24,5 +24,5 @@ do
     echo ${NAME[$i]}
     fq1=fastq/${ID[$i]}_1.fastq.gz
     fq2=fastq/${ID[$i]}_2.fastq.gz
-    $sing star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.star.sh
+    $sing star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/star.sh.${NAME[$i]}
 done
