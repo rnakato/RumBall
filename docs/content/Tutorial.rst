@@ -11,11 +11,6 @@ Get data
 
 Here we use four mRNA-seq samples of HEK293 cells (siCTCF and control from `Zuin et al., PNAS, 2014 <https://pubmed.ncbi.nlm.nih.gov/24335803/>`_):
 
-These scripts assume that the fastq files are stored in ``fastq/$cell`` (e.g., ``fastq/Control_1``).
-The outputs are stored in ``JuicerResults/$cell``.
-
-The whole commands using the Singularity image (``rnakato_juicer.sif``) are as follows:
-
 .. code-block:: bash
 
     mkdir -p fastq
