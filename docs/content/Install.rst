@@ -5,12 +5,15 @@ Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumbal
 
 **RumBall** internally uses the tools including:
 
-- Bowtie2 version 2.4.5
-- BWA version 0.7.17
-- MACS2 version 2.2.6
-- SAMtools version 1.15.1
-- DROMPA+ version 1.15.1
-- SSP version 1.2.5
+- STAR v2.7.10a
+- RSEM v1.3.3
+- salmon v1.7.0
+- edgeR 3.28.0
+- hisat v2.2.1
+- stringtie v2.2.1
+- ballgown 2.18.0
+- kallisto v0.46.1
+- sleuth 0.30.0
 
 
 Docker
