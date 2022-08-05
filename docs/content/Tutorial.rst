@@ -4,7 +4,7 @@ Tutorial
 This tutorial assumes using singularity image. 
 Please add ``singularity exec rumball.sif`` before the commands.
 
-The scripts are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`.
+The scripts are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
 
 Get data
 ------------------------
