@@ -5,15 +5,16 @@ Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumbal
 
 **RumBall** internally uses the tools including:
 
-- STAR v2.7.10a
-- RSEM v1.3.3
-- salmon v1.7.0
-- edgeR 3.28.0
-- hisat v2.2.1
-- stringtie v2.2.1
-- ballgown 2.18.0
-- kallisto v0.46.1
-- sleuth 0.30.0
+- STAR version 2.7.10a
+- RSEM version 1.3.3
+- salmon version 1.7.0
+- edgeR version 3.38.1
+- DESeq2 version 1.36.0
+- hisat version 2.2.1
+- stringtie version 2.2.1
+- ballgown version 2.18.0
+- kallisto version 0.46.1
+- sleuth version 0.30.0
 
 
 Docker
