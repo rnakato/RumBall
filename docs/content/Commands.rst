@@ -33,22 +33,29 @@ build-index.sh: build index for RNA-seq
 provided in ``download_genomedata.sh``. 
 The ``<odir>`` is used in the **RumBall** commands below.
 
-
 .. code-block:: bash
 
-    build-index.sh [-p ncore] -a <program> <build> <odir>
-      -a: use genome_full.fa
-      program: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon
-      build (only for hisat2):
+    build-index.sh [Options] <program> <build> <odir>
+      <program>: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon
+      <build> (only for hisat2):
              human (GRCh38, GRCh37)
              mouse (GRCm39, GRCm38)
              rat (mRatBN7.2)
              fly (BDGP6)
              zebrafish (GRCz11)
-                 C. elegans (WBcel235)
+             C. elegans (WBcel235)
              S. serevisiae (R64-1-1)
+      <odir>: outout directory
+       Options:
+          -a: consider all scaffolds (default: chromosomes only)
+          -p: number of CPUs (default: 4)
       Example:
-             build-index.sh rsem-star GRCh38 Ensembl-GRCh38
+             build-index.sh -p 12 rsem-star GRCh38 Ensembl-GRCh38
+
+When specifying ``hisat2``, ``build-index.sh`` downloads prebuilt indexes instead of building them to reduce the computational time.
+Therefore ``build-index.sh`` allows the genome build shown in the help abobe for hisat2, while any genome data is acceptable for the other programs.
+
+In default, ``build-index.sh`` considers chromosomes only. If you want to include all scaffolds, add ``-a`` option.
 
 star.sh: execute STAR and RSEM
 ------------------------------------------------
