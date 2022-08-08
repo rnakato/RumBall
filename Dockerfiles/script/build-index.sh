@@ -52,8 +52,8 @@ if test $full = 1 ; then
     gt="$odir/genometable_full.txt"
     name=genome_full
 else
-    genome="$odir/genome_full.fa"
-    gt="$odir/genometable_full.txt"
+    genome="$odir/genome.fa"
+    gt="$odir/genometable.txt"
     name=genome
 fi
 
