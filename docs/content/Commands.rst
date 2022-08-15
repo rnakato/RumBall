@@ -29,8 +29,8 @@ download_genomedata.sh
 build-index.sh: build index for RNA-seq
 -----------------------------------------------------
 
-``build-index.sh`` builds index files of the tools specified. ``<odir>`` should be the same with ``<outputdir>`` directory 
-provided in ``download_genomedata.sh``. 
+``build-index.sh`` builds index files of the tools specified. ``<odir>`` should be the same with ``<outputdir>`` directory
+provided in ``download_genomedata.sh``.
 The ``<odir>`` is used in the **RumBall** commands below.
 
 .. code-block:: bash
@@ -110,7 +110,7 @@ rsem_merge.sh: merge expression data of multiple samples
 
     - gene expression data: \*.genes.<TPM|count>.txt
     - transcript expression data: \*.isoforms.<TPM|count>.txt
-    - merged xlsx file: \*.xlsx 
+    - merged xlsx file: \*.xlsx
 
 
 DESeq2.sh: differential expression analysis for two groups by DESeq2
@@ -145,7 +145,7 @@ DESeq2.sh: differential expression analysis for two groups by DESeq2
     - Matrix.\*.count.DESeq2.HighlyExpressedGenes.pdf ... Heatmap of top-ranked DEGs
     - Matrix.\*.count.DESeq2.sampleClustering.pdf ... Clustering results of sample-wide comparison
     - Matrix.\*.count.DESeq2.samplePCA.pdf ... PCA plot of samples based on gene expression level
-    
+
 
 edgeR.sh: differential expression analysis for two groups by edgeR
 -----------------------------------------------------------------------------------------------
@@ -180,10 +180,16 @@ edgeR.sh: differential expression analysis for two groups by edgeR
     - Matrix.\*.count.samplesCluster.inDEGs.pdf ... Hierarchical tree of samples obtained the heatmap above
     - Matrix.\*.count.edgeR.Volcano.pdf ... Volcano plot of all genes. Top-ranked genes are labeled.
     - Matrix.\*.count.samplePCA.pdf ... PCA plot of samples based on gene expression level
-          
+
+
+これまで遺伝子フィルタリングでは「全てのサンプルで発現が0の遺伝子」をフィルタしていましたが、これをedgeRで提供されている filterByExpr 関数に変更しました。これにより、今までよりもフィルタされる遺伝子の数が増えます。FDRの値もそれに伴い変化します（FDRがnon-significant側に移動）。
+FDR閾値に加えてlog2foldchangeでもフィルタしたい場合のオプション -lfcthre を追加しました。 -lfcthre=1 とするとグループ間で2倍以上（厳密ではない）変動している遺伝子のみをDEGとして出力するようになります。
+同定されたDEG数が0の時にもDEGヒートマップを描画するためにエラーで終了してしまっていましたが、DEG数が0の時はこれらのプロットを描画しないように修正しました。
+
+
 check_stranded.sh
 ------------------------------------------------
-           
+
 In case that it is not clear whether the input samples are stranded or not, use ``check_stranded.sh`` for the quick check.
 
 
@@ -194,7 +200,7 @@ In case that it is not clear whether the input samples are stranded or not, use 
 This command runs bowtie to map reads onto the mRNA sequences obtained from NCBI. If the samples are reverse-straned, the most reads will be mapped to the reverse strand.
 If fifty-fifty, the samples are unstranded.
 
-           
+
 csv2xlsx.pl
 ------------------------------------------------
 
