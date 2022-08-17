@@ -1,12 +1,10 @@
 #!/bin/bash
 cmdname=`basename $0`
-pwd=`pwd`
 function usage()
 {
-    echo "$cmdname [-p ncore] -a <program> <build> <odir>" 1>&2
-    echo "  -a: use genome_full.fa" 1>&2
-    echo "  program: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon" 1>&2
-    echo "  build (only for hisat2):" 1>&2
+    echo "$cmdname [Options] <program> <build> <odir>" 1>&2
+    echo "  <program>: rsem-star, rsem-bowtie2, hisat2, kallisto, salmon" 1>&2
+    echo "  <build> (only for hisat2):" 1>&2
     echo "         human (GRCh38, GRCh37)" 1>&2
     echo "         mouse (GRCm39, GRCm38)" 1>&2
     echo "         rat (mRatBN7.2)" 1>&2
@@ -14,8 +12,12 @@ function usage()
     echo "         zebrafish (GRCz11)" 1>&2
     echo "         C. elegans (WBcel235)" 1>&2
     echo "         S. serevisiae (R64-1-1)" 1>&2
+    echo "  <odir>: outout directory" 1>&2
+    echo '   Options:' 1>&2
+    echo '      -a: consider all scaffolds (default: chromosomes only)' 1>&2
+    echo '      -p: number of CPUs (default: 4)' 1>&2
     echo "  Example:" 1>&2
-    echo "         $cmdname rsem-star GRCh38 Ensembl-GRCh38" 1>&2
+    echo "         $cmdname -p 12 rsem-star GRCh38 Ensembl-GRCh38" 1>&2
 }
 
 ncore=4
