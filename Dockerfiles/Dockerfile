@@ -1,26 +1,14 @@
-### RumBall: Docker image for RNA-seq analysis
-# Installed tools:
-# STAR v2.7.10a
-# RSEM v1.3.3
-# salmon v1.7.0
-# edgeR 3.28.0
-# hisat v2.2.1
-# stringtie v2.2.1
-# ballgown 2.18.0
-# kallisto v0.46.1
-# sleuth 0.30.0
-
 FROM rnakato/database:Ensembl106
 LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
+SHELL ["/bin/bash", "-c"]
 
 WORKDIR /opt
-
-ENV DEBIAN_FRONTEND=noninteractive
-SHELL ["/bin/bash", "-c"]
+USER root
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
     build-essential \
+    fastqc \
     libboost-all-dev \
     libbz2-dev \
     libcurl4-gnutls-dev \
@@ -88,3 +76,6 @@ COPY NCBI NCBI
 COPY script script
 
 ENV PATH ${PATH}:/opt/RSEM-1.3.3:/opt/STAR-2.7.10a/bin/Linux_x86_64:/opt/kallisto:/opt/salmon-1.8.0_linux_x86_64/bin/:/opt/hisat2-2.2.1:/opt/stringtie-2.2.1.Linux_x86_64:/opt/script:/opt/ChIPseqTools/bin/:/opt:/opt/bwa-0.7.17:/opt/bowtie-1.3.1-linux-x86_64:/opt/bowtie2-2.4.5-linux-x86_64
+
+USER ubuntu
+CMD ["/bin/bash", "-c"]
