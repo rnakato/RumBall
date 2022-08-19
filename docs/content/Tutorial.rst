@@ -1,7 +1,7 @@
 Tutorial
 =====================
 
-This tutorial assumes using singularity image. 
+This tutorial assumes using singularity image.
 Please add ``singularity exec rumball.sif`` before the commands.
 
 The scripts are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
@@ -19,7 +19,7 @@ Here we use four mRNA-seq samples of HEK293 cells (siCTCF and control from `Zuin
         fastq-dump --gzip $id --split-files -O fastq
     done
 
-Then download and generate the reference dataset including genome, gene annotation and index files. 
+Then download and generate the reference dataset including genome, gene annotation and index files.
 **RumBall** contains several scripts to do that:
 
 .. code-block:: bash
@@ -27,12 +27,12 @@ Then download and generate the reference dataset including genome, gene annotati
     build=GRCh38  # specify the build (Ensembl) that you need
     Ddir=Ensembl-$build/
     mkdir -p log
-    
+
     # Download genome and gtf
     download_genomedata.sh $build $Ddir 2>&1 | tee log/Ensembl-$build
-    
-    # make index for STAR-RSEM 
-    ncore=12 # number of CPUs 
+
+    # make index for STAR-RSEM
+    ncore=12 # number of CPUs
     build-index.sh -p $ncore rsem-star $build $Ddir
 
 
@@ -75,7 +75,7 @@ Of course you can also use a shell loop:
 
     ID=("SRR710092" "SRR710093" "SRR710094" "SRR710095")
     NAME=("HEK293_Control_rep1" "HEK293_Control_rep2" "HEK293_siCTCF_rep1" "HEK293_siCTCF_rep2")
-    
+
     mkdir -p log
     for ((i=0; i<${#ID[@]}; i++))
     do
@@ -89,18 +89,18 @@ Of course you can also use a shell loop:
 Differential analysis
 --------------------------------------------------
 
-``rsem_merge.sh`` merges the RSEM output of all samples. 
+``rsem_merge.sh`` merges the RSEM output of all samples.
 The generated matrix can be applied to DESeq2 or edgeR to identify differentially expressed genes between two groups:
 
 .. code-block:: bash
 
     Ctrl="star/HEK293_Control_rep1 star/HEK293_Control_rep2"
-    siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep1"
+    siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep2"
     # For DESeq2
     mkdir -p Matrix_deseq2
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2/HEK293 $Ddir
     DESeq2.sh Matrix_deseq2/HEK293 2:2 Control:siCTCF
-    
+
     # For edgeR
     mkdir -p Matrix_edgeR
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir
