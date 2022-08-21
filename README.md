@@ -25,7 +25,8 @@ This command mounts `/work` directory.
 
 ## 2. Usage
 
-See the [RumBall Manual](https://rumball.readthedocs.io/en/latest/).
+See https://rumball.readthedocs.io for the detailed Manual.
+
 
 ## 3. Build Docker image from Dockerfile
 
