@@ -39,9 +39,9 @@ else
 fi
 
 if [[ $fastq = *.gz ]]; then
-    command="bowtie $index <(zcat $fastq) -p12 | cut -f2 | sort | uniq -c"
+    command="bowtie -x $index <(zcat $fastq) -p12 | cut -f2 | sort | uniq -c"
 else
-    command="bowtie $index $fastq -p12 | cut -f2 | sort | uniq -c"
+    command="bowtie -x $index $fastq -p12 | cut -f2 | sort | uniq -c"
 fi
 
 echo $command

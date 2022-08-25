@@ -73,9 +73,9 @@ RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2
     && R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
 
 COPY NCBI NCBI
-COPY script script
+COPY RumBall RumBall
 
-ENV PATH ${PATH}:/opt/RSEM-1.3.3:/opt/STAR-2.7.10a/bin/Linux_x86_64:/opt/kallisto:/opt/salmon-1.8.0_linux_x86_64/bin/:/opt/hisat2-2.2.1:/opt/stringtie-2.2.1.Linux_x86_64:/opt/script:/opt/ChIPseqTools/bin/:/opt:/opt/bwa-0.7.17:/opt/bowtie-1.3.1-linux-x86_64:/opt/bowtie2-2.4.5-linux-x86_64
+ENV PATH ${PATH}:/opt/RSEM-1.3.3:/opt/STAR-2.7.10a/bin/Linux_x86_64:/opt/kallisto:/opt/salmon-1.8.0_linux_x86_64/bin/:/opt/hisat2-2.2.1:/opt/stringtie-2.2.1.Linux_x86_64:/opt/RumBall:/opt/ChIPseqTools/bin/:/opt:/opt/bwa-0.7.17:/opt/bowtie-1.3.1-linux-x86_64:/opt/bowtie2-2.4.5-linux-x86_64
 
 USER ubuntu
 CMD ["/bin/bash", "-c"]
