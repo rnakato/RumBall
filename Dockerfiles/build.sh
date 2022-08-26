@@ -1,5 +1,7 @@
-for tag in latest 0.1.0
+for tag in 0.2.0
 do
-    docker build -t rnakato/rumball:$tag .
+    docker build -f Dokerfile.$tag -t rnakato/rumball:$tag .
     docker push rnakato/rumball:$tag
+    docker tag rnakato/rumball:$tag rnakato/rumball:latest
+    docker push rnakato/rumball
 done
