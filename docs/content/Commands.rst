@@ -7,7 +7,6 @@ download_genomedata.sh
 ``download_genomedata.sh`` downloads the genome and gene annotation files of the genome build specified.
 **RumBall** assumes the reference data is downloaded by this command.
 
-
 .. code-block:: bash
 
     download_genomedata.sh <build> <outputdir>
