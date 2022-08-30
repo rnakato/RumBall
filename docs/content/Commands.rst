@@ -20,7 +20,7 @@ download_genomedata.sh
              chicken (GRCg6a)
              African clawed frog (xenLae2)
              C. elegans (WBcel235)
-             S. serevisiae (R64-1-1)
+             S. cerevisiae (R64-1-1)
              S. pombe (SPombe)
       Example:
              download_genomedata.sh GRCh38 Ensembl-GRCh38
@@ -44,7 +44,7 @@ The ``<odir>`` is used in the **RumBall** commands below.
              fly (BDGP6)
              zebrafish (GRCz11)
              C. elegans (WBcel235)
-             S. serevisiae (R64-1-1)
+             S. cerevisiae (R64-1-1)
       <odir>: outout directory
        Options:
           -a: consider all scaffolds (default: chromosomes only)
