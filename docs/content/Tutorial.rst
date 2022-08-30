@@ -1,10 +1,13 @@
 Tutorial
 =====================
 
-This tutorial assumes using singularity image.
-Please add ``singularity exec rumball.sif`` before the commands.
+This page describes the tutorial how to get the results from FASTQ files.
+The sample scripts for human, mouse and `S. cerevisiae` are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
 
-The scripts are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
+.. note::
+
+   | This tutorial assumes using the **RumBall** singularity image (``rumball.sif``). Please add ``singularity exec rumball.sif`` before each command below.
+   | Example: ``singularity exec rumball.sif download_genomedata.sh``
 
 Get data
 ------------------------
