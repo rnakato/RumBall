@@ -1,9 +1,9 @@
 Ddir=Ensembl-GRCh38/
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0.sif"
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
 
 Ctrl="star/HEK293_Control_rep1 star/HEK293_Control_rep2"
-siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep1"
+siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep2"
 
 mkdir -p Matrix_edgeR
 $sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir

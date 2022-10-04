@@ -15,7 +15,7 @@ NAME=(
 
 db=Ensembl
 build=GRCh38
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0.sif"
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
 Ddir=Ensembl-GRCh38/
 
 mkdir -p log

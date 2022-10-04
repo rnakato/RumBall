@@ -38,7 +38,8 @@ gname=$3
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
 
-R="Rscript /opt/script/edgeR.R"
+Rdir=$(cd $(dirname $0) && pwd)
+R="Rscript $Rdir/edgeR.R"
 
 ex(){ echo $1; eval $1; }
 

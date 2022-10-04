@@ -6,7 +6,7 @@ done
 
 # download data
 mkdir -p log
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.1.0.sif"
+sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
 build=GRCh38
 ncore=24
 $sing download_genomedata.sh $build Ensembl-$build/ 2>&1 | tee log/Ensembl-$build
