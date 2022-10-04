@@ -150,7 +150,7 @@ dds@colData
 counts_norm <- t(t(counts) / dds$sizeFactor)
 
 res <- results(dds, alpha = p)
-head(res)
+#head(res)
 summary(res)
 
 # shrinkage (apeglm)
@@ -175,7 +175,7 @@ head(assay(vsd), 3)
 #rlogMat <- assay(rld)
 vsdMat <- assay(vsd)
 
-cnts <- cbind(rownames(counts_norm), genename, counts_norm, vsdMat, res, annotation)
+cnts <- cbind(rownames(counts_norm), genename, counts_norm, resLFC, annotation) # vsdMat
 colnames(cnts)[1] <- "Gene id"
 #cnts_vsd <- cbind(rownames(vsdMat), vsdMat, res)
 
