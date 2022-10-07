@@ -8,16 +8,19 @@ function usage()
     echo '   <num of reps>: number of replicates (quated by ":")' 1>&2
     echo '   <group name>: labels of two groups compared (quated by ":")' 1>&2
     echo '   Options:' 1>&2
-    echo '      -t <FDR>: FDR threshould (default: 0.05)' 1>&2
+    echo '      -t <float>: FDR threshould (default: 0.05)' 1>&2
+    echo '      -n <int>: number of genes for GO analysis (default: 500)' 1>&2
     echo "  Example:" 1>&2
     echo "   $cmdname Matrix 2:2 WT:KD" 1>&2
 }
 
 p=0.05
-while getopts t: option
+nGene_GO=500
+while getopts t:n: option
 do
     case ${option} in
         t) p=${OPTARG};;
+        n) nGene_GO=${OPTARG};;
         *)
             usage
             exit 1
@@ -67,4 +70,8 @@ for str in genes isoforms; do
     done
 
     csv2xlsx.pl $s -o $outname.$str.$postfix.edgeR.xlsx
+done
+
+for ty in DEGs upDEGs downDEGs; do
+    Rscript $Rdir/run_clusterProfiler.R -i=$outname.genes.$postfix.edgeR.$ty -n=$nGene_GO -o=clusterProfiler_edgeR_$ty
 done
