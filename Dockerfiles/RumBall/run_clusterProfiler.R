@@ -4,7 +4,7 @@
 
 # Necessary input/files names
 # from DESeq2
-# 1. HEK293.genes.count.DESeq2.upDEGs.tsv 
+# 1. HEK293.genes.count.DESeq2.upDEGs.tsv
 # 2. HEK293.genes.count.DESeq2.downDEGs.tsv
 
 # from edgeR
@@ -89,8 +89,8 @@ for (each.arg in args) {
     }
     else if (grepl('^-o=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
-        if (! is.na(arg.split[2]) ) { 
-            output <- arg.split[2] 
+        if (! is.na(arg.split[2]) ) {
+            output <- arg.split[2]
         }
         else { stop('No output file name provided for parameter -o=')}
     }
@@ -118,22 +118,24 @@ suppressPackageStartupMessages(library("ggplot2"))
 suppressPackageStartupMessages(library("dplyr"))
 
 # Check if input and output exist.
-outdir <- "GO_results"
-if (!file.exists(outdir)) {
-  cat("Output directory does not exist, creating...")
-  dir.create(file.path(outdir))
-  cat(" done!\n")
-}
+#outdir <- "GO_results"
+#if (!file.exists(outdir)) {
+#  cat("Output directory does not exist, creating...")
+#  dir.create(file.path(outdir))
+#  cat(" done!\n")
+#}
 
 # deleting previous outputfile
 #Check its existence
-if (file.exists(paste0(outdir,"/",output,"_top",n,".pdf")))
+#if (file.exists(paste0(outdir,"/",output,"_top",n,".pdf")))
+if (file.exists(paste0(output,"_top",n,".pdf")))
     #Delete file if it exists
-    file.remove(file=paste0(outdir,"/",output,"_top",n,".pdf"))
+    #file.remove(file=paste0(outdir,"/",output,"_top",n,".pdf"))
+    file.remove(file=paste0(output,"_top",n,".pdf"))
 
 
 # Read in each file separated
-data <-read.csv(file = filename, sep = "\t", header = TRUE) 
+data <-read.csv(file = filename, sep = "\t", header = TRUE)
 
 
 
@@ -156,7 +158,7 @@ if (strsplit(sample, "/")[[1]][1] == "deseq2"){
 
 
 
-# Select just top X genes 
+# Select just top X genes
 deg.list <- data2[1:n,1]  #using EmsemblID, set to 2 for Symbol but some genes might be missing
 #print(deg.list)
 #print(keytypes(org.Hs.eg.db))
@@ -190,9 +192,9 @@ head(ego)
 if (length(ego$Count) != 0){
 
     # Find the longest string in the Description column
-    
+
     #ego <- head(ego, 10)
-    
+
     df1 <- as.data.frame(ego$Description)
     max_lenght <- as.numeric(lapply(df1, function(x) max(nchar(x))))
 
@@ -200,14 +202,15 @@ if (length(ego$Count) != 0){
     #print(plot.width)
     plot.width = 7
     plot.height = 4
-    
+
 
     #options(repr.plot.width = plot.width, repr.plot.height = plot.height)
-    fig <- mutate(ego, qscore = -log(p.adjust, base=10)) %>% 
-              barplot(x = "qscore") + 
+    fig <- mutate(ego, qscore = -log(p.adjust, base=10)) %>%
+              barplot(x = "qscore") +
               ggtitle(paste0("GO enrichment of ",sample)) +
               theme(text = element_text(size=8))
-    ggsave(fig, file=paste0(outdir,"/",output,"_top",n,".pdf"), width = plot.width, height = plot.height)
+#    ggsave(fig, file=paste0(outdir,"/",output,"_top",n,".pdf"), width = plot.width, height = plot.height)
+    ggsave(fig, file=paste0(output,"_top",n,".pdf"), width = plot.width, height = plot.height)
 
 } else if (length(ego$Count) == 0){
 

@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 cmdname=`basename $0`
 function usage()
 {
@@ -73,5 +73,5 @@ for str in genes isoforms; do
 done
 
 for ty in DEGs upDEGs downDEGs; do
-    Rscript $Rdir/run_clusterProfiler.R -i=$outname.genes.$postfix.edgeR.$ty -n=$nGene_GO -o=clusterProfiler_edgeR_$ty
+    Rscript $Rdir/run_clusterProfiler.R -i=$outname.genes.$postfix.edgeR.$ty.tsv -n=$nGene_GO -o=$outname.genes.$postfix.edgeR.GO.clusterProfiler.$ty
 done
