@@ -69,8 +69,8 @@ RUN wget --progress=dot:giga https://github.com/COMBINE-lab/salmon/releases/down
     && tar zxvf salmon-1.8.0_linux_x86_64.tar.gz \
     && rm salmon-1.8.0_linux_x86_64.tar.gz
 
-RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq', 'GenomicFeatures', 'clusterProfiler', 'org.Mm.eg.db', 'org.Hs.eg.db', 'org.Dm.eg.db', 'org.Ce.eg.db', 'AnnotationHub', 'enrichplot'))" \
-    && R -e "install.packages(c('som','ggfortify','ggrepel','gplots'))"
+RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq', 'GenomicFeatures', 'clusterProfiler', 'org.Mm.eg.db', 'org.Rn.eg.db', 'org.Hs.eg.db', 'org.Dm.eg.db', 'org.Ce.eg.db', 'AnnotationHub', 'enrichplot'))" \
+    && R -e "install.packages(c('som','ggfortify','ggrepel','gplots','gprofiler2'))"
 
 COPY NCBI NCBI
 COPY RumBall RumBall
