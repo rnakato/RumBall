@@ -56,6 +56,7 @@ Therefore ``build-index.sh`` allows the genome build shown in the help abobe for
 
 In default, ``build-index.sh`` considers chromosomes only. If you want to include all scaffolds, add ``-a`` option.
 
+
 star.sh: execute STAR and RSEM
 ------------------------------------------------
 
@@ -118,15 +119,17 @@ DESeq2.sh: differential expression analysis for two groups by DESeq2
 
 .. code-block:: bash
 
-    DESeq2.sh [Options] <inputfile> <num of reps> <groupname>
+    DESeq2.sh [Options] <inputfile> <num of reps> <groupname> <species>
        <inputfile>: prefix of input matrix file
        <Ddir>: directory of gene annotation files
-           <num of reps>: number of replicates (quated by ":")
+       <num of reps>: number of replicates (quated by ":")
        <group name>: labels of two groups compared (quated by ":")
+       <species>: [Human|Mouse|Rat|Fly|Celegans]
        Options:
           -t <FDR>: FDR threshould (default: 0.05)
+          -n <int>: number of genes for GO analysis (default: 500)
        Example:
-          DESeq2.sh star/Matrix 2:2 WT:KD
+          DESeq2.sh star/Matrix 2:2 WT:KD Human
 
 - Output
 
@@ -151,15 +154,17 @@ edgeR.sh: differential expression analysis for two groups by edgeR
 
 .. code-block:: bash
 
-    edgeR.sh [Options] <inputfile> <num of reps> <groupname>
+    edgeR.sh [Options] <inputfile> <num of reps> <groupname> <species>
        <inputfile>: prefix of input matrix file
        <Ddir>: directory of gene annotation files
        <num of reps>: number of replicates (quated by ":")
        <group name>: labels of two groups compared (quated by ":")
+       <species>: [Human|Mouse|Rat|Fly|Celegans]
        Options:
-          -t <FDR>: FDR threshould (default: 0.05)
+          -t <float>: FDR threshould (default: 0.05)
+          -n <int>: number of genes for GO analysis (default: 500)
       Example:
-       edgeR.sh Matrix 2:2 WT:KD
+       edgeR.sh Matrix 2:2 WT:KD Human
 
 - Output
 
