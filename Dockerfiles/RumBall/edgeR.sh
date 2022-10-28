@@ -98,7 +98,8 @@ for ty in DEGs upDEGs downDEGs; do
         Rscript $Rdir/run_clusterProfiler.R \
                 -i=$outname.genes.$postfix.edgeR.$ty.tsv \
                 -n=$nGene_GO -o=$outname.genes.$postfix.edgeR.GO.clusterProfiler.$ty \
-                -n=$nGene_GO -orgdb=$orgdb
+                -n=$nGene_GO -orgdb=$orgdb \
+		-tool=edger
     fi
 done
 
@@ -106,4 +107,4 @@ if test "$orggp" != ""; then
     head=$outname.genes.$postfix.edgeR
     Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
             -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2
-done
+fi

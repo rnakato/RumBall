@@ -7,7 +7,7 @@ siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep2"
 
 mkdir -p Matrix_edgeR
 $sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR/HEK293 $Ddir
-$sing edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF
+$sing edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF Human
 
 mkdir -p Matrix_deseq2
 $sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2/HEK293 $Ddir

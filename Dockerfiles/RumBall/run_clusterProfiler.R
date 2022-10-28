@@ -20,6 +20,7 @@ print.usage <- function() {
 	cat('   OPTIONAL ARGUMENTS\n',file=stderr())
         cat('      -orgdb=<orgdb>           , OrgDb annotation. Choose org.Hs.eg.db org.Mm.eg.db  \n', file=stderr())
         cat('      -ont=<ont>               , One of "BP", "MF", and "CC" subontologies, or "ALL" for all three \n', file=stderr())
+        cat('      -tool=<tool>             , [deseq2|edger] (default:deseq2) \n', file=stderr())
 	cat('      -padjmethod=<padjmethod> ,  "BH", "holm", "hochberg", "hommel", "bonferroni", "BY", "fdr", "none" \n',file=stderr())
 	cat('      -p=<float>               , threshold for FDR (default: 0.01) \n',file=stderr())
 	cat('   OUTPUT ARGUMENTS\n',file=stderr())
@@ -39,6 +40,7 @@ if (nargs < minargs | nargs > maxargs) {
 nrowname <- 1
 ncolskip <- 0
 orgdb <- "org.Hs.eg.db"
+tool <- "deseq2"
 ont <- "BP"
 padjmethod <- "BH"
 p <- 0.05
@@ -70,6 +72,13 @@ for (each.arg in args) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             ont <- arg.split[2]
+        }
+        else { stop('No value provided for parameter -ont=')}
+    }
+    else if (grepl('^-tool=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            tool <- arg.split[2]
         }
         else { stop('No value provided for parameter -ont=')}
     }
@@ -106,6 +115,7 @@ sample
 n
 orgdb
 ont
+tool
 padjmethod
 p
 output
@@ -142,10 +152,10 @@ if (file.exists(paste0(output,"_top",n,".pdf")))
 data <-read.csv(file = filename, sep = "\t", header = TRUE)
 
 
-
 # Order files based on the FDR or P-adjust score and then Fold Change
 # Determine whether the file is processed by EdgeR or DESeq2
-if (strsplit(sample, "/")[[1]][1] == "deseq2"){
+#if (strsplit(sample, "/")[[1]][1] == "deseq2"){
+if (tool == "deseq2"){
     data2 <- data %>%
          as.data.frame() %>%
          arrange(padj) %>%
