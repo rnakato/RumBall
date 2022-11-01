@@ -11,4 +11,4 @@ $sing edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF Human
 
 mkdir -p Matrix_deseq2
 $sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2/HEK293 $Ddir
-$sing DESeq2.sh Matrix_deseq2/HEK293 2:2 Control:siCTCF
+$sing DESeq2.sh Matrix_deseq2/HEK293 2:2 Control:siCTCF Human

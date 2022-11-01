@@ -106,5 +106,6 @@ done
 if test "$orggp" != ""; then
     head=$outname.genes.$postfix.edgeR
     Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
-            -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2
+            -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2 \
+	    -tool=edger
 fi

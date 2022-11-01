@@ -16,12 +16,13 @@
 print.usage <- function() {
     cat('\nUsage: Rscript run_gprofiler2.R <options>\n',file=stderr())
     cat('   MANDATORY ARGUMENTS\n',file=stderr())
-    cat('      -i_up=<input file upregulated>          , input file (upDEG list either from edgeR or DEseq) \n',file=stderr())
-    cat('      -i_down=<input file downregulated>      , input file (downDEG list either from edgeR or DEseq) \n',file=stderr())
-    cat('      -n=<n>                                  , number of DEGs to consider \n',file=stderr())
-    cat('      -org=<org>                              , Organism <hsapiens, mmusculus> \n', file=stderr())
+    cat('      -i_up=<input file upregulated>       , input file (upDEG list either from edgeR or DEseq) \n',file=stderr())
+    cat('      -i_down=<input file downregulated>   , input file (downDEG list either from edgeR or DEseq) \n',file=stderr())
+    cat('      -n=<n>                               , number of DEGs to consider \n',file=stderr())
+    cat('      -org=<org>                           , Organism <hsapiens, mmusculus> \n', file=stderr())
+    cat('      -tool=<tool>                         , [deseq2|edger] (default:deseq2) \n', file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
-    cat('      -o=<output>                             , prefix of output file \n',file=stderr())
+    cat('      -o=<output>                          , prefix of output file \n',file=stderr())
     cat('\n',file=stderr())
 }
 
@@ -34,8 +35,7 @@ if (nargs < minargs | nargs > maxargs) {
         q(save="no",status=1)
 }
 
-#org <- "hsapiens"
-#n <- 200
+tool <- "deseq2"
 
 for (each.arg in args) {
     if (grepl('^-i_up=',each.arg)) {
@@ -66,6 +66,13 @@ for (each.arg in args) {
         }
         else { stop('No value provided for parameter -org=')}
     }
+    else if (grepl('^-tool=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            tool <- arg.split[2]
+        }
+        else { stop('No value provided for parameter -ont=')}
+    }
     else if (grepl('^-o=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
@@ -78,7 +85,7 @@ for (each.arg in args) {
 tmp <- strsplit(updeg, "[.]")[[1]][1]
 tmp <- strsplit(tmp, "_")[[1]][2]
 sample <- strsplit(tmp, "/")[[1]][2]
-tool <- strsplit(tmp, "/")[[1]][1]
+#tool <- strsplit(tmp, "/")[[1]][1]
 
 # check the variables
 sample
