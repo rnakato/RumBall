@@ -90,17 +90,17 @@ while(<ListFile>){
 
     if($type eq "genes") {
 	next if($outputtype eq "pc" && $Hashgtype{$id} ne "protein_coding" );
-	if(exists($Hashgname{$id})){
+	if(exists($Hashgname{$id}) && $Hashgname{$id} ne ""){
 	    print "$Hashgname{$id}$sep$_\n";
 	}else{
-	    print "\t$_\n";
+	    print "$id$sep$_\n";
 	}
     } else {
 	next if($outputtype eq "pc" && $Hashttype{$id} ne "protein_coding" );
-	if(exists($Hashtname{$id})){
+	if(exists($Hashtname{$id}) && $Hashtname{$id} ne ""){
             print "$Hashtname{$id}$sep$_\n";
         }else{
-            print "\t$_\n";
+            print "$id$sep$_\n";
         }
     }
 }

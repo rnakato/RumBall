@@ -20,6 +20,7 @@ print.usage <- function() {
     cat('      -i_down=<input file downregulated>   , input file (downDEG list either from edgeR or DEseq) \n',file=stderr())
     cat('      -n=<n>                               , number of DEGs to consider \n',file=stderr())
     cat('      -org=<org>                           , Organism <hsapiens, mmusculus> \n', file=stderr())
+    cat('   OPTIONAL ARGUMENTS\n',file=stderr())
     cat('      -tool=<tool>                         , [deseq2|edger] (default:deseq2) \n', file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output>                          , prefix of output file \n',file=stderr())
@@ -29,7 +30,7 @@ print.usage <- function() {
 args <- commandArgs(trailingOnly = T)
 nargs = length(args);
 minargs = 5;
-maxargs = 5;
+maxargs = 6;
 if (nargs < minargs | nargs > maxargs) {
         print.usage()
         q(save="no",status=1)
