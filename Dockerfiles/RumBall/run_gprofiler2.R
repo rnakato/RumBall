@@ -150,7 +150,8 @@ data_up <- read.csv(file = updeg, sep = "\t", header = TRUE)
 data_up_prepro <- preprodata(sample, data_up)
 deg.list_up <- data_up_prepro[,1]  #using EmsemblID, set 2 for Symbol but some genes might be missing
 deg.list_up_dedup <- deg.list_up[!duplicated(deg.list_up)]
-deg.list_up_final <- gconvert(deg.list_up_dedup[1:n])
+#deg.list_up_final <- gconvert(deg.list_up_dedup[1:n])
+deg.list_up_final <- gconvert(deg.list_up_dedup[1:n], organism = org)
 #print(head(deg.list_up_final))
 
 
@@ -159,9 +160,9 @@ data_down <- read.csv(file = downdeg, sep = "\t", header = TRUE)
 data_down_prepro <- preprodata(sample, data_down)
 deg.list_down <- data_down_prepro[,1]  #using EmsemblID, set 2 for Symbol but some genes might be missing
 deg.list_down_dedup <- deg.list_down[!duplicated(deg.list_down)]
-deg.list_down_final <- gconvert(deg.list_down_dedup[1:n])
-#print(head(deg.list_down_final))
-
+#deg.list_down_final <- gconvert(deg.list_down_dedup[1:n])
+deg.list_down_final <- gconvert(deg.list_down_dedup[1:n], organism = org)
+                                        #print(head(deg.list_down_final))
 
 # g:GOSt tool that performs over-representation analysis using hypergeometric test.
 multi_gp <- gost(list("up-regulated" = deg.list_up_final, "down-regulated" = deg.list_down_final), organism = org, multi_query = FALSE, evcodes = TRUE)

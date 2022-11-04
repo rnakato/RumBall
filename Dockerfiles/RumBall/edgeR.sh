@@ -94,18 +94,23 @@ for str in genes isoforms; do
 done
 
 for ty in DEGs upDEGs downDEGs; do
-    if test "$orgdb" != ""; then
+    ifile=$outname.genes.$postfix.edgeR.$ty.tsv
+    n=`wc -l $ifile | cut -f1 -d " "`
+    if test "$orgdb" != "" && test $n -gt 1; then
         Rscript $Rdir/run_clusterProfiler.R \
-                -i=$outname.genes.$postfix.edgeR.$ty.tsv \
-                -n=$nGene_GO -o=$outname.genes.$postfix.edgeR.GO.clusterProfiler.$ty \
-                -n=$nGene_GO -orgdb=$orgdb \
+                -i=$ifile -n=$nGene_GO -orgdb=$orgdb \
+		-o=$outname.genes.$postfix.edgeR.GO.clusterProfiler.$ty \
 		-tool=edger
     fi
 done
 
 if test "$orggp" != ""; then
     head=$outname.genes.$postfix.edgeR
+    n1=`wc -l $head.upDEGs.tsv | cut -f1 -d " "`
+    n2=`wc -l $head.downDEGs.tsv | cut -f1 -d " "`
+    if test $n1 -gt 1 && test $n2 -gt 1; then
     Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
             -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2 \
 	    -tool=edger
+    fi
 fi
