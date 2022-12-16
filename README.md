@@ -37,7 +37,7 @@ First clone and move to the repository
 
 Then type:
 
-    docker build -f Dokerfile.<version> -t <account>/rumball
+    docker build -f Dockerfile.<version> -t <account>/rumball .
 
 ## 4. Contact
 
