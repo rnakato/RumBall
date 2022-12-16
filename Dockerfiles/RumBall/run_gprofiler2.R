@@ -107,6 +107,8 @@ suppressPackageStartupMessages(library(enrichplot))
 suppressPackageStartupMessages(library(DOSE))
 suppressPackageStartupMessages(library(dplyr))
 
+if(!interactive()) pdf(NULL)
+
 # Check if input and output exist.
 #outdir <- "GO_results"
 #if (!file.exists(outdir)) {
