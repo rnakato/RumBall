@@ -1,6 +1,7 @@
 Ddir=Ensembl-GRCh38/
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
+sing="singularity exec rumball.sif"
 
 Ctrl="star/HEK293_Control_rep1 star/HEK293_Control_rep2"
 siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep2"

@@ -13,7 +13,8 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
+#sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.3.0.sif"
+sing="singularity exec rumball.sif"
 
 mkdir -p log
 for ((i=0; i<${#ID[@]}; i++))
