@@ -94,7 +94,6 @@ log example:
 rsem_merge.sh: merge expression data of multiple samples
 ------------------------------------------------------------------------------------------------
 
-
 .. code-block:: bash
 
     rsem_merge.sh [-s <strings for sed>] <inputdirs> <prefix> <Ddir>
