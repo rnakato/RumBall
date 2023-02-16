@@ -39,6 +39,10 @@ Then type:
 
     docker build -f Dockerfile.<version> -t <account>/rumball
 
-## 4. Contact
+## 4. Singularity images
+
+Prebuild singularity images (version 3.8.5) are available on our [Google Drive](https://drive.google.com/drive/folders/1wsWIcoPG3oxZarH3hMGJcWsXeOwrQ2hv?usp=sharing).
+
+## 5. Contact
 
 Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
