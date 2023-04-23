@@ -1,7 +1,7 @@
 Installation
 ================
 
-Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumball>`_.
+Docker image (based on Ubuntu 22.04) is available at `DockerHub <https://hub.docker.com/r/rnakato/rumball>`_.
 
 Docker
 ++++++++++++++
