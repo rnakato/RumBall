@@ -3,23 +3,6 @@ Installation
 
 Docker image is available at `DockerHub <https://hub.docker.com/r/rnakato/rumball>`_.
 
-The latest version of **RumBall** (v0.2.0) internally uses the tools including:
-
-- STAR v2.7.10a
-- RSEM v1.3.3
-- salmon v1.7.0
-- edgeR v3.38.1
-- DESeq2 v1.36.0
-- hisat v2.2.1
-- stringtie v2.2.1
-- ballgown v2.18.0
-- kallisto v0.46.1
-- sleuth v0.30.0
-- ClusterProfiler v4.4.4
-- gprofiler2 v0.2.1
-- SRA Toolkit v3.0.0
-
-
 Docker
 ++++++++++++++
 
