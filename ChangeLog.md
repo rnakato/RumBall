@@ -2,6 +2,7 @@
 
 ## 0.4.2 (2023-04-23)
 - Change the base image from rnakato/database to rnakato/mapping (to simplify installation)
+- Change the script nake ``build-index.sh`` to ``build-index-RNAseq.sh``
 
 ## 0.4.1 (2023-02-16)
 - While the previous version of ``edgeR.sh`` filtered genes with 0 expression in all samples, the current version uses the ``filterByExpr`` function provided by edgeR. This results in more genes being filtered than before, and the FDR value changes accordingly, so more genes become non-significant.

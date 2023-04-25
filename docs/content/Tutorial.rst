@@ -67,10 +67,10 @@ Mapping reads by STAR
 
     Ddir=Ensembl-GRCh38
     mkdir -p log
-    star.sh paired HEK293_Control_rep1 fastq/SRR710092_1.fastq.gz fastq/SRR710092_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_Control_rep1
-    star.sh paired HEK293_Control_rep2 fastq/SRR710093_1.fastq.gz fastq/SRR710093_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_Control_rep2
-    star.sh paired HEK293_siCTCF_rep1  fastq/SRR710094_1.fastq.gz fastq/SRR710094_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_siCTCF_rep1
-    star.sh paired HEK293_siCTCF_rep2  fastq/SRR710095_1.fastq.gz fastq/SRR710095_2.fastq.gz $Ddir reverse > log/star.sh.HEK293_siCTCF_rep2
+    star.sh paired HEK293_Control_rep1 "fastq/SRR710092_1.fastq.gz fastq/SRR710092_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_Control_rep1
+    star.sh paired HEK293_Control_rep2 "fastq/SRR710093_1.fastq.gz fastq/SRR710093_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_Control_rep2
+    star.sh paired HEK293_siCTCF_rep1  "fastq/SRR710094_1.fastq.gz fastq/SRR710094_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_siCTCF_rep1
+    star.sh paired HEK293_siCTCF_rep2  "fastq/SRR710095_1.fastq.gz fastq/SRR710095_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_siCTCF_rep2
 
 Of course you can also use a shell loop:
 

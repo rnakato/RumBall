@@ -43,7 +43,7 @@ mergekallistotsv.sh $files > $output.transcript.csv
 convert_genename_fromgtf.pl --type=isoforms -f $output.transcript.csv -g $gtf --nline=0 > $output.transcript.name.csv
 
 echo "tximport to gene..."
-Rscript /opt/script/kallisto_tximport.R $output.gene $gtf $files
+Rscript /opt/RumBall/kallisto_tximport.R $output.gene $gtf $files
 
 tmpfile=$(mktemp)
 for file in $files
