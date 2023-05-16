@@ -43,10 +43,6 @@ Then type:
 
     docker build -f Dockerfile.<version> -t <account>/rumball
 
-## 4. Singularity images
-
-Prebuild singularity images (version 3.8.5) are available on our [OneDrive](https://univtokyo-my.sharepoint.com/:f:/g/personal/5389587184_utac_u-tokyo_ac_jp/EqJEoxcCBSxDiqGI3F0tRWwBe5ZNea6NQbIJ_Z9aLyL85Q?e=kBLebv).
-
 ## 5. Contact
 
 Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp

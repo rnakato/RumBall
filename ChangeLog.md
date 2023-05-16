@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.4.3 (2023-05-11)
+- Remove /root/.cpanm/work directory
+
 ## 0.4.2 (2023-04-23)
 - Change the base image from rnakato/database to rnakato/mapping (to simplify installation)
 - Change the script nake ``build-index.sh`` to ``build-index-RNAseq.sh``
