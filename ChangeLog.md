@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4 (2023-07-16)
+- Update `download_genomedata.sh` for S.pombe
+- Update `build-index-RNAseq.sh` for S.pombe
+
 ## 0.4.3 (2023-05-11)
 - Remove /root/.cpanm/work directory
 

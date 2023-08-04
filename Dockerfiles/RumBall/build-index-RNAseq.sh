@@ -12,6 +12,7 @@ function usage()
     echo "         zebrafish (GRCz11)" 1>&2
     echo "         C. elegans (WBcel235)" 1>&2
     echo "         S. cerevisiae (R64-1-1)" 1>&2
+    echo "         S. pombe (SPombe)" 1>&2
     echo "  <odir>: outout directory" 1>&2
     echo '   Options:' 1>&2
     echo '      -a: consider all scaffolds (default: chromosomes only)' 1>&2

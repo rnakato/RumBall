@@ -46,6 +46,7 @@ The ``<odir>`` is used in the **RumBall** commands below.
              zebrafish (GRCz11)
              C. elegans (WBcel235)
              S. cerevisiae (R64-1-1)
+             S. pombe (SPombe)
       <odir>: outout directory
        Options:
           -a: consider all scaffolds (default: chromosomes only)
