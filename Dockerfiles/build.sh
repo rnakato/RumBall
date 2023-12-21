@@ -1,4 +1,4 @@
-tag=0.4.5
+tag=0.4.6
 docker build -f Dockerfile.$tag -t rnakato/rumball:$tag . --no-cache
 exit
 docker push rnakato/rumball:$tag
