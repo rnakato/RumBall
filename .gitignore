@@ -1,2 +1,7 @@
 docs/_build/
 docs/.vscode/
+tutorial/Matrix_deseq2/
+tutorial/Matrix_edgeR/
+tutorial/fastq/
+tutorial/kallisto/
+tutorial/log/
