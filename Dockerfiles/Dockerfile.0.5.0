@@ -1,8 +1,10 @@
-FROM rnakato/mapping:2023.08
+FROM rnakato/mapping:2023.11
 LABEL maintainer="Ryuichiro Nakato <rnakato@iqb.u-tokyo.ac.jp>"
 
 USER root
 WORKDIR /opt
+
+SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -51,19 +53,22 @@ RUN wget --progress=dot:giga https://github.com/COMBINE-lab/salmon/releases/down
     && tar zxvf salmon-1.8.0_linux_x86_64.tar.gz \
     && rm salmon-1.8.0_linux_x86_64.tar.gz
 
-RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq', 'GenomicFeatures', 'clusterProfiler', 'org.Mm.eg.db', 'org.Rn.eg.db', 'org.Hs.eg.db', 'org.Dm.eg.db', 'org.Ce.eg.db', 'AnnotationHub', 'enrichplot'))" \
+RUN R -e "BiocManager::install(c('multtest', 'apeglm', 'limma', 'edgeR', 'DESeq2', 'Rtsne', 'tximport', 'tximportData', 'preprocessCore', 'rhdf5', 'ballgown', 'DEXSeq', 'GenomicFeatures', 'clusterProfiler', 'org.Mm.eg.db', 'org.Rn.eg.db', 'org.Hs.eg.db', 'org.Dm.eg.db', 'org.Ce.eg.db', 'AnnotationHub', 'enrichplot', 'FRASER'))" \
     && R -e "install.packages(c('som','ggfortify','ggrepel','gplots','gprofiler2'))"
 
 # MntJULiP
-#RUN conda create -n mntjulip-env python=3.9 numpy scipy pandas Cython \
-#    && source activate mntjulip-env \
-#    && pip install --no-cache-dir "pystan<3" statsmodels "dask[complete]" \
-#    && git clone https://github.com/splicebox/MntJULiP.git \
-#    && cd MntJULiP \
-#    && python setup.py install \
-#    && conda deactivate \
+RUN set -e \
+    && conda init bash \
+    && . ~/.bashrc \
+    && conda create -n mntjulip-env python=3.9 numpy scipy pandas Cython \
+    && source activate mntjulip-env \
+    && pip install --no-cache-dir "pystan<3" statsmodels "dask[complete]" \
+    && git clone https://github.com/splicebox/MntJULiP.git \
+    && cd MntJULiP \
+    && python setup.py install \
+    && conda deactivate
 # CHESSBOARD
-RUN pip install --no-cache-dir git+https://bitbucket.org/biociphers/chessboard
+#RUN pip install --no-cache-dir git+https://bitbucket.org/biociphers/chessboard
 
 COPY NCBI NCBI
 COPY RumBall RumBall

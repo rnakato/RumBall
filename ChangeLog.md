@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0 (2023-12-21)
+    - Add OpenBLAS-0.3.24
+    - Update bedtools from v2.30.0 to v2.31.0
+
 ## 0.4.4 (2023-07-16)
 - Update `download_genomedata.sh` for S.pombe
 - Update `build-index-RNAseq.sh` for S.pombe
