@@ -36,7 +36,7 @@ Then download and generate the reference dataset including genome, gene annotati
 
     # make index for STAR-RSEM
     ncore=12 # number of CPUs
-    build-index.sh -p $ncore rsem-star $build $Ddir
+    build-index-RNAseq.sh -p $ncore rsem-star $build $Ddir
 
 
 Check Strandedness
