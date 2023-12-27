@@ -30,6 +30,7 @@ gname2 <- "groupB"
 p <- 0.01
 nrowname <- 1
 ncolskip <- 0
+species <- "Human"
 
 for (each.arg in args) {
     if (grepl('^-i=',each.arg)) {
@@ -96,8 +97,8 @@ for (each.arg in args) {
         if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
         else { stop('No output file name provided for parameter -o=')}
     }
-    else if (grepl("^-s=", args[i])) {
-        species <- sub("^-s=", "", args[i])
+    else if (grepl("^-s=",each.arg)) {
+        species <- sub("^-s=", "", each.arg)
         break
     }
 }
@@ -242,18 +243,31 @@ dev.off()
 #dev.off()
 
 
-# Include gene symbols into the heatmap
-if (species == "Human") {
-    db <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
-} else if (species == "Mouse") {
-    db <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
-    # Add more species and corresponding datasets as needed
-}
+## Include gene symbols into the heatmap
+#if (species == "Human") {
+#    db <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+#} else if (species == "Mouse") {
+#    db <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+#    # Add more species and corresponding datasets as needed
+#}
+# Assuming species holds values like "Human", "Mouse", etc.
+dataset_name <- switch(species,
+                       "Human" = "hsapiens_gene_ensembl",
+                       "Mouse" = "mmusculus_gene_ensembl",
+                       # ... other species cases ...
+                       stop("Unsupported species: ", species)
+                      )
+db <- useMart("ensembl", dataset = dataset_name)
 
+
+gene_ids <- rownames(dds)
+
+# Use the previously set 'db' based on 'species'
 geneanno <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol"),
                   filters = "ensembl_gene_id",
-                  values = rownames(your_data_frame),
+                  values = gene_ids,
                   mart = db)
+
 
 # Add gene symbol
 dds$gene_symbol <- geneanno$hgnc_symbol[match(rownames(dds), geneanno$ensembl_gene_id)]
