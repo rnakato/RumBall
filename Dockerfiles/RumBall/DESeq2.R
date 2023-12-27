@@ -12,6 +12,7 @@ print.usage <- function() {
 	cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
 	cat('   OUTPUT ARGUMENTS\n',file=stderr())
 	cat('      -o=<output> , prefix of output file \n',file=stderr())
+	cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
 	cat('\n',file=stderr())
 }
 
@@ -95,6 +96,10 @@ for (each.arg in args) {
         if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
         else { stop('No output file name provided for parameter -o=')}
     }
+    else if (grepl("^-s=", args[i])) {
+        species <- sub("^-s=", "", args[i])
+        break
+    }
 }
 
 filename
@@ -104,6 +109,7 @@ p
 num1
 num2
 output
+species
 
 group <- data.frame(group = factor(c(rep(gname1,num1),rep(gname2,num2))))
 
@@ -235,12 +241,34 @@ dev.off()
 #meanSdPlot(vsdfastMat)
 #dev.off()
 
+
+# Include gene symbols into the heatmap
+if (species == "Human") {
+    db <- useMart("ensembl", dataset = "hsapiens_gene_ensembl")
+} else if (species == "Mouse") {
+    db <- useMart("ensembl", dataset = "mmusculus_gene_ensembl")
+    # Add more species and corresponding datasets as needed
+}
+
+geneanno <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol"),
+                  filters = "ensembl_gene_id",
+                  values = rownames(your_data_frame),
+                  mart = db)
+
+# Add gene symbol
+dds$gene_symbol <- geneanno$hgnc_symbol[match(rownames(dds), geneanno$ensembl_gene_id)]
+
+
 # heatmap of top20 highly-expressed genes
 library(pheatmap)
 select <- order(rowMeans(counts(dds,normalized=TRUE)), decreasing=TRUE)[1:20]
 
 nt <- normTransform(dds) # log2(x+1)
 df <- as.data.frame(colData(dds)[,c("group","group")])
+
+# Update row names for the heatmap
+rownames(df) <- dds$gene_symbol
+
 pdf(paste(output, ".DESeq2.HighlyExpressedGenes.pdf", sep=""), height=7, width=7)
 #par(mfrow=c(1,2))
 #pheatmap(assay(nt)[select,], cluster_rows=F, show_rownames=T, cluster_cols=F, annotation_col=df)
