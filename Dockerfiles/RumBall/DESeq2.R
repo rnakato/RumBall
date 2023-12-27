@@ -25,6 +25,42 @@ if (nargs < minargs | nargs > maxargs) {
 	q(save="no",status=1)
 }
 
+#base_path <- Sys.getenv("FILE_BASE_PATH", unset = "")
+#
+# Set the cache directory for R
+# Concatenate base_path with your desired cache folder name
+#cache_dir <- file.path(base_path, ".cache")
+#if (!dir.exists(cache_dir)) {
+#    dir.create(cache_dir, recursive = TRUE)
+#}
+#
+# Set the cache directory for R
+#Sys.setenv("R_CACHE_DIR" = cache_dir)
+base_path <- Sys.getenv("FILE_BASE_PATH", unset = "/work")
+cache_dir <- file.path(base_path, ".cache/biomaRt")
+if (!dir.exists(cache_dir)) {
+    dir.create(cache_dir, recursive = TRUE)
+}
+
+#if (base_path == "") {
+#    base_path <- getwd()  # Fallback to current working directory
+#}
+#cache_dir <- file.path(base_path, ".cache")
+#
+#print(paste("Base path:", base_path))
+#print(paste("Cache directory:", cache_dir))
+#
+#if (!dir.exists(cache_dir)) {
+#    tryCatch({
+#        dir.create(cache_dir, recursive = TRUE)
+#	dir.create(paste0(cache_dir,"/biomaRt"), recursive = TRUE)
+#    }, error = function(e) {
+#        cat("Error in creating cache directory:", e$message, "\n")
+#    })
+#}
+
+
+
 gname1 <- "groupA"
 gname2 <- "groupB"
 p <- 0.01
@@ -37,6 +73,7 @@ for (each.arg in args) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             filename <- arg.split[2]
+	    #filename <- paste0(base_path, filename_temp) #modified
         }
         else { stop('No input file name provided for parameter -i=')}
     }
@@ -94,7 +131,7 @@ for (each.arg in args) {
     }
     else if (grepl('^-o=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
-        if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
+        if (! is.na(arg.split[2]) ) { output <- arg.split[2] }#modified
         else { stop('No output file name provided for parameter -o=')}
     }
     else if (grepl("^-s=",each.arg)) {
@@ -187,16 +224,6 @@ colnames(cnts)[1] <- "Gene id"
 #cnts_vsd <- cbind(rownames(vsdMat), vsdMat, res)
 
 
-# https://staffblog.amelieff.jp/entry/biomart
-#library(biomaRt)
-#db <- useMart("ensembl")
-#hd <- useDataset("hsapiens_gene_ensembl", mart = db)
-
-#geneanno <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol", "description"),
-#         filters = "ensembl_gene_id", values = rownames(counts_norm),
-#         mart = hd, useCache = FALSE)
-
-
 # FDRでランキング
                                         #resAndvsd <- transform(exp=assay(vsd), res)
                                         #resOrdered <- resAndvsd[order(res$padj),]
@@ -205,8 +232,8 @@ resSig <- subset(resOrdered, padj < p)
 
 write.table(resOrdered, file=paste(output, ".DESeq2.all.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 write.table(resSig,     file=paste(output, ".DESeq2.DEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange>0,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange<0,], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange>1,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange<1,], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 
 # Volcano plot
 cat('\nmake Volcano plot\n',file=stdout())
@@ -242,6 +269,17 @@ dev.off()
 #meanSdPlot(vsdfastMat)
 #dev.off()
 
+
+library(biomaRt)
+library(BiocFileCache)
+library(AnnotationHub)
+#cache_dir <- paste0(base_path,".cache/")
+#ah <- AnnotationHub::AnnotationHub(cache = BiocFileCache::BiocFileCache(cache_dir, ask = FALSE))
+
+biomaRt::useMartCache(TRUE)
+biomaRt::setCacheDir("/work/.cache")
+bfc <- BiocFileCache::BiocFileCache("/work/.cache", ask = FALSE)
+BiocFileCache::setCache(bfc)
 
 ## Include gene symbols into the heatmap
 #if (species == "Human") {
