@@ -35,13 +35,31 @@ if [ $# -ne 4 ]; then
   exit 1
 fi
 
-outname=$1
+
+
+
+# Determine if running in Docker/Singularity or a standard environment
+# This can be based on environment variables or other indicators
+# For example, checking if a specific directory exists
+if [ -d "/work" ]; then
+    FILE_BASE_PATH="/work/"
+    #export R_CACHE_DIR = "/work/.cache/"
+else
+    FILE_BASE_PATH=""
+fi
+export FILE_BASE_PATH
+
+
+outname=$FILE_BASE_PATH$1
 n=$2
 gname=$3
 sp=$4
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
 
+
+
+# Database to use for ClusterProfiler
 if test $sp = "Human"; then
     orgdb=org.Hs.eg.db
     orggp=hsapiens
@@ -61,6 +79,7 @@ else
     echo "[Note] Species $sp is not included in [Human|Mouse|Rat|Fly|Celegans]. GO analysis will be skipped."
 fi
 
+
 Rdir=$(cd $(dirname $0) && pwd)
 R="Rscript $Rdir/DESeq2.R"
 
@@ -70,8 +89,8 @@ ex(){
 }
 
 postfix=count
-ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1"
-ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1"
+ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp"
+ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp"
 
 for str in genes isoforms; do
     for ty in DEGs upDEGs downDEGs; do
@@ -103,8 +122,8 @@ for ty in DEGs upDEGs downDEGs; do
     fi
 done
 
-if test "$orggp" != ""; then
-    head=$outname.genes.$postfix.DESeq2
-    Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
-            -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2
-fi
+#if test "$orggp" != ""; then
+#    head=$outname.genes.$postfix.DESeq2
+#    Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
+#            -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2
+#fi

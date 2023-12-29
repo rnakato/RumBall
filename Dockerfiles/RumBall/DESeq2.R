@@ -1,35 +1,43 @@
-# https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html
+# Script for DESeq2 Analysis
 
+# Function to print usage information
 print.usage <- function() {
-	cat('\nUsage: Rscript DESeq2.R <options>\n',file=stderr())
-	cat('   MANDATORY ARGUMENTS\n',file=stderr())
-	cat('      -i=<input file>  , input file (RSEM gene/transcript file, estimated count) \n',file=stderr())
-	cat('      -n=<num1>:<num2> , num of replicates for each group \n',file=stderr())
-	cat('   OPTIONAL ARGUMENTS\n',file=stderr())
-	cat('      -nrowname=<int> , row name (default: 1) \n',file=stderr())
-    cat('      -ncolskip=<int> , colmun num to be skiped (default: 0) \n',file=stderr())
-	cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
-	cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
-	cat('   OUTPUT ARGUMENTS\n',file=stderr())
-	cat('      -o=<output> , prefix of output file \n',file=stderr())
-	cat('\n',file=stderr())
+    cat('\nUsage: Rscript DESeq2.R <options>\n', file = stderr())
+    cat('   MANDATORY ARGUMENTS\n',file=stderr())
+    cat('      -i=<input file>  , input file (RSEM gene/transcript file, estimated count) \n',file=stderr())
+    cat('      -n=<num1>:<num2> , num of replicates for each group \n',file=stderr())
+    cat('   OPTIONAL ARGUMENTS\n',file=stderr())
+    cat('      -nrowname=<int> , row name (default: 1) \n',file=stderr())
+    cat('      -ncolskip=<int> , column num to be skipped (default: 0) \n',file=stderr())
+    cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
+    cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
+    cat('   OUTPUT ARGUMENTS\n',file=stderr())
+    cat('      -o=<output> , prefix of output file \n',file=stderr())
+    cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
+    cat('\n',file=stderr())
 }
 
-args <- commandArgs(trailingOnly = T)
-nargs = length(args);
-minargs = 1;
-maxargs = 8;
+# Parse command line arguments
+args <- commandArgs(trailingOnly = TRUE)
+nargs <- length(args)
+minargs <- 1
+maxargs <- 8
+
+# Validate arguments
 if (nargs < minargs | nargs > maxargs) {
-	print.usage()
-	q(save="no",status=1)
+    print.usage()
+    q(save = "no", status = 1)
 }
 
+# Default values for script parameters
 gname1 <- "groupA"
 gname2 <- "groupB"
 p <- 0.01
 nrowname <- 1
 ncolskip <- 0
+species <- "Human"
 
+# Process command line arguments
 for (each.arg in args) {
     if (grepl('^-i=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
@@ -95,29 +103,35 @@ for (each.arg in args) {
         if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
         else { stop('No output file name provided for parameter -o=')}
     }
+    else if (grepl("^-s=",each.arg)) {
+        species <- sub("^-s=", "", each.arg)
+        break
+    }
 }
 
 filename
-nrowname
+nrowname <- 1
 ncolskip
 p
 num1
 num2
 output
+species
 
-group <- data.frame(group = factor(c(rep(gname1,num1),rep(gname2,num2))))
+# Initialize variables for the analysis
+group <- data.frame(group = factor(c(rep(gname1, num1), rep(gname2, num2))))
 
-### read data
-cat('\nread in', filename, '\n',file=stdout())
-data <- read.table(filename, header=F, row.names=nrowname, sep="\t")
-colnames(data) <- unlist(data[1,])   # ヘッダ文字化け対策 header=Tで読み込むと記号が.になる
+# Read in data
+cat('\nread in', filename, '\n', file = stdout())
+data <- read.table(filename, header = FALSE, row.names = nrowname, sep = "\t")
+colnames(data) <- unlist(data[1,])   # Adjust for header encoding issues
 data <- data[-1,]
 
+# Preprocess data
 first = dim(data)[2] - 5
 last = dim(data)[2]
 annotation <- data[,first:last]
 data <- data[,-first:-last]
-
 if (ncolskip==1) {
     data[,-1] <- lapply(data[,-1], function(x) as.numeric(as.character(x)))
     annotation <- subset(annotation,rowSums(data[,-1])!=0)
@@ -134,25 +148,40 @@ if (ncolskip==1) {
 } else {
     data <- subset(data,rowSums(data)!=0)
 }
-
 counts <- as.matrix(data)
 counts <- floor(counts) # DESeq2は整数しか受け付けない
 
+print("this is the counts matrix")
+print(head(counts))
+
+
+# DESeq2 analysis
 suppressPackageStartupMessages({
     library(DESeq2)
     library(ggplot2)
 })
 
 dds <- DESeqDataSetFromMatrix(countData = counts, colData = group, design = ~ group)
+dds <- estimateSizeFactors(dds)
+
+#preprocessing
+#badgenes<-names(which(apply(counts(dds), 1, function(x){sum(x < 5)}) > 0.9 * ncol(dds)))
+#dds <- dds[which(!rownames(dds) %in% badgenes), ]
+
+#perform deseq analysis, prevent deseq from inserting p-adj values which are NA, insert p-adj values, subset all DEGs
+#ddsFiltered<-DESeq(ddsFiltered)
+#res<-results(ddsFiltered, cooksCutoff=FALSE, independentFiltering=FALSE)
+#filtered<-counts(ddsFiltered) 
+#filtered<-as.data.frame(filtered)
+#filtered<-filtered%>%mutate(padj=res$padj)
+#all_diff_genes <-subset(filtered,filtered$padj<0.05)
+
 dds <- DESeq(dds)
-
-dds@colData
 counts_norm <- t(t(counts) / dds$sizeFactor)
-
 res <- results(dds, alpha = p)
-#head(res)
 summary(res)
 
+# Additional DESeq2 analyses
 # shrinkage (apeglm)
 resLFC <- lfcShrink(dds, coef=2, type="apeglm")
 
@@ -180,16 +209,6 @@ colnames(cnts)[1] <- "Gene id"
 #cnts_vsd <- cbind(rownames(vsdMat), vsdMat, res)
 
 
-# https://staffblog.amelieff.jp/entry/biomart
-#library(biomaRt)
-#db <- useMart("ensembl")
-#hd <- useDataset("hsapiens_gene_ensembl", mart = db)
-
-#geneanno <- getBM(attributes = c("ensembl_gene_id", "hgnc_symbol", "description"),
-#         filters = "ensembl_gene_id", values = rownames(counts_norm),
-#         mart = hd, useCache = FALSE)
-
-
 # FDRでランキング
                                         #resAndvsd <- transform(exp=assay(vsd), res)
                                         #resOrdered <- resAndvsd[order(res$padj),]
@@ -198,11 +217,12 @@ resSig <- subset(resOrdered, padj < p)
 
 write.table(resOrdered, file=paste(output, ".DESeq2.all.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 write.table(resSig,     file=paste(output, ".DESeq2.DEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange>0,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange<0,], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange>1,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange<1,], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 
-# Volcano plot
-cat('\nmake Volcano plot\n',file=stdout())
+
+# Volcano plot creation
+cat('\nmake Volcano plot\n', file = stdout())
 library(ggplot2)
 library(ggrepel)
 volcanoData <- data.frame(Gene=resOrdered$genename, logFC=resOrdered$log2FoldChange,
@@ -225,20 +245,11 @@ for(i in topDEGsid) {
 }
 dev.off()
 
-## SD against mean
-#library("vsn")
-#pdf(paste(output, ".MeanVariance.pdf", sep=""), height=7, width=9)
-#par(mfrow=c(1,2))
-#meanSdPlot(log2(counts(dds,normalized=T) + 1))
-#meanSdPlot(rlogMat)
-#meanSdPlot(vsdMat)
-#meanSdPlot(vsdfastMat)
-#dev.off()
-
-# heatmap of top20 highly-expressed genes
+# Heatmap of highly expressed genes
 library(pheatmap)
+select <- order(rowMeans(counts(dds, normalized = TRUE)), decreasing = TRUE)[1:20]
+vsdMat <- assay(vst(dds, blind = FALSE))
 select <- order(rowMeans(counts(dds,normalized=TRUE)), decreasing=TRUE)[1:20]
-
 nt <- normTransform(dds) # log2(x+1)
 df <- as.data.frame(colData(dds)[,c("group","group")])
 pdf(paste(output, ".DESeq2.HighlyExpressedGenes.pdf", sep=""), height=7, width=7)
@@ -247,56 +258,20 @@ pdf(paste(output, ".DESeq2.HighlyExpressedGenes.pdf", sep=""), height=7, width=7
 pheatmap(vsdMat[select,], cluster_rows=F, show_rownames=T, cluster_cols=F, annotation_col=df)
 dev.off()
 
-# sample clustering
-library("RColorBrewer")
-sampleDists <- dist(t(vsdMat))
-sampleDistMatrix <- as.matrix(sampleDists)
-#rownames(sampleDistMatrix) <- paste(rld$condition, rld$type, sep="-")
-colnames(sampleDistMatrix) <- NULL
-colors <- colorRampPalette( rev(brewer.pal(9, "Blues")) )(255)
-pdf(paste(output, ".DESeq2.sampleClustering.pdf", sep=""), height=7, width=8)
-pheatmap(sampleDistMatrix, clustering_distance_rows=sampleDists, clustering_distance_cols=sampleDists, col=colors)
-dev.off()
+# Heatmap of DEGs
+#rld <- vst(dds, blind=FALSE)
+#de <- rownames(resSig)
+#print("here is ok")
+#de_mat <- assay(rld)[de,]
+#pdf(paste(output, ".DESeq2.heatmapDEGs.pdf", sep=""), height=7, width=7)
+#pheatmap(t(scale(t(de_mat))),show_rownames=F, show_colnames=F, annotation_col=group)
+#dev.off()
 
-# PCA plot
+# Sample clustering and PCA plot
 pdf(paste(output, ".DESeq2.samplePCA.pdf", sep=""), height=7, width=7)
 plotPCA(vsd, intgroup=c("group"))
 dev.off()
 
+# Finish script execution
 q("no")
 
-
-# multifactor designs
-#designの中の特定のtypeをcontrastにする（single-factor Wald test）
-res.A.B <- results(dds, contrast=c("condition","A","B"))
-res.A.C <- results(dds, contrast=c("condition","A","C"))
-res.B.C <- results(dds, contrast=c("condition","B","C"))
-
-head()
-resOrdered <- res.A.B[order(res.A.B$padj),]
-
-# one-way ANOVA (p-value indicates difference at least in one condition)
-ddsLRT <- DESeq(dds, test="LRT", reduced= ~ 1)
-resLRT <- results(ddsLRT)
-
-
-# 多群間二因子比較
-group <- data.frame(
-  condition = factor(c(rep("K",6),rep("W",6))),
-  day = factor(c(rep(c(0,2,7),4)))
-)
-model.matrix(~ group$con + group$day)
-
-dds <- nbinomLRT(dds, full = ~ condition + day, reduced = ~ day)
-res <- results(dds)
-res
-head(res[order(res$pvalue), ])
-
-dds <- nbinomLRT(dds, full = ~ condition + day, reduced = ~ condition)
-res <- results(dds)
-res
-head(res[order(res$pvalue), ])
-
-dds <- estimateSizeFactors(dds)
-dds <- estimateDispersions(dds)
-res <- results(dds)
