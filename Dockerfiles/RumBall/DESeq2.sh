@@ -9,7 +9,8 @@ function usage()
     echo '   <group name>: labels of two groups compared (quated by ":")' 1>&2
     echo '   <species>: [Human|Mouse|Rat|Fly|Celegans]' 1>&2
     echo '   Options:' 1>&2
-    echo '      -t <FDR>: FDR threshould (default: 0.05)' 1>&2
+    echo '      -lfc <float>: log2 fold change threshold (default: 1)' 1>&2
+    echo '      -t <FDR>: FDR threshould for GO analysis (default: 0.05)' 1>&2
     echo '      -n <int>: number of genes for GO analysis (default: 500)' 1>&2
     echo "   Example:" 1>&2
     echo "      $cmdname star/Matrix 2:2 WT:KD Human" 1>&2
@@ -20,6 +21,7 @@ nGene_GO=500
 while getopts t:n: option
 do
     case ${option} in
+        lfc) lfc=${OPTARG};;
         t) p=${OPTARG};;
         n) nGene_GO=${OPTARG};;
         *)
@@ -89,8 +91,8 @@ ex(){
 }
 
 postfix=count
-ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp"
-ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp"
+ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$lfc"
+ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$lfc"
 
 for str in genes isoforms; do
     for ty in DEGs upDEGs downDEGs; do
