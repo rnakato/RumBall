@@ -13,6 +13,7 @@ print.usage <- function() {
     cat('      -p=<float>      , threshold for FDR (default: 0.01) 
 \n',file=stderr())
     cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
+    cat('      -ncolname=<int> , column num for gene annotation (default: 2) \n',file=stderr()
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
     cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
@@ -23,7 +24,7 @@ print.usage <- function() {
 args <- commandArgs(trailingOnly = TRUE)
 nargs <- length(args)
 minargs <- 1
-maxargs <- 9
+maxargs <- 10
 
 # Validate arguments
 if (nargs < minargs | nargs > maxargs) {
@@ -39,6 +40,7 @@ nrowname <- 1
 ncolskip <- 0
 species <- "Human"
 lfcthre <- 0
+ncolname <- 2
 
 # Process command line arguments
 for (each.arg in args) {
@@ -100,6 +102,14 @@ for (each.arg in args) {
             lfcthre <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -lfcthre=')}
+    }
+    else if (grepl('^-ncolname=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            ncolname <- as.numeric(arg.split[2])
+        }
+        else { stop('No value provided for parameter -ncolname=')}
+    }
     else if (grepl('^-p=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
@@ -123,6 +133,7 @@ nrowname
 ncolskip
 p
 lfcthre
+ncolname
 num1
 num2
 output
@@ -146,7 +157,7 @@ if (ncolskip==1) {
     data[,-1] <- lapply(data[,-1], function(x) as.numeric(as.character(x)))
     annotation <- subset(annotation,rowSums(data[,-1])!=0)
     data <- subset(data,rowSums(data[,-1])!=0)
-    genename <- data[,1]
+    genename <- data[,ncolname]
     data <- data[,-1]
 } else if (ncolskip==2) {
     data[,-1:-2] <- lapply(data[,-1:-2], function(x) as.numeric(as.character(x)))
