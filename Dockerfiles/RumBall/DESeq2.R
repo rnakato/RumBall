@@ -10,7 +10,10 @@ print.usage <- function() {
     cat('      -nrowname=<int> , row name (default: 1) \n',file=stderr())
     cat('      -ncolskip=<int> , column num to be skipped (default: 0) \n',file=stderr())
     cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
-    cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
+    cat('      -p=<float>      , threshold for FDR (default: 0.01) 
+\n',file=stderr())
+    cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
+    cat('      -ncolname=<int> , column num for gene annotation (default: 2) \n',file=stderr()
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
     cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
@@ -21,7 +24,7 @@ print.usage <- function() {
 args <- commandArgs(trailingOnly = TRUE)
 nargs <- length(args)
 minargs <- 1
-maxargs <- 8
+maxargs <- 10
 
 # Validate arguments
 if (nargs < minargs | nargs > maxargs) {
@@ -36,6 +39,8 @@ p <- 0.01
 nrowname <- 1
 ncolskip <- 0
 species <- "Human"
+lfcthre <- 0
+ncolname <- 2
 
 # Process command line arguments
 for (each.arg in args) {
@@ -91,6 +96,20 @@ for (each.arg in args) {
         }
         else { stop('No value provided for parameter -ncolskip=')}
     }
+    else if (grepl('^-lfcthre=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            lfcthre <- as.numeric(arg.split[2])
+        }
+        else { stop('No value provided for parameter -lfcthre=')}
+    }
+    else if (grepl('^-ncolname=',each.arg)) {
+        arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
+        if (! is.na(arg.split[2]) ) {
+            ncolname <- as.numeric(arg.split[2])
+        }
+        else { stop('No value provided for parameter -ncolname=')}
+    }
     else if (grepl('^-p=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
@@ -110,9 +129,11 @@ for (each.arg in args) {
 }
 
 filename
-nrowname <- 1
+nrowname
 ncolskip
 p
+lfcthre
+ncolname
 num1
 num2
 output
@@ -136,7 +157,7 @@ if (ncolskip==1) {
     data[,-1] <- lapply(data[,-1], function(x) as.numeric(as.character(x)))
     annotation <- subset(annotation,rowSums(data[,-1])!=0)
     data <- subset(data,rowSums(data[,-1])!=0)
-    genename <- data[,1]
+    genename <- data[,ncolname]
     data <- data[,-1]
 } else if (ncolskip==2) {
     data[,-1:-2] <- lapply(data[,-1:-2], function(x) as.numeric(as.character(x)))
@@ -217,8 +238,8 @@ resSig <- subset(resOrdered, padj < p)
 
 write.table(resOrdered, file=paste(output, ".DESeq2.all.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 write.table(resSig,     file=paste(output, ".DESeq2.DEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange>1,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
-write.table(resSig[resSig$log2FoldChange<1,], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange>lfcthre,], file=paste(output, ".DESeq2.upDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
+write.table(resSig[resSig$log2FoldChange<(lfcthre*-1),], file=paste(output, ".DESeq2.downDEGs.tsv", sep=""), quote=F, sep="\t",row.names = F, col.names = T)
 
 
 # Volcano plot creation
@@ -274,4 +295,3 @@ dev.off()
 
 # Finish script execution
 q("no")
-
