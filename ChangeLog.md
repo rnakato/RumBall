@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.5.1 (20203-12-30)
+## 0.5.1 (2023-12-30)
 - Enable Docker scripts to write files in `/work/`
 - Reduce default memory allocation from 96G to 48G
 - Remove g:profiler2 report in favor of ClusterProfiler for GO enrichment
