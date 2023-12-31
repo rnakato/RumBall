@@ -13,11 +13,10 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-#sing="singularity exec --bind /work,/work2 /work/SingularityImages/rumball.0.4.2.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.5.0.sif"
 sing="singularity exec rumball.sif"
 
-Ddir=/work/Database/Database_fromDocker/Referencedata_hg38
-#Ddir=Ensembl-GRCh38/
+Ddir=Ensembl-GRCh38/
 
 mkdir -p log
 for ((i=0; i<${#ID[@]}; i++))
@@ -26,5 +25,4 @@ do
     fq1=fastq/${ID[$i]}_1.fastq.gz
     fq2=fastq/${ID[$i]}_2.fastq.gz
     $sing star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/star.sh.${NAME[$i]}
-    exit
 done

@@ -1,19 +1,24 @@
 # Changelog
 
+## 0.5.1 (20203-12-30)
+- Enable Docker scripts to write files in `/work/`
+- Reduce default memory allocation from 96G to 48G
+- Remove g:profiler2 report in favor of ClusterProfiler for GO enrichment
+
 ## 0.5.0 (2023-12-21)
-    - Add OpenBLAS-0.3.24
-    - Update bedtools from v2.30.0 to v2.31.0
+- Added OpenBLAS-0.3.24
+- Updated bedtools from v2.30.0 to v2.31.0
 
 ## 0.4.4 (2023-07-16)
-- Update `download_genomedata.sh` for S.pombe
-- Update `build-index-RNAseq.sh` for S.pombe
+- Updated `download_genomedata.sh` for S.pombe
+- Updated `build-index-RNAseq.sh` for S.pombe
 
 ## 0.4.3 (2023-05-11)
-- Remove /root/.cpanm/work directory
+- Removed /root/.cpanm/work directory
 
 ## 0.4.2 (2023-04-23)
-- Change the base image from rnakato/database to rnakato/mapping (to simplify installation)
-- Change the script nake ``build-index.sh`` to ``build-index-RNAseq.sh``
+- Changed the base image from rnakato/database to rnakato/mapping (to simplify installation)
+- Changed the script nake ``build-index.sh`` to ``build-index-RNAseq.sh``
 
 ## 0.4.1 (2023-02-16)
 - While the previous version of ``edgeR.sh`` filtered genes with 0 expression in all samples, the current version uses the ``filterByExpr`` function provided by edgeR. This results in more genes being filtered than before, and the FDR value changes accordingly, so more genes become non-significant.
@@ -22,11 +27,11 @@
 
 ## 0.3.0 (2022-11-2)
 - convert_genename_fromgtf.pl: add Ensembl id to "genename" column if the gene name is not provided in the input gtf file
-- add GO analysis using clusterProfiler and gprofiler
+- Added GO analysis using clusterProfiler and gprofiler
 
 ## 0.2.0
 - Public release
-- Update Manual
+- Updated Manual
 
 ## 0.1.0
 - First commit
