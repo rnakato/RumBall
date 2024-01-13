@@ -68,6 +68,6 @@ ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           $odir/$prefix"
 
 log=$odir/log/bowtie2-$prefix.txt
-ex "parsebowtielog2.pl -p $odir/$prefix.log > $log"
+ex "parsebowtielog2.pl -p $odir/$prefix.log $prefix > $log"
 
 ex "rsem-plot-model $odir/$prefix $odir/$prefix.quals.pdf"
