@@ -1,5 +1,5 @@
-Tutorial
-=====================
+Tutorial for RNA-seq analysis (human, RSEM)
+===============================================
 
 This page describes the tutorial how to get the results from FASTQ files.
 The sample scripts for human, mouse and `S. cerevisiae` are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
@@ -8,6 +8,9 @@ The sample scripts for human, mouse and `S. cerevisiae` are also available at `R
 
    | This tutorial assumes using the **RumBall** singularity image (``rumball.sif``). Please add ``singularity exec rumball.sif`` before each command below.
    | Example: ``singularity exec rumball.sif download_genomedata.sh``
+
+.. contents::
+   :depth: 3
 
 Get data
 ------------------------
@@ -90,7 +93,7 @@ Of course you can also use a shell loop:
 
 
 Differential analysis
---------------------------------------------------
+++++++++++++++++++++++++++++++++++++++++++++
 
 ``rsem_merge.sh`` merges the RSEM output of all samples.
 The generated matrix can be applied to DESeq2 or edgeR to identify differentially expressed genes between two groups:
@@ -110,5 +113,61 @@ The generated matrix can be applied to DESeq2 or edgeR to identify differentiall
     edgeR.sh Matrix_edgeR/HEK293 2:2 Control:siCTCF Human
 
 From ``v0.3.0``, ``DESeq2.sh`` and ``edgeR.sh`` also implement gene onthology (GO) analysis
-using `ClusterProfiler <https://bioconductor.org/packages/clusterProfiler/>`_ and `gprofiler2 <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>`_. 
+using `ClusterProfiler <https://bioconductor.org/packages/clusterProfiler/>`_ and `gprofiler2 <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>`_.
 They use top-ranked 500 upregulated/downregulated DEGs for the GO analysis. Use `-n` option the change the gene number.
+
+
+Mapping reads by Bowtie2
+--------------------------------------------------
+
+Because STAR requires large amounts of memory for mapping, it is not suitable for a non-high performance computing environment.
+Bowtie2 needs less memory with comparable mapping accuracy, although it is slower than STAR. Here is an example using Bowtie2.
+
+.. code-block:: bash
+
+    ID=("SRR710092" "SRR710093" "SRR710094" "SRR710095")
+    NAME=("HEK293_Control_rep1" "HEK293_Control_rep2" "HEK293_siCTCF_rep1" "HEK293_siCTCF_rep2")
+
+    mkdir -p log
+    for ((i=0; i<${#ID[@]}; i++))
+    do
+        echo ${NAME[$i]}
+        fq1=fastq/${ID[$i]}_1.fastq.gz
+        fq2=fastq/${ID[$i]}_2.fastq.gz
+        bowtie2.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.bowtie2.sh
+    done
+
+The results are stored in the ``bowtie2`` directory. The mapping statistics are in the log files  ``bowtie2/${NAME[$i]}.log``. Additionally, the log files are parsed by ``parsebowtielog2.pl`` to output a summary table of all samples:
+
+.. code-block:: bash
+
+    mkdir -p log
+    for ((i=0; i<${#ID[@]}; i++))
+    do
+        parsebowtielog2.pl -p $odir/${NAME[$i]}.log
+    done
+
+
+The ``-p`` option is needed if the reads are paired-end.
+
+
+Differential analysis
+++++++++++++++++++++++++++++++++++++++++++++
+
+The diffential analysis step is the same with the STAR example above:
+
+.. code-block:: bash
+
+    Ctrl="bowtie2/HEK293_Control_rep1 bowtie2/HEK293_Control_rep2"
+    siCTCF="bowtie2/HEK293_siCTCF_rep1 bowtie2/HEK293_siCTCF_rep2"
+
+    # For DESeq2
+    mkdir -p Matrix_edgeR_bowtie2
+    rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
+    DESeq2.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human
+
+    # For edgeR
+    mkdir -p Matrix_deseq2_bowtie2
+    rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_bowtie2/HEK293 $Ddir
+    edgeR.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
+

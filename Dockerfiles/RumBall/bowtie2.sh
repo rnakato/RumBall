@@ -9,7 +9,7 @@ function usage()
     echo '   <Ddir>: directory of index and gtf files' 1>&2
     echo '   <strandedness [none|forward|reverse]>: strandedness of input fastq files ("reverse" in the most cases)' 1>&2
     echo '   Options:' 1>&2
-    echo '      -d outputdir: Output directory (default: "star/")' 1>&2
+    echo '      -d outputdir: Output directory (default: "bowtie2/")' 1>&2
     echo '      -p ncore: number of CPUs (default: 12, note that large number (e.g., 64) may cause an error in STAR)' 1>&2
     echo "   Example:" 1>&2
     echo "      $cmdname single HeLa_rep1 HeLa_rep1.fastq.gz Ensembl-GRCh38 reverse" 1>&2
@@ -58,8 +58,6 @@ ex(){ echo $1; eval $1; }
 
 ex "mkdir -p $odir/log"
 
-#bowtie2 $param -p12 -x $index $fastq 2> log/bowtie2.$prefix | samtools sort > $odir/$prefix.sort.bam
-
 ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           --estimate-rspd  \
                           --strandedness $strand \
@@ -69,5 +67,7 @@ ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           $index \
                           $odir/$prefix"
 
+log=$odir/log/bowtie2-$prefix.txt
+ex "parsebowtielog2.pl -p $odir/$prefix.log > $log"
 
 ex "rsem-plot-model $odir/$prefix $odir/$prefix.quals.pdf"

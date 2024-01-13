@@ -1,6 +1,9 @@
 Commands in RumBall
 ============================
 
+.. contents::
+   :depth: 2
+
 download_genomedata.sh
 ------------------------------------
 
@@ -202,7 +205,6 @@ check_stranded.sh
 
 In case that it is not clear whether the input samples are stranded or not, use ``check_stranded.sh`` for the quick check.
 
-
 .. code-block:: bash
 
     check_stranded.sh [human|mouse] <fastq>
@@ -210,6 +212,15 @@ In case that it is not clear whether the input samples are stranded or not, use 
 This command runs bowtie to map reads onto the mRNA sequences obtained from NCBI. If the samples are reverse-straned, the most reads will be mapped to the reverse strand.
 If fifty-fifty, the samples are unstranded.
 
+
+parsebowtielog2.pl
+------------------------------------------------
+
+``parsebowtielog2.pl`` parses the log file of bowtie2 and outputs the number of mapped reads. This script is useful to merge the stats for all samples into a single .tsv file. Add ``-p`` option if the input files are paired-end reads.
+
+.. code-block:: bash
+
+    parsebowtielog2.pl [--pair|-p] <file> <label>
 
 csv2xlsx.pl
 ------------------------------------------------

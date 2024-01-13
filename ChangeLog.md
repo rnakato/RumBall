@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.2 (2024-01-13)
+- Bug Fix in DESeq2.sh and DESeq2.R that the option is not passed correctly
+- Added `parsebowtielog2.pl` that parses the log file of bowtie2 and outputs the number of mapped reads.
+- Added a sample script (bowtie2.sh) for using bowtie2 for mapping in the `tutorial/` directory.
+- Updated the Manual and added the tutorial of RSEM-bowtie2.
+
 ## 0.5.1 (2023-12-30)
 - Enable Docker scripts to write files in `/work/`
 - Reduce default memory allocation from 96G to 48G

@@ -8,15 +8,14 @@ print.usage <- function() {
     cat('      -n=<num1>:<num2> , num of replicates for each group \n',file=stderr())
     cat('   OPTIONAL ARGUMENTS\n',file=stderr())
     cat('      -nrowname=<int> , row name (default: 1) \n',file=stderr())
-    cat('      -ncolskip=<int> , column num to be skipped (default: 0) \n',file=stderr())
+    cat('      -ncolskip=<int> , # of column to be skipped (default: 0) \n',file=stderr())
     cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
-    cat('      -p=<float>      , threshold for FDR (default: 0.01) 
-\n',file=stderr())
+    cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
     cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
-    cat('      -ncolname=<int> , column num for gene annotation (default: 2) \n',file=stderr()
+    cat('      -ncolname=<int> , # of column for gene annotation (default: 2) \n',file=stderr())
+    cat('      -s=<species> , species for the analysis (e.g., Human, Mouse, default: Human) \n', file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
-    cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
     cat('\n',file=stderr())
 }
 
@@ -38,20 +37,20 @@ gname2 <- "groupB"
 p <- 0.01
 nrowname <- 1
 ncolskip <- 0
-species <- "Human"
 lfcthre <- 0
 ncolname <- 2
+species <- "Human"
 
 # Process command line arguments
 for (each.arg in args) {
-    if (grepl('^-i=',each.arg)) {
+    if (grepl('^-i=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             filename <- arg.split[2]
         }
         else { stop('No input file name provided for parameter -i=')}
     }
-    else if (grepl('^-n=',each.arg)) {
+    else if (grepl('^-n=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             sep.vals <- arg.split[2]
@@ -68,7 +67,7 @@ for (each.arg in args) {
         }
         else { stop('No value provided for parameter -n=')}
     }
-    else if (grepl('^-gname=',each.arg)) {
+    else if (grepl('^-gname=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             sep.vals <- arg.split[2]
@@ -82,62 +81,61 @@ for (each.arg in args) {
         }
         else { stop('No value provided for parameter -gname=')}
     }
-    else if (grepl('^-nrowname=',each.arg)) {
+    else if (grepl('^-nrowname=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             nrowname <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -nrowname=')}
     }
-    else if (grepl('^-ncolskip=',each.arg)) {
+    else if (grepl('^-ncolskip=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             ncolskip <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -ncolskip=')}
     }
-    else if (grepl('^-lfcthre=',each.arg)) {
+    else if (grepl('^-lfcthre=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             lfcthre <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -lfcthre=')}
     }
-    else if (grepl('^-ncolname=',each.arg)) {
+    else if (grepl('^-ncolname=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
-        if (! is.na(arg.split[2]) ) {
+        if (!is.na(arg.split[2])) {
             ncolname <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -ncolname=')}
     }
-    else if (grepl('^-p=',each.arg)) {
+    else if (grepl('^-p=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
             p <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -p=')}
     }
-    else if (grepl('^-o=',each.arg)) {
+    else if (grepl('^-o=', each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
         else { stop('No output file name provided for parameter -o=')}
     }
-    else if (grepl("^-s=",each.arg)) {
+    else if (grepl("^-s=", each.arg)) {
         species <- sub("^-s=", "", each.arg)
-        break
     }
 }
 
-filename
-nrowname
-ncolskip
-p
-lfcthre
-ncolname
-num1
-num2
-output
-species
+cat('filename: ', filename, '\n', file = stdout())
+cat('nrowname: ', nrowname, '\n', file = stdout())
+cat('ncolskip: ', ncolskip, '\n', file = stdout())
+cat('p: ', p, '\n', file = stdout())
+cat('lfcthre: ', lfcthre, '\n', file = stdout())
+cat('ncolname: ', ncolname, '\n', file = stdout())
+cat('num1: ', num1, '\n', file = stdout())
+cat('num2: ', num2, '\n', file = stdout())
+cat('output: ', output, '\n', file = stdout())
+cat('species: ', species, '\n', file = stdout())
 
 # Initialize variables for the analysis
 group <- data.frame(group = factor(c(rep(gname1, num1), rep(gname2, num2))))
@@ -149,23 +147,23 @@ colnames(data) <- unlist(data[1,])   # Adjust for header encoding issues
 data <- data[-1,]
 
 # Preprocess data
-first = dim(data)[2] - 5
-last = dim(data)[2]
-annotation <- data[,first:last]
-data <- data[,-first:-last]
+first <- dim(data)[2] - 5
+last <- dim(data)[2]
+annotation <- data[, first:last]
+data <- data[, -first:-last]
 if (ncolskip==1) {
-    data[,-1] <- lapply(data[,-1], function(x) as.numeric(as.character(x)))
-    annotation <- subset(annotation,rowSums(data[,-1])!=0)
-    data <- subset(data,rowSums(data[,-1])!=0)
-    genename <- data[,ncolname]
-    data <- data[,-1]
+    data[,-1] <- lapply(data[, -1], function(x) as.numeric(as.character(x)))
+    annotation <- subset(annotation,rowSums(data[, -1])!=0)
+    data <- subset(data, rowSums(data[, -1])!=0)
+    genename <- data[, ncolname]
+    data <- data[, -1]
 } else if (ncolskip==2) {
-    data[,-1:-2] <- lapply(data[,-1:-2], function(x) as.numeric(as.character(x)))
-    annotation <- subset(annotation,rowSums(data[,-1:-2])!=0)
-    data <- subset(data,rowSums(data[,-1:-2])!=0)
-    genename <- data[,1:2]
-    colnames(genename) <- c('genename','id')
-    data <- data[,-1:-2]
+    data[, -1:-2] <- lapply(data[, -1:-2], function(x) as.numeric(as.character(x)))
+    annotation <- subset(annotation,rowSums(data[, -1:-2]) != 0)
+    data <- subset(data, rowSums(data[, -1:-2]) != 0)
+    genename <- data[, 1:2]
+    colnames(genename) <- c('genename', 'id')
+    data <- data[, -1:-2]
 } else {
     data <- subset(data,rowSums(data)!=0)
 }

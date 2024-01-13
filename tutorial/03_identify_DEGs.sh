@@ -1,5 +1,5 @@
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.5.0.sif"
-sing="singularity exec rumball.sif"
+sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.5.2.sif"
+#sing="singularity exec rumball.sif"
 
 Ddir=Ensembl-GRCh38/
 

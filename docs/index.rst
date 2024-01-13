@@ -45,11 +45,6 @@ Contents:
 
    content/Install
    content/Tutorial
-   content/OtherExamples
    content/Commands
 
-
-Contact:
---------------
-
-:Mail: rnakato AT iqb.u-tokyo.ac.jp
+..   content/kallisto

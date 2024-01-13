@@ -124,6 +124,17 @@ num1
 num2
 output
 
+cat('filename: ', filename, '\n', file = stdout())
+cat('color: ', color, '\n', file = stdout())
+cat('nrowname: ', nrowname, '\n', file = stdout())
+cat('ncolskip: ', ncolskip, '\n', file = stdout())
+cat('p: ', p, '\n', file = stdout())
+cat('lfcthre: ', lfcthre, '\n', file = stdout())
+cat('num1: ', num1, '\n', file = stdout())
+cat('num2: ', num2, '\n', file = stdout())
+cat('output: ', output, '\n', file = stdout())
+
+
 nsample <- num1 + num2
 
 group <- factor(c(rep(gname1,num1),rep(gname2,num2)))
