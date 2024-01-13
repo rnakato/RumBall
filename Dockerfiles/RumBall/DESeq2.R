@@ -12,8 +12,8 @@ print.usage <- function() {
     cat('      -gname=<name1>:<name2> , name of each group \n',file=stderr())
     cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
     cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
-    cat('      -ncolname=<int> , # of column for gene annotation (default: 2) \n',file=stderr())
-    cat('      -s=<species> , species for the analysis (e.g., Human, Mouse, default: Human) \n', file=stderr())
+    cat('      -ncolname=<int> , # of column for the gene symbol (default: 1) \n',file=stderr())
+    cat('      -s=<species> , species for the analysis ([Human|Mouse|Rat|Fly|Celegans], default: Human) \n', file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
     cat('\n',file=stderr())
@@ -38,7 +38,7 @@ p <- 0.01
 nrowname <- 1
 ncolskip <- 0
 lfcthre <- 0
-ncolname <- 2
+ncolname <- 1
 species <- "Human"
 
 # Process command line arguments
@@ -151,15 +151,16 @@ first <- dim(data)[2] - 5
 last <- dim(data)[2]
 annotation <- data[, first:last]
 data <- data[, -first:-last]
+
 if (ncolskip==1) {
     data[,-1] <- lapply(data[, -1], function(x) as.numeric(as.character(x)))
-    annotation <- subset(annotation,rowSums(data[, -1])!=0)
+    annotation <- subset(annotation, rowSums(data[, -1])!=0)
     data <- subset(data, rowSums(data[, -1])!=0)
     genename <- data[, ncolname]
     data <- data[, -1]
 } else if (ncolskip==2) {
     data[, -1:-2] <- lapply(data[, -1:-2], function(x) as.numeric(as.character(x)))
-    annotation <- subset(annotation,rowSums(data[, -1:-2]) != 0)
+    annotation <- subset(annotation, rowSums(data[, -1:-2]) != 0)
     data <- subset(data, rowSums(data[, -1:-2]) != 0)
     genename <- data[, 1:2]
     colnames(genename) <- c('genename', 'id')
@@ -229,8 +230,8 @@ colnames(cnts)[1] <- "Gene id"
 
 
 # FDRでランキング
-                                        #resAndvsd <- transform(exp=assay(vsd), res)
-                                        #resOrdered <- resAndvsd[order(res$padj),]
+#resAndvsd <- transform(exp=assay(vsd), res)
+#resOrdered <- resAndvsd[order(res$padj),]
 resOrdered <- cnts[order(cnts$pvalue),]
 resSig <- subset(resOrdered, padj < p)
 
@@ -244,12 +245,15 @@ write.table(resSig[resSig$log2FoldChange<(lfcthre*-1),], file=paste(output, ".DE
 cat('\nmake Volcano plot\n', file = stdout())
 library(ggplot2)
 library(ggrepel)
-volcanoData <- data.frame(Gene=resOrdered$genename, logFC=resOrdered$log2FoldChange,
-                          FDR=-log10(resOrdered$padj), significant=resOrdered$padj < p)
+volcanoData <- data.frame(Gene=resOrdered$genename, 
+                          logFC=resOrdered$log2FoldChange,
+                          FDR=-log10(resOrdered$padj), 
+                          significant=resOrdered$padj < p)
+                          
 volc = ggplot(volcanoData, aes(logFC, FDR)) +
-    geom_point(aes(col=significant)) +
-    scale_color_manual(values=c("black", "red")) +
-    ggtitle(paste("Volcano plot (", gname1, ", ", gname2, ")", sep=""))
+       geom_point(aes(col=significant)) +
+       scale_color_manual(values=c("black", "red")) +
+       ggtitle(paste("Volcano plot (", gname1, ", ", gname2, ")", sep=""))
 volc = volc + geom_text_repel(data=head(volcanoData[order(volcanoData$FDR, decreasing=T),], 20), aes(label=Gene))
 ggsave(paste(output, ".DESeq2.Volcano.pdf", sep=""), plot=volc, device="pdf")
 
@@ -269,12 +273,22 @@ library(pheatmap)
 select <- order(rowMeans(counts(dds, normalized = TRUE)), decreasing = TRUE)[1:20]
 vsdMat <- assay(vst(dds, blind = FALSE))
 select <- order(rowMeans(counts(dds,normalized=TRUE)), decreasing=TRUE)[1:20]
-nt <- normTransform(dds) # log2(x+1)
+#nt <- normTransform(dds) # log2(x+1)
+vsdMat_genename <- cbind(genename, vsdMat)
+rownames <- make.names(vsdMat_genename[,1], unique=TRUE)
+vsdMat_genename <- vsdMat_genename[,-1]
+colnames <- colnames(vsdMat_genename)
+vsdMat_genename <- data.frame(matrix(as.numeric(vsdMat_genename), nrow = nrow(vsdMat_genename), ncol = ncol(vsdMat_genename)))
+rownames(vsdMat_genename) <- rownames
+colnames(vsdMat_genename) <- colnames
+
 df <- as.data.frame(colData(dds)[,c("group","group")])
+print(df)
+#df <- as.data.frame(vsdMat_genename[,c("group","group")])
 pdf(paste(output, ".DESeq2.HighlyExpressedGenes.pdf", sep=""), height=7, width=7)
 #par(mfrow=c(1,2))
 #pheatmap(assay(nt)[select,], cluster_rows=F, show_rownames=T, cluster_cols=F, annotation_col=df)
-pheatmap(vsdMat[select,], cluster_rows=F, show_rownames=T, cluster_cols=F, annotation_col=df)
+pheatmap(vsdMat_genename[select,], cluster_rows=F, show_rownames=T, cluster_cols=F, annotation_col=df)
 dev.off()
 
 # Heatmap of DEGs
