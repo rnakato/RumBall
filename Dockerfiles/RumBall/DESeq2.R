@@ -15,7 +15,7 @@ print.usage <- function() {
     cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
-    cat(' -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
+    cat('      -s=<species> , species for the analysis (e.g., Human, Mouse) \n', file=stderr())
     cat('\n',file=stderr())
 }
 
@@ -100,6 +100,7 @@ for (each.arg in args) {
             lfcthre <- as.numeric(arg.split[2])
         }
         else { stop('No value provided for parameter -lfcthre=')}
+    }
     else if (grepl('^-p=',each.arg)) {
         arg.split <- strsplit(each.arg,'=',fixed=TRUE)[[1]]
         if (! is.na(arg.split[2]) ) {
@@ -114,7 +115,6 @@ for (each.arg in args) {
     }
     else if (grepl("^-s=",each.arg)) {
         species <- sub("^-s=", "", each.arg)
-        break
     }
 }
 

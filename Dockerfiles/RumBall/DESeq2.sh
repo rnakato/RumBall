@@ -9,48 +9,44 @@ function usage()
     echo '   <group name>: labels of two groups compared (quated by ":")' 1>&2
     echo '   <species>: [Human|Mouse|Rat|Fly|Celegans]' 1>&2
     echo '   Options:' 1>&2
-    echo '      -lfc <float>: log2 fold change threshold (default: 1)' 1>&2
     echo '      -t <FDR>: FDR threshould for GO analysis (default: 0.05)' 1>&2
     echo '      -n <int>: number of genes for GO analysis (default: 500)' 1>&2
+    echo '      -l <float>: log2 fold change threshold (default: 1)' 1>&2
     echo "   Example:" 1>&2
     echo "      $cmdname star/Matrix 2:2 WT:KD Human" 1>&2
 }
 
-p=0.05
+t=0.05
 nGene_GO=500
-while getopts t:n: option
+l=1.0
+
+while getopts "t:n:l:" option
 do
     case ${option} in
-        lfc) lfc=${OPTARG};;
-        t) p=${OPTARG};;
+        t) t=${OPTARG};;
         n) nGene_GO=${OPTARG};;
+        l) l=${OPTARG};;
         *)
             usage
             exit 1
             ;;
     esac
 done
+#echo "t: $t, nGene_GO: $nGene_GO, l: $l"
 shift $((OPTIND - 1))
-
 if [ $# -ne 4 ]; then
   usage
   exit 1
 fi
 
-
-
-
 # Determine if running in Docker/Singularity or a standard environment
-# This can be based on environment variables or other indicators
-# For example, checking if a specific directory exists
-if [ -d "/work" ]; then
+if [ -n "$SINGULARITY_CONTAINER" ]; then
+    # Configure paths or settings specific to Singularity
+else
+    # Default configuration
     FILE_BASE_PATH="/work/"
     #export R_CACHE_DIR = "/work/.cache/"
-else
-    FILE_BASE_PATH=""
 fi
-export FILE_BASE_PATH
-
 
 outname=$FILE_BASE_PATH$1
 n=$2
@@ -59,26 +55,25 @@ sp=$4
 n1=$(cut -d':' -f1 <<<${n})
 n2=$(cut -d':' -f2 <<<${n})
 
-
-
 # Database to use for ClusterProfiler
-if test $sp = "Human"; then
+if [ "$sp" = "Human" ]; then
     orgdb=org.Hs.eg.db
     orggp=hsapiens
-elif test $sp = "Mouse"; then
+elif [ "$sp" = "Mouse" ]; then
     orgdb=org.Mm.eg.db
     orggp=mmusculus
-elif test $sp = "Rat"; then
+elif [ "$sp" = "Rat" ]; then
     orgdb=org.Rn.eg.db
     orggp=rnorvegicus
-elif test $sp = "Fly"; then
+elif [ "$sp" = "Fly" ]; then
     orgdb=org.Dm.eg.db
     orggp=dmelanogaster
-elif test $sp = "Celegans"; then
-     orgdb=org.Ce.eg.db
-     orggp=celegans
+elif [ "$sp" = "Celegans" ]; then
+    orgdb=org.Ce.eg.db
+    orggp=celegans
 else
     echo "[Note] Species $sp is not included in [Human|Mouse|Rat|Fly|Celegans]. GO analysis will be skipped."
+    orgdb=""
 fi
 
 
@@ -91,8 +86,8 @@ ex(){
 }
 
 postfix=count
-ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$lfc"
-ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$lfc"
+ex "$R -i=$outname.genes.$postfix.txt -n=$n -gname=$gname -o=$outname.genes.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$l"
+ex "$R -i=$outname.isoforms.$postfix.txt -n=$n -gname=$gname -o=$outname.isoforms.$postfix -p=$p -nrowname=2 -ncolskip=1 -s=$sp -lfcthre=$l"
 
 for str in genes isoforms; do
     for ty in DEGs upDEGs downDEGs; do
@@ -116,16 +111,11 @@ for str in genes isoforms; do
 done
 
 for ty in DEGs upDEGs downDEGs; do
-    if test "$orgdb" != ""; then
+    if [ "$orgdb" != "" ]; then
+    #if test "$orgdb" != ""; then
         Rscript $Rdir/run_clusterProfiler.R \
                 -i=$outname.genes.$postfix.DESeq2.$ty.tsv \
                 -n=$nGene_GO -o=$outname.genes.$postfix.DESeq2.GO.clusterProfiler.$ty \
                 -n=$nGene_GO -orgdb=$orgdb
     fi
 done
-
-#if test "$orggp" != ""; then
-#    head=$outname.genes.$postfix.DESeq2
-#    Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
-#            -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2
-#fi
