@@ -42,7 +42,3 @@ First clone and move to the repository
 Then type:
 
     docker build -f Dockerfile.<version> -t <account>/rumball
-
-## 5. Contact
-
-Ryuichiro Nakato: rnakato AT iqb.u-tokyo.ac.jp
