@@ -1,4 +1,4 @@
-Tutorial for RNA-seq analysis (human, RSEM)
+Tutorial (human, RSEM)
 ===============================================
 
 This page describes the tutorial how to get the results from FASTQ files.
