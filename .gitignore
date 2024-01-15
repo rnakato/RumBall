@@ -8,3 +8,9 @@ tutorial/log/
 tutorial/Ensembl-GRCh38/
 tutorial/star/
 tutorial/bowtie2/
+tutorial/Matrix_deseq2/
+tutorial/Matrix_edgeR/
+tutorial/Matrix_deseq2_bowtie2/
+tutorial/Matrix_edgeR_bowtie2/
+tutorial/Matrix_deseq2_kallisto/
+tutorial/Matrix_edgeR_kallisto/

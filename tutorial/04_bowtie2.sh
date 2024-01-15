@@ -13,8 +13,8 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.5.2.sif"
-#sing="singularity exec rumball.sif"
+#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.6.0.sif"
+sing="singularity exec rumball.sif"
 
 Ddir=Ensembl-GRCh38/
 
@@ -31,11 +31,11 @@ Ctrl="bowtie2/HEK293_Control_rep1 bowtie2/HEK293_Control_rep2"
 siCTCF="bowtie2/HEK293_siCTCF_rep1 bowtie2/HEK293_siCTCF_rep2"
 
 # For DESeq2
-mkdir -p Matrix_edgeR_bowtie2
-rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
-DESeq2.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human
+mkdir -p Matrix_deseq2_bowtie2 
+$sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_bowtie2/HEK293 $Ddir
+$sing DESeq2.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
 
 # For edgeR
-mkdir -p Matrix_deseq2_bowtie2
-rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_bowtie2/HEK293 $Ddir
-edgeR.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
+mkdir -p Matrix_edgeR_bowtie2
+$sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
+$sing edgeR.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human

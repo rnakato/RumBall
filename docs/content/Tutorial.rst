@@ -155,7 +155,7 @@ The ``-p`` option is needed if the reads are paired-end.
 Differential analysis
 ++++++++++++++++++++++++++++++++++++++++++++
 
-The diffential analysis step is the same with the STAR example above:
+The differential analysis step is the same with the STAR example above:
 
 .. code-block:: bash
 

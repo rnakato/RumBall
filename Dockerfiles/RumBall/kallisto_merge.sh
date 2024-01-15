@@ -1,4 +1,5 @@
 #!/bin/bash
+
 cmdname=`basename $0`
 function usage()
 {
@@ -37,25 +38,57 @@ Ddir=$3
 ex(){ echo $1; eval $1; }
 
 gtf=$Ddir/gtf_chrUCSC/chr.gtf
+refFlat_transcript=$Ddir/gtf_chrUCSC/chr.transcript.refFlat
+refFlat_gene=$Ddir/gtf_chrUCSC/chr.gene.refFlat
 
-echo "merging csv files..."
-mergekallistotsv.sh $files > $output.transcript.csv
-convert_genename_fromgtf.pl --type=isoforms -f $output.transcript.csv -g $gtf --nline=0 > $output.transcript.name.csv
+### Transcript level
+echo "merging tsv files to $output.transcript.tsv..."
+mergekallistotsv.sh -t $files > $output.transcript.TPM.tsv
+mergekallistotsv.sh    $files > $output.transcript.count.tsv
 
-echo "tximport to gene..."
-Rscript /opt/RumBall/kallisto_tximport.R $output.gene $gtf $files
-
-tmpfile=$(mktemp)
-for file in $files
+for norm in TPM count
 do
-  echo -en "\t`echo  $file | sed -e 's/kallisto\///g' -e 's/\/abundance.tsv//g'`" >> $tmpfile
-done
-echo "" >> $tmpfile
-cat $output.gene.csv >> $tmpfile
-mv $tmpfile $output.gene.csv
+    convert_genename_fromgtf.pl --type=isoforms -f $output.transcript.$norm.tsv -g $gtf --nline=0 \
+            > $output.transcript.$norm.tsv.temp #$output.transcript.$norm.withname.tsv
+    mv $output.transcript.$norm.tsv.temp $output.transcript.$norm.tsv
 
-echo "convert csv to xlsx..."
-convert_genename_fromgtf.pl --type=genes --outputtype=all -f $output.gene.csv -g $gtf --nline=0 > $output.gene.name.all.csv
-convert_genename_fromgtf.pl --type=genes --outputtype=pc  -f $output.gene.csv -g $gtf --nline=0 > $output.gene.name.pc.csv
-csv2xlsx.pl -i $output.gene.name.all.csv -n gene-TPM.all -i $output.gene.name.pc.csv -n gene-TPM.proteincoding -i $output.transcript.name.csv -n isoform-TPM -o $output.xlsx
+    echo "Adding gene annotation to $output.transcript.annotated.tsv..."
+    add_geneinfo_fromRefFlat.pl isoforms $output.transcript.$norm.tsv $refFlat_transcript 1 \
+            > $output.transcript.$norm.annotated.tsv
+done
+
+### Gene level
+echo "tximport to gene..."
+Rscript /opt/RumBall/kallisto_tximport.R $output.genes $gtf $files
+#Rscript /work3/DockerFiles/RumBall/Dockerfiles/RumBall/kallisto_tximport.R $output.genes $gtf $files
+
+# Add header
+tmpfile=$(mktemp)
+
+for norm in TPM count
+do
+    outputfile=$output.genes.$norm.tsv
+    for file in $files; do
+        echo -en "\t`echo  $file | sed -e 's/kallisto\///g' -e 's/\/abundance.tsv//g'`" >> $tmpfile
+    done
+    echo "" >> $tmpfile
+    cat $outputfile >> $tmpfile
+    mv $tmpfile $outputfile
+
+    for genetype in all pc; do
+    convert_genename_fromgtf.pl --type=genes --outputtype=$genetype -f $outputfile -g $gtf --nline=0 > $output.genes.$norm.$genetype.tsv
+    echo "Adding gene annotation to $output.genes.$norm.$genetype.annotated.tsv..."
+    add_geneinfo_fromRefFlat.pl genes $output.genes.$norm.$genetype.tsv  $refFlat_gene 1 > $output.genes.$norm.$genetype.annotated.tsv
+      done
+done
+
+echo "convert tsv to xlsx..."
+csv2xlsx.pl \
+  -i $output.genes.TPM.all.annotated.tsv -n gene-TPM.all \
+  -i $output.genes.TPM.pc.annotated.tsv -n gene-TPM.proteincoding \
+  -i $output.genes.count.all.annotated.tsv -n gene-count.all \
+  -i $output.genes.count.pc.annotated.tsv -n gene-count.proteincoding \
+  -i $output.transcript.TPM.annotated.tsv -n transcript-TPM \
+  -i $output.transcript.count.annotated.tsv -n transcript-count \
+  -o $output.xlsx
 echo "done."

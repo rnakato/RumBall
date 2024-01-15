@@ -45,6 +45,5 @@ Contents:
 
    content/Install
    content/Tutorial
+   content/kallisto
    content/Commands
-
-..   content/kallisto

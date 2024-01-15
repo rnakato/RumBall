@@ -13,7 +13,8 @@ print.usage <- function() {
     cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
     cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
     cat('      -ncolname=<int> , # of column for the gene symbol (default: 1) \n',file=stderr())
-    cat('      -s=<species> , species for the analysis ([Human|Mouse|Rat|Fly|Celegans], default: Human) \n', file=stderr())
+    cat('      -s=<species>, species for the analysis ([Human|Mouse|Rat|Fly|Celegans], default: Human) \n', file=stderr())
+    cat('      -noannotation, specify when the gene|transcript annotation is missing) \n', file=stderr())
     cat('   OUTPUT ARGUMENTS\n',file=stderr())
     cat('      -o=<output> , prefix of output file \n',file=stderr())
     cat('\n',file=stderr())
@@ -23,7 +24,7 @@ print.usage <- function() {
 args <- commandArgs(trailingOnly = TRUE)
 nargs <- length(args)
 minargs <- 1
-maxargs <- 10
+maxargs <- 11
 
 # Validate arguments
 if (nargs < minargs | nargs > maxargs) {
@@ -40,6 +41,7 @@ ncolskip <- 0
 lfcthre <- 0
 ncolname <- 1
 species <- "Human"
+isannotation <- "on"
 
 # Process command line arguments
 for (each.arg in args) {
@@ -124,6 +126,9 @@ for (each.arg in args) {
     else if (grepl("^-s=", each.arg)) {
         species <- sub("^-s=", "", each.arg)
     }
+    else if (grepl("^-noannotation", each.arg)) {
+        isannotation <- "off"
+    }
 }
 
 cat('filename: ', filename, '\n', file = stdout())
@@ -147,10 +152,14 @@ colnames(data) <- unlist(data[1,])   # Adjust for header encoding issues
 data <- data[-1,]
 
 # Preprocess data
-first <- dim(data)[2] - 5
-last <- dim(data)[2]
-annotation <- data[, first:last]
-data <- data[, -first:-last]
+if (isannotation == "on") {
+    first <- dim(data)[2] - 5
+    last <- dim(data)[2]
+    annotation <- data[, first:last]
+    data <- data[, -first:-last]
+} else {
+    annotation <- ""
+}
 
 if (ncolskip==1) {
     data[,-1] <- lapply(data[, -1], function(x) as.numeric(as.character(x)))

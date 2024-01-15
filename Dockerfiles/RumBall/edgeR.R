@@ -12,6 +12,7 @@ print.usage <- function() {
 	cat('      -p=<float>      , threshold for FDR (default: 0.01) \n',file=stderr())
 	cat('      -lfcthre=<float> , threshold of log2(foldchange) (default: 0) \n',file=stderr())
 	cat('      -color=<color>  , heatmap color (blue|orange|purple|green , default: blue) \n',file=stderr())
+    cat('      -noannotation, specify when the gene|transcript annotation is missing) \n', file=stderr())
 	cat('   OUTPUT ARGUMENTS\n',file=stderr())
 	cat('      -o=<output> , prefix of output file \n',file=stderr())
 	cat('\n',file=stderr())
@@ -20,7 +21,7 @@ print.usage <- function() {
 args <- commandArgs(trailingOnly = T)
 nargs = length(args);
 minargs = 1;
-maxargs = 8;
+maxargs = 9;
 if (nargs < minargs | nargs > maxargs) {
 	print.usage()
 	q(save="no",status=1)
@@ -33,6 +34,7 @@ color <- "blue"
 gname1 <- "group1"
 gname2 <- "group2"
 lfcthre <- 0
+isannotation <- "on"
 
 for (each.arg in args) {
     if (grepl('^-i=',each.arg)) {
@@ -113,6 +115,9 @@ for (each.arg in args) {
         if (! is.na(arg.split[2]) ) { output <- arg.split[2] }
         else { stop('No output file name provided for parameter -o=')}
     }
+    else if (grepl("^-noannotation", each.arg)) {
+        isannotation <- "off"
+    }
 }
 
 cat('filename: ', filename, '\n', file = stdout())
@@ -138,10 +143,14 @@ data <- read.table(filename, header=F, row.names=nrowname, sep="\t")
 colnames(data) <- unlist(data[1,])   # ヘッダ文字化け対策 header=Tで読み込むと記号が.になる
 data <- data[-1,]
 
-first = dim(data)[2] - 5
-last = dim(data)[2]
-annotation <- data[,first:last]
-data <- data[,-first:-last]
+if (isannotation == "on") {
+    first = dim(data)[2] - 5
+    last = dim(data)[2]
+    annotation <- data[,first:last]
+    data <- data[,-first:-last]
+} else {
+    annotation <- ""
+}
 
 if (ncolskip==1) {
     data[,-1] <- lapply(data[,-1], function(x) as.numeric(as.character(x)))
@@ -174,7 +183,9 @@ keep <- filterByExpr(d, group=group)
 d <- d[keep, , keep.lib.sizes=FALSE]
 counts <- counts[keep,]
 genename <- genename[keep]
-annotation <- annotation[keep,]
+if (isannotation == "on") {
+    annotation <- annotation[keep,]
+}
 cat('\nThe number of transcripts after filtering lowly expressed ones by filterByExpr\n',file=stdout())
 sum(keep)
 
@@ -257,10 +268,20 @@ autoplot(prcomp(t(fittedcount_norm)), shape=F, label=T, label.size=3, data=d$sam
 dev.off()
 
 ## normalize後のfitted valueを表示
-if(ncolskip==0){
-	cnts <- cbind(rownames(fittedcount), fittedcount_norm, tt$table, annotation)
+
+if (isannotation == "on") {
+    if(ncolskip==0){
+        cnts <- cbind(rownames(fittedcount), fittedcount_norm, tt$table, annotation)
+    }else{
+        cnts <- cbind(rownames(fittedcount), genename, fittedcount_norm, tt$table, annotation)
+    }
 }else{
-	cnts <- cbind(rownames(fittedcount), genename, fittedcount_norm, tt$table, annotation)
+    if(ncolskip==0){
+        cnts <- cbind(rownames(fittedcount), fittedcount_norm, tt$table)
+    }else{
+        cnts <- cbind(rownames(fittedcount), genename, fittedcount_norm, tt$table)
+    }
+
 }
 
 colnames(cnts)[1] <- "Ensembl ID"

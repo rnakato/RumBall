@@ -53,6 +53,7 @@ fi
 pwd=$(cd $(dirname $0) && pwd)
 
 index=$Ddir/rsem-bowtie2-indexes/genome/genome
+index_rsem=$Ddir/rsem-star-indexes/genome/rsem/index
 
 ex(){ echo $1; eval $1; }
 
@@ -61,10 +62,18 @@ ex "mkdir -p $odir/log"
 ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           --estimate-rspd  \
                           --strandedness $strand \
-			  --append-names \
+			              --append-names \
                           --output-genome-bam \
-			  $fastq \
+		  	              $fastq \
                           $index \
+                          $odir/$prefix"
+
+# 遺伝子名が ID_symbol になってしまうので、bamから再生成
+ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \
+                          --strandedness reverse \
+                          --no-bam-output \
+                          $odir/$prefix.transcript.bam \
+                          $index_rsem \
                           $odir/$prefix"
 
 log=$odir/log/bowtie2-$prefix.txt

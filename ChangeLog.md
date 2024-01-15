@@ -1,9 +1,16 @@
 # Changelog
 
+## 0.6.0 (2024-01-16)
+- Modified the scripts for the kallisto analysis.
+- Added the `-k` option to DESeq2.sh to allow the kallisto output.
+- Added the `-noannotation` option to DESeq2.R.
+- Updated the Manual and added the tutorial of kallisto.
+
 ## 0.5.2 (2024-01-13)
 - Bug Fix in DESeq2.sh and DESeq2.R that the option is not passed correctly
-- Added `parsebowtielog2.pl` that parses the log file of bowtie2 and outputs the number of mapped reads.
+- Changed the gene name in `HighlyExpressedGenes.pdf` of DESeq2 analysis from Ensembl ID to gene symbol.
 - Added a sample script (bowtie2.sh) for using bowtie2 for mapping in the `tutorial/` directory.
+- Added `parsebowtielog2.pl` that parses the log file of bowtie2 and outputs the number of mapped reads.
 - Updated the Manual and added the tutorial of RSEM-bowtie2.
 
 ## 0.5.1 (2023-12-30)
