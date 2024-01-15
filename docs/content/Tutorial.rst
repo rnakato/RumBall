@@ -103,6 +103,7 @@ The generated matrix can be applied to DESeq2 or edgeR to identify differentiall
 
     Ctrl="star/HEK293_Control_rep1 star/HEK293_Control_rep2"
     siCTCF="star/HEK293_siCTCF_rep1 star/HEK293_siCTCF_rep2"
+
     # For DESeq2
     mkdir -p Matrix_deseq2
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2/HEK293 $Ddir
@@ -116,6 +117,7 @@ The generated matrix can be applied to DESeq2 or edgeR to identify differentiall
 From ``v0.3.0``, ``DESeq2.sh`` and ``edgeR.sh`` also implement gene onthology (GO) analysis
 using `ClusterProfiler <https://bioconductor.org/packages/clusterProfiler/>`_ and `gprofiler2 <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>`_.
 They use top-ranked 500 upregulated/downregulated DEGs for the GO analysis. Use `-n` option the change the gene number.
+
 
 
 Mapping reads by Bowtie2
@@ -163,12 +165,12 @@ The differential analysis step is the same with the STAR example above:
     siCTCF="bowtie2/HEK293_siCTCF_rep1 bowtie2/HEK293_siCTCF_rep2"
 
     # For DESeq2
-    mkdir -p Matrix_edgeR_bowtie2
-    rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
-    DESeq2.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human
-
-    # For edgeR
     mkdir -p Matrix_deseq2_bowtie2
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_bowtie2/HEK293 $Ddir
-    edgeR.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
+    DESeq2.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
+
+    # For edgeR
+    mkdir -p Matrix_edgeR_bowtie2
+    rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
+    edgeR.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human
 
