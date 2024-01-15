@@ -2,7 +2,7 @@ Tutorial (human, RSEM)
 ===============================================
 
 This page describes the tutorial how to get the results from FASTQ files.
-The sample scripts for human, mouse and `S. cerevisiae` are also available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
+The sample scripts are available at `RumBall GitHub <https://github.com/rnakato/RumBall/tree/main/tutorial>`_.
 
 .. note::
 
