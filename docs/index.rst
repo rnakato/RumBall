@@ -3,7 +3,7 @@ RumBall
 ================================================================
 
 **RumBall** is a RNA-seq analysis pipeline with Docker.
-The latest version of **RumBall** (v0.4.2) internally uses the tools.
+The latest version of **RumBall** (v0.6.0) internally uses the tools.
 
 - Mapping tools
    - BWA version 0.7.17
