@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.7.0 (2024-02-03)
+- Added user ubuntu
+- Installed `sudo`
+- Updated Miniconda from Python 3.9 to Python 3.10
+- Updated STAR from v2.7.10a to v2.7.11b
+- Updated salmon from from v1.7.0 to v1.10.0
+- Updated Bowtie2 from v2.4.5 to v2.5.3
+- Updated chromap from v0.2.4 to v0.2.5
+- Changed WORKDIR from /opt to /home/ubuntu
+
 ## 0.6.0 (2024-01-16)
 - Modified the scripts for the kallisto analysis.
 - Added the `-k` option to DESeq2.sh to allow the kallisto output.

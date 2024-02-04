@@ -9,10 +9,14 @@ See [Changelog](https://github.com/rnakato/RumBall/blob/main/ChangeLog.md)
 Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumball).
 
 ### 1.1 Docker
+
 To use docker command, type:
 
     docker pull rnakato/rumball
     docker run -it --rm rnakato/rumball <command>
+
+- user:password
+    - ubuntu:ubuntu
 
 ### 1.2 Singularity
 
