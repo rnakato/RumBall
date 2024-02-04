@@ -1,5 +1,5 @@
 tag=0.7.0
-#docker build -f Dockerfile.$tag -t rnakato/rumball:$tag . #--no-cache
+docker build -f Dockerfile.$tag -t rnakato/rumball:$tag . #--no-cache
 #docker save -o rumball-$tag.tar rnakato/rumball:$tag
 #singularity build -F rumball.$tag.sif docker-archive://rumball-$tag.tar
 
