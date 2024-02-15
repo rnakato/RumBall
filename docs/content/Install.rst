@@ -40,10 +40,10 @@ Then you can run RumBall with the command:
 
    singularity exec rumball.sif <command>
 
-Singularity will automatically mount the current directory. If you want to access the files in the other directory, use the `--bind` option, for instance:
+Singularity will automatically mount the current directory. If you want to access the files in the other directory, use the ``--bind`` option, for instance:
 
 .. code-block:: bash
 
    singularity exec --bind /work rumball.sif <command>
 
-This command mounts the `/work` directory.
+This command mounts the ``/work`` directory.
