@@ -10,9 +10,14 @@ Docker image is available at [DockerHub](https://hub.docker.com/r/rnakato/rumbal
 
 ### 1.1 Docker
 
-To use docker command, type:
+To use the docker command, type:
 
+    # Pull docker image
     docker pull rnakato/rumball
+
+    # Container login
+    docker run --rm -it rnakato/rumball /bin/bash
+    # Execute a command
     docker run -it --rm rnakato/rumball <command>
 
 - user:password
@@ -20,16 +25,22 @@ To use docker command, type:
 
 ### 1.2 Singularity
 
-Singularity can also be used to execute the docker image:
+Singularity is the alternative way to use the docker image.
+With this command you can build the singularity file (.sif) of RumBall:
 
     singularity build rumball.sif docker://rnakato/rumball
+
+Instead, you can download the CustardPy singularity image from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0) (We use singularity version 3.8.5).
+
+Then you can run RumBall with the command:
+
     singularity exec rumball.sif <command>
 
-Singularity mounts the current directory automatically. If you access the files in the other directory, mount it by `--bind` option:
+Singularity will automatically mount the current directory. If you want to access the files in the other directory, use the `--bind` option, for instance:
 
     singularity exec --bind /work rumball.sif <command>
 
-This command mounts `/work` directory.
+This command mounts the `/work` directory.
 
 ## 2. Usage
 
