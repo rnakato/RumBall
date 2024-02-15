@@ -32,7 +32,7 @@ With this command you can build the singularity file (.sif) of RumBall:
    # build image
    singularity build rumball.sif docker://rnakato/rumball
 
-Instead, you can download the CustardPy singularity image from our `Dropbox <https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0>`_ (We use singularity version 3.8.5).
+Instead, you can download the RumBall singularity image from our `Dropbox <https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0>`_ (We use singularity version 3.8.5).
 
 Then you can run RumBall with the command:
 
