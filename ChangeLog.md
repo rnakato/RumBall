@@ -1,5 +1,9 @@
 # Changelog
 
+
+## 0.7.1 (2024-02-213)
+- Install MS core fonts (ttf-mscorefonts-installer)
+  
 ## 0.7.0 (2024-02-03)
 - Added user ubuntu
 - Installed `sudo`
