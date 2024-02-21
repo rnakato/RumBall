@@ -1,7 +1,7 @@
 # Changelog
 
 
-## 0.7.1 (2024-02-213)
+## 0.7.1 (2024-02-21)
 - Install MS core fonts (ttf-mscorefonts-installer)
   
 ## 0.7.0 (2024-02-03)
