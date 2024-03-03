@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.7.2 (2024-3-3)
+  - Fixed a bug in `download_genomedata.sh` that did not download the genome data correctly.
 
 ## 0.7.1 (2024-02-21)
 - Install MS core fonts (ttf-mscorefonts-installer)
