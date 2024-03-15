@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.3 (2024-3-7)
+  - Added `mptable.UCSC.T2T.28mer.flen150.txt` and `mptable.UCSC.T2T.36mer.flen150.txt` in `SSP/data/mptable`.
+  - Added the ideogram file for the T2T genome in `DROMPAplus/data/ideogram`.
+  - Modified `download_genomedata.sh` to download the reference file of the T2T genome.
+  - Updated chromap from v0.2.5 to v0.2.6
+
 ## 0.7.2 (2024-3-3)
   - Fixed a bug in `download_genomedata.sh` that did not download the genome data correctly.
 
