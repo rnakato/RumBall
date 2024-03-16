@@ -1,5 +1,5 @@
 
-# <img src = "docs/_static/img/RumBall_logo.png" width = 160ptx> RumBall: RNA-seq analysis platform with Docker
+# RumBall: RNA-seq analysis platform with Docker
 
 <img src = "docs/_static/img/workflow.png" width = 600ptx>
 
