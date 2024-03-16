@@ -64,4 +64,4 @@ Then type:
 
 ## 4. Reference
 
-- Nagai LAE, Lee S, *Nakato R. Protocol for identifying differentially expressed genes using the RumBall RNA-seq analysis platform, *STAR Protocols*, 2024. doi: [10.1016/j.xpro.2024.102926](https://doi.org/10.1016/j.xpro.2024.102926)
+- Nagai LAE, Lee S, Nakato R. Protocol for identifying differentially expressed genes using the RumBall RNA-seq analysis platform, *STAR Protocols*, 2024. doi: [10.1016/j.xpro.2024.102926](https://doi.org/10.1016/j.xpro.2024.102926)
