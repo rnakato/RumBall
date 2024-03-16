@@ -26,7 +26,7 @@ This image contains various tools for RNA-seq analysis as below:
    - `ballgown <https://bioconductor.org/packages/release/bioc/html/ballgown.html>`_ v2.18.0
    - `sleuth <https://github.com/pachterlab/sleuth>`_ v0.30.0
 
-- Gene onthology (GO) analysi
+- Gene onthology (GO) analysis
    - `ClusterProfiler <https://bioconductor.org/packages/release/bioc/html/clusterProfiler.html>`_ v4.4.4
    - `gprofiler2 <https://cran.r-project.org/web/packages/gprofiler2/vignettes/gprofiler2.html>`_ v0.2.1
 

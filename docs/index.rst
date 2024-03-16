@@ -1,5 +1,5 @@
 ================================================================
-RumBall: RNA-seq analysis pipeline with Docker.
+RumBall: RNA-seq analysis pipeline with Docker
 ================================================================
 
 .. figure:: _static/img/workflow.png
