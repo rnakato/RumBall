@@ -2,6 +2,8 @@
 
 # RumBall: Docker image for RNA-seq analysis
 
+<img src = "docs/_static/img/workflow.png" width = 600ptx>
+
 ## 0. Changelog
 
 See [Changelog](https://github.com/rnakato/RumBall/blob/main/ChangeLog.md)
