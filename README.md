@@ -1,4 +1,4 @@
-# RumBall: Docker image for RNA-seq analysis
+# <img src = "docs/_static/img/RumBall_logo.png" width = 200ptx> RumBall: Docker image for RNA-seq analysis
 
 ## 0. Changelog
 
