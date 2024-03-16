@@ -79,6 +79,8 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+ogp_site_url = "https://rumball.readthedocs.io/en/latest/"
+html_logo = "_static/img/RumBall_logo.png"
 
 # -- Options for HTML output ----------------------------------------------
 
