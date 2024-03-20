@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.4 (2024-3-20)
+- `download_genomedata.sh`: 
+    - Updated the version of Ensemble data from 106 to 111.
+    - Added `Medaka` genome.
+
 ## 0.7.3 (2024-3-7)
   - Added `mptable.UCSC.T2T.28mer.flen150.txt` and `mptable.UCSC.T2T.36mer.flen150.txt` in `SSP/data/mptable`.
   - Added the ideogram file for the T2T genome in `DROMPAplus/data/ideogram`.
