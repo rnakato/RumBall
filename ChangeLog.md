@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.0 (2024-8-29)
+- Changed Python environment from conda to micromamba (`/opt/micromamba`)
+- Fixed typos in the scripts.
+- Added gprofiler to ``DESeq2.sh``.
+
 ## 0.7.4 (2024-3-20)
 - `download_genomedata.sh`: 
     - Updated the version of Ensemble data from 106 to 111.

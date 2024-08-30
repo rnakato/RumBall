@@ -146,7 +146,6 @@ preprodata <- function(sample, exprtable){
 }
 
 
-
 # Read in UP regulated DEG file
 data_up <- read.csv(file = updeg, sep = "\t", header = TRUE)
 data_up_prepro <- preprodata(sample, data_up)
@@ -208,7 +207,6 @@ gp_mod_enrich <- new("enrichResult", result = gp_mod_ordered)
 p1 <- gostplot(multi_gp, interactive = FALSE)
 publish_gostplot(p1)
 ggsave(p1, file=paste0(output,"_", tool, "_p1_top",n,".pdf"))
-
 
 # blarplot of GOs
 p2 <- barplot(gp_mod_enrich, showCategory = 10, font.size = 14) +
