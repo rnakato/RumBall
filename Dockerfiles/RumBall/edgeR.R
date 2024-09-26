@@ -297,7 +297,6 @@ write.table(cnts_sig[cnts_sig$logFC < 0,], file=paste(output, ".edgeR.downDEGs.t
 
 ### MAplot
 cat('\nMA plot\n',file=stdout())
-#pdf(paste(output, ".MAplot.pdf", sep=""), height=7, width=7)
 Data <- cbind(cnts$logCPM, cnts$logFC)
 colnames(Data) <- c("logCPM", "logFC")
 ma = ggplot(Data, aes(logCPM, logFC)) +

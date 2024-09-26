@@ -193,14 +193,13 @@ edgeR.sh: differential expression analysis for two groups by edgeR
     - Matrix.\*.count.edgeR.Volcano.pdf ... Volcano plot of all genes. Top-ranked genes are labeled.
     - Matrix.\*.count.samplePCA.pdf ... PCA plot of samples based on gene expression level
 
+- ``Matrix.\*.count.edgeR.\*.tsv`` contains the value fitted by the ``glmQLFit`` function in edgeR, which is then normalized by the total number of reads. It does not contain the variance among replicates. edgeR (and DESeq2) assumes no variance in the same group, so the fitted value will be the same.
+- ``Matrix.\*.count.heatmap.0.01.png`` uses the normalized fitted values.
+
 - Note:
     - While the previous version of ``edgeR.sh`` filtered genes with 0 expression in all samples, the current version uses the ``filterByExpr`` function provided by edgeR. This results in more genes being filtered than before, and the FDR value changes accordingly, so more genes become non-significant.
     - The current version allows ``-lfcthre`` if you want to filter DEGs by ``log2foldchange`` in addition to the FDR threshold. Setting ``-lfcthre=1`` will output only those genes that vary more than 2-fold (not strictly) between groups as DEGs.
     - Fixed an error on drawing heatmaps when the number of DEGs is zero.
-
-..    - これまで遺伝子フィルタリングでは「全てのサンプルで発現が0の遺伝子」をフィルタしていましたが、これをedgeRで提供されている filterByExpr 関数に変更しました。これにより、今までよりもフィルタされる遺伝子の数が増えます。FDRの値もそれに伴い変化します（FDRがnon-significant側に移動）。
-..    - FDR閾値に加えてlog2foldchangeでもフィルタしたい場合のオプション -lfcthre を追加しました。 -lfcthre=1 とするとグループ間で2倍以上（厳密ではない）変動している遺伝子のみをDEGとして出力するようになります。
-..    - 同定されたDEG数が0の時にもDEGヒートマップを描画するためにエラーで終了してしまっていましたが、DEG数が0の時はこれらのプロットを描画しないように修正しました。
 
 
 check_stranded.sh
