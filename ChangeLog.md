@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1 (2024-10-02)
+- Updated SAMtools from 1.19.2 to 1.21
+- Updated SRA Toolkit from 3.0.10 to v3.1.1
+- Added [parallel-fastq-dump](https://github.com/rvalieris/parallel-fastq-dump)
+- Added `Arabidopsis thaliana` genome (TAIR10) in `download_genomedata.sh`.
+
+
 ## 0.8.0 (2024-8-29)
 - Changed Python environment from conda to micromamba (`/opt/micromamba`)
 - Fixed typos in the scripts.
