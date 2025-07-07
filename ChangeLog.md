@@ -1,11 +1,16 @@
 # Changelog
 
+## 0.8.2 (2025-7-7)
+- `download_genomedata.sh`: Added `T2T-mhaESC` genome (T2T for mouse, note that the gtf file is not well-annotated yet)
+- Added minimap2 v2.30-r1287
+- Update ChIPseqTools (DROMPAplus v.1.20.1)
+- Updated bowtie2 from 2.5.3 to 2.5.4
+
 ## 0.8.1 (2024-10-02)
 - Updated SAMtools from 1.19.2 to 1.21
 - Updated SRA Toolkit from 3.0.10 to v3.1.1
 - Added [parallel-fastq-dump](https://github.com/rvalieris/parallel-fastq-dump)
 - Added `Arabidopsis thaliana` genome (TAIR10) in `download_genomedata.sh`.
-
 
 ## 0.8.0 (2024-8-29)
 - Changed Python environment from conda to micromamba (`/opt/micromamba`)
