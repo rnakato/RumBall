@@ -26,22 +26,22 @@ To use the docker command, type:
 - user:password
     - ubuntu:ubuntu
 
-### 1.2 Singularity
+### 1.2 Apptainer/Singularity
 
-Singularity is the alternative way to use the docker image.
+Apptainer (Singularity) is the alternative way to use the docker image.
 With this command you can build the singularity file (.sif) of RumBall:
 
-    singularity build rumball.sif docker://rnakato/rumball
+    apptainer build rumball.sif docker://rnakato/rumball
 
-Instead, you can download the RumBall singularity image from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0) (We use singularity version 3.8.5).
+Instead, you can download the RumBall apptainer image from our [Dropbox](https://www.dropbox.com/scl/fo/lptb68dirr9wcncy77wsv/h?rlkey=whhcaxuvxd1cz4fqoeyzy63bf&dl=0) (We use apptainer version 1.4.2).
 
 Then you can run RumBall with the command:
 
-    singularity exec rumball.sif <command>
+    apptainer exec rumball.sif <command>
 
-Singularity will automatically mount the current directory. If you want to access the files in the other directory, use the `--bind` option, for instance:
+Apptainer will automatically mount the current directory. If you want to access the files in the other directory, use the `--bind` option, for instance:
 
-    singularity exec --bind /work rumball.sif <command>
+    apptainer exec --bind /work rumball.sif <command>
 
 This command mounts the `/work` directory.
 
