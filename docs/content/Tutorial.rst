@@ -6,8 +6,8 @@ The sample scripts are available at `RumBall GitHub <https://github.com/rnakato/
 
 .. note::
 
-   | This tutorial assumes using the **RumBall** singularity image (``rumball.sif``). Please add ``singularity exec rumball.sif`` before each command below.
-   | Example: ``singularity exec rumball.sif download_genomedata.sh``
+   | This tutorial assumes using the **RumBall** singularity image (``rumball.sif``). Please add ``apptainer exec rumball.sif`` before each command below.
+   | Example: ``apptainer exec rumball.sif download_genomedata.sh``
 
 .. contents::
    :depth: 3
