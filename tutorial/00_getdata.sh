@@ -1,5 +1,5 @@
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.5.2.sif"
-sing="singularity exec rumball.sif"
+#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.0.0.sif"
+sing="apptainer exec rumball.sif"
 
 mkdir -p fastq
 for id in SRR710092 SRR710093 SRR710094 SRR710095

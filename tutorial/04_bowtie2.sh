@@ -13,8 +13,8 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-#sing="singularity exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.0.6.0.sif"
-sing="singularity exec rumball.sif"
+#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.0.0.sif"
+sing="apptainer exec rumball.sif"
 
 Ddir=Ensembl-GRCh38/
 
