@@ -13,10 +13,9 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.0.0.sif"
-sing="apptainer exec rumball.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.1.0.sif"
 
-Ddir=Ensembl-GRCh38/
+Ddir=Referencedata_hg38
 
 mkdir -p log
 for ((i=0; i<${#ID[@]}; i++))
@@ -31,7 +30,7 @@ Ctrl="bowtie2/HEK293_Control_rep1 bowtie2/HEK293_Control_rep2"
 siCTCF="bowtie2/HEK293_siCTCF_rep1 bowtie2/HEK293_siCTCF_rep2"
 
 # For DESeq2
-mkdir -p Matrix_deseq2_bowtie2 
+mkdir -p Matrix_deseq2_bowtie2
 $sing rsem_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_bowtie2/HEK293 $Ddir
 $sing DESeq2.sh Matrix_deseq2_bowtie2/HEK293 2:2 Control:siCTCF Human
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 (2026.6.XX)
+  - Added ``download_Ecoli.sh`` and ``download_Lambdaphage.sh``.
+  - Updated ``download_genomedata.sh`` to download the latest version of the gene annotation data from ENSEMBLE.
+  - Updated Bioconductor 3.22 to 3.23
+  - Updated SRA Toolkit from 3.2.1 to v3.4.1
+  - Updated SAMtools from 1.21 to 1.22.1
+  - Added ``isnumber.sh``
+
+
 ## 1.0.0 (2026-3-13)
   - Added `download_RPE1.sh` to download the RPE1 genome data.
   - Added [pfastq-dump](https://github.com/inutano/pfastq-dump) (a bash implementation of parallel-fastq-dump)  and removed parallel-fastq-dump

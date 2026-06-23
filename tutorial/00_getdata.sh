@@ -1,19 +1,18 @@
-#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.0.0.sif"
-sing="apptainer exec rumball.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.1.0.sif"
 
 mkdir -p fastq
-for id in SRR710092 SRR710093 SRR710094 SRR710095
+for id in #SRR710092 SRR710093 SRR710094 SRR710095
 do
     $sing fastq-dump --gzip $id --split-files -O fastq
 done
 
 # download data
 mkdir -p log
-build=GRCh38
+build=hg38
 ncore=24
-$sing download_genomedata.sh $build Ensembl-$build/ 2>&1 | tee log/Ensembl-$build
+$sing download_genomedata.sh $build Referencedata_$build/ 2>&1 | tee log/Referencedata_$build
 
 # make index
-$sing build-index-RNAseq.sh -p $ncore rsem-star $build Ensembl-$build
-$sing build-index-RNAseq.sh -p $ncore rsem-bowtie2 $build Ensembl-$build
-$sing build-index-RNAseq.sh -p $ncore kallisto  $build Ensembl-$build
+$sing build-index-RNAseq.sh -p $ncore rsem-star    $build Referencedata_$build
+$sing build-index-RNAseq.sh -p $ncore rsem-bowtie2 $build Referencedata_$build
+$sing build-index-RNAseq.sh -p $ncore kallisto     $build Referencedata_$build

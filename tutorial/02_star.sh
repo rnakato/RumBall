@@ -13,10 +13,9 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-#sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.0.0.sif"
-sing="apptainer exec rumball.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.1.0.sif"
 
-Ddir=Ensembl-GRCh38/
+Ddir=Referencedata_hg38
 
 mkdir -p log
 for ((i=0; i<${#ID[@]}; i++))

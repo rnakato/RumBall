@@ -112,10 +112,10 @@ run_clusterProfiler(){
     ifile=$outname.$post.DESeq2.$ty.tsv
     n=`wc -l $ifile | cut -f1 -d " "`
     if test "$orgdb" != ""; then
-        Rscript $Rdir/run_clusterProfiler.R \
+        ex "Rscript $Rdir/run_clusterProfiler.R \
                 -i=$ifile -n=$nGene_GO -orgdb=$orgdb \
                 -o=$outname.$post.DESeq2.GO.clusterProfiler.$ty \
-                -tool=deseq2
+                -tool=deseq2"
     fi
 }
 
@@ -176,9 +176,9 @@ else
         n1=`wc -l $head.upDEGs.tsv   | cut -f1 -d " "`
         n2=`wc -l $head.downDEGs.tsv | cut -f1 -d " "`
         if test $n1 -gt 1 && test $n2 -gt 1; then
-            Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
+            ex "Rscript $Rdir/run_gprofiler2.R -i_up=$head.upDEGs.tsv -i_down=$head.downDEGs.tsv \
                     -n=$nGene_GO -org=$orggp -o=$head.GO.gProfiler2 \
-                    -tool=deseq2
+                    -tool=deseq2"
         fi
     fi
 fi

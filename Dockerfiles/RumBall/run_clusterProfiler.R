@@ -168,16 +168,11 @@ if (tool == "deseq2"){
          filter(FDR < 0.05) %>%
          arrange(desc(logFC))
 }
-#data2
-
-
 
 # Select just top X genes
 deg.list <- data2[1:n,1]  #using EmsemblID, set to 2 for Symbol but some genes might be missing
 #print(deg.list)
 #print(keytypes(org.Hs.eg.db))
-
-
 
 # Convert the symbols to ENTREZID (necessary for clusterprofiler)
 # If the IDs are in different format, need to adjust properly or skip the process
@@ -207,8 +202,6 @@ if (length(ego$Count) != 0){
 
     # Find the longest string in the Description column
 
-    #ego <- head(ego, 10)
-
     df1 <- as.data.frame(ego$Description)
     max_lenght <- as.numeric(lapply(df1, function(x) max(nchar(x))))
 
@@ -223,13 +216,10 @@ if (length(ego$Count) != 0){
               barplot(x = "qscore") +
               ggtitle(paste0("GO enrichment of ",sample)) +
               theme(text = element_text(size=8))
-#    ggsave(fig, file=paste0(outdir,"/",output,"_top",n,".pdf"), width = plot.width, height = plot.height)
     ggsave(fig, file=paste0(output,"_top",n,".pdf"), width = plot.width, height = plot.height)
 
 } else if (length(ego$Count) == 0){
-
     print('No GO terms enriched for the sets of genes submitted. Skipping plot...')
-
 }
 
 print('GO enrichment analysis done.')
