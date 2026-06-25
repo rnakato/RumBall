@@ -12,8 +12,8 @@ function usage()
     echo '      -d outputdir: Output directory (default: "bowtie2/")' 1>&2
     echo '      -p ncore: number of CPUs (default: 12, note that large number (e.g., 64) may cause an error in STAR)' 1>&2
     echo "   Example:" 1>&2
-    echo "      $cmdname single HeLa_rep1 HeLa_rep1.fastq.gz Ensembl-GRCh38 reverse" 1>&2
-    echo "      $cmdname paired HeLa_rep1 \"HeLa_rep1_1.fastq.gz HeLa_rep1_2.fastq.gz\" Ensembl-GRCh38 reverse" 1>&2
+    echo "      $cmdname single HeLa_rep1 HeLa_rep1.fastq.gz Referencedata_hg38 reverse" 1>&2
+    echo "      $cmdname paired HeLa_rep1 \"HeLa_rep1_1.fastq.gz HeLa_rep1_2.fastq.gz\" Referencedata_hg38 reverse" 1>&2
 }
 
 odir=bowtie2
@@ -67,6 +67,9 @@ ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
 		  	              $fastq \
                           $index \
                           $odir/$prefix"
+
+ex "samtools index $odir/$prefix.genome.bam"
+#ex "samtools index $odir/$prefix.transcript.bam"
 
 # 遺伝子名が ID_symbol になってしまうので、bamから再生成
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \

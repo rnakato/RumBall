@@ -52,7 +52,6 @@ for str in genes isoforms; do
 	        cat $head.txt | sed -e 's/'$rem'//g' > $head.temp
 	        mv $head.temp $head.txt
 	    done
-
     done
 done
 

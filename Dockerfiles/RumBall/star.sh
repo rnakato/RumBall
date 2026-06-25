@@ -70,11 +70,14 @@ ex(){ echo $1; eval $1; }
 
 ex "mkdir -p $odir/log"
 
-STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
+ex "STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
      --quantMode TranscriptomeSAM \
      --runThreadN $ncore --outSAMattributes All $pzip \
      --genomeDir $index_star --readFilesIn $fastq $parstr \
-     --outFileNamePrefix $odir/$prefix.
+     --outFileNamePrefix $odir/$prefix."
+
+ex "samtools index $odir/$prefix.Aligned.sortedByCoord.out.bam"
+#ex "samtools index $odir/$prefix.Aligned.toTranscriptome.out.bam"
 
 log=$odir/log/star-$prefix.txt
 ex "parse_starlog.pl $odir/$prefix.Log.final.out > $log"
