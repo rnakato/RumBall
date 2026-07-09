@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.1.0 (2026.6.XX)
+## 1.1.0 (2026.6.28)
   - Added ``download_Ecoli.sh`` and ``download_Lambdaphage.sh``.
   - Updated ``download_genomedata.sh`` to download the latest version of the gene annotation data from ENSEMBLE.
   - Updated Bioconductor 3.22 to 3.23
