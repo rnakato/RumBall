@@ -92,6 +92,19 @@ Of course you can also use a shell loop:
         star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.star.sh
     done
 
+You can summarize the mapping stats into a single line using ``parse_starlog.pl``:
+
+.. code-block:: bash
+
+    NAME=("HEK293_Control_rep1" "HEK293_Control_rep2" "HEK293_siCTCF_rep1" "HEK293_siCTCF_rep2")
+
+    mkdir -p log
+    for ((i=0; i<${#NAME[@]}; i++))
+    do
+        parse_starlog.pl star/${NAME[$i]}.Log.final.out > star/${NAME[$i]}.onelinestats.txt
+    done
+
+
 
 Differential analysis
 ++++++++++++++++++++++++++++++++++++++++++++

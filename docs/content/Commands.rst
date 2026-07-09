@@ -215,6 +215,16 @@ This command runs bowtie to map reads onto the mRNA sequences obtained from NCBI
 If fifty-fifty, the samples are unstranded.
 
 
+parse_starlog.pl
+------------------------------------------------
+
+``parse_starlog.pl`` parses the log file of STAR and outputs the number of mapped reads.
+This script is useful to merge the stats for all samples into a single .tsv file. 
+
+.. code-block:: bash
+
+    parse_starlog.pl star/$label.Log.final.out
+
 parsebowtielog2.pl
 ------------------------------------------------
 
@@ -223,6 +233,7 @@ parsebowtielog2.pl
 .. code-block:: bash
 
     parsebowtielog2.pl [--pair|-p] <file> <label>
+
 
 csv2xlsx.pl
 ------------------------------------------------
