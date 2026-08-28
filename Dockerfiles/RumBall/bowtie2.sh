@@ -64,12 +64,13 @@ ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           --strandedness $strand \
 			              --append-names \
                           --output-genome-bam \
+                          --sort-bam-by-coordinate \
 		  	              $fastq \
                           $index \
                           $odir/$prefix"
 
-ex "samtools index $odir/$prefix.genome.bam"
-#ex "samtools index $odir/$prefix.transcript.bam"
+ex "rm $odir/$prefix.genome.bam"
+ex "samtools index $odir/$prefix.genome.sorted.bam"
 
 # 遺伝子名が ID_symbol になってしまうので、bamから再生成
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \

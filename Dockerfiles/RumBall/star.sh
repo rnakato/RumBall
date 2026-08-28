@@ -77,7 +77,6 @@ ex "STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
      --outFileNamePrefix $odir/$prefix."
 
 ex "samtools index $odir/$prefix.Aligned.sortedByCoord.out.bam"
-#ex "samtools index $odir/$prefix.Aligned.toTranscriptome.out.bam"
 
 log=$odir/log/star-$prefix.txt
 ex "parse_starlog.pl $odir/$prefix.Log.final.out > $log"

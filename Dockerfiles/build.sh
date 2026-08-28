@@ -1,6 +1,6 @@
-tag=1.1.0
+tag=1.2.0
 docker build -f Dockerfile.$tag -t rnakato/rumball:$tag . #--no-cache
-apptainer build -F /work3/SingularityImages/rumball.$tag.sif docker-daemon://rnakato/rumball:$tag
+#apptainer build -F /work3/SingularityImages/rumball.$tag.sif docker-daemon://rnakato/rumball:$tag
 #exit
 
 docker push rnakato/rumball:$tag

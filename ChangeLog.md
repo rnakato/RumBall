@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0 (2026.8.28)
+  - Modified ``bowtie2.sh`` to use a sorted BAM file instead of an unsorted one by adding the ``--sort-bam-by-coordinate`` option to RSEM.
+  - Modified the ``02_star.sh`` and ``04_bowtie2.sh`` scripts in the ``tutorial/`` directory to output mapping stats.
+
 ## 1.1.0 (2026.6.28)
   - Added ``download_Ecoli.sh`` and ``download_Lambdaphage.sh``.
   - Updated ``download_genomedata.sh`` to download the latest version of the gene annotation data from ENSEMBLE.
@@ -7,7 +11,6 @@
   - Updated SRA Toolkit from 3.2.1 to v3.4.1
   - Updated SAMtools from 1.21 to 1.22.1
   - Added ``isnumber.sh``
-
 
 ## 1.0.0 (2026-3-13)
   - Added `download_RPE1.sh` to download the RPE1 genome data.
@@ -35,7 +38,7 @@
 - Added gprofiler to ``DESeq2.sh``.
 
 ## 0.7.4 (2024-3-20)
-- `download_genomedata.sh`: 
+- `download_genomedata.sh`:
     - Updated the version of Ensemble data from 106 to 111.
     - Added `Medaka` genome.
 
@@ -50,7 +53,7 @@
 
 ## 0.7.1 (2024-02-21)
 - Install MS core fonts (ttf-mscorefonts-installer)
-  
+
 ## 0.7.0 (2024-02-03)
 - Added user ubuntu
 - Installed `sudo`

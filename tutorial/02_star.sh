@@ -23,5 +23,18 @@ do
     echo ${NAME[$i]}
     fq1=fastq/${ID[$i]}_1.fastq.gz
     fq2=fastq/${ID[$i]}_2.fastq.gz
-    $sing star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/star.sh.${NAME[$i]}
+#    $sing star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/star.sh.${NAME[$i]}
+done
+
+## Output mapping stats
+for ((i=0; i<${#ID[@]}; i++))
+do
+    $sing parse_starlog.pl star/${NAME[$i]}.Log.final.out > star/${NAME[$i]}.onelinestats.txt
+done
+
+stats=star.stats.tsv
+head -n1 star/${NAME[0]}.onelinestats.txt > $stats
+for ((i=0; i<${#ID[@]}; i++))
+do
+    tail -n1 star/${NAME[$i]}.onelinestats.txt >> $stats
 done

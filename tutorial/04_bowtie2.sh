@@ -13,9 +13,10 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.1.0.sif"
+sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.2.0.sif"
 
 Ddir=Referencedata_hg38
+ncore=24
 
 mkdir -p log
 for ((i=0; i<${#ID[@]}; i++))
@@ -23,8 +24,23 @@ do
     echo ${NAME[$i]}
     fq1=fastq/${ID[$i]}_1.fastq.gz
     fq2=fastq/${ID[$i]}_2.fastq.gz
-    $sing bowtie2.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/bowtie2.sh.${NAME[$i]}
+    $sing bowtie2.sh -p $ncore paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/bowtie2.sh.${NAME[$i]}
 done
+
+## Output mapping stats
+for ((i=0; i<${#ID[@]}; i++))
+do
+    $sing parsebowtielog2.pl --pair bowtie2/${NAME[$i]}.log ${NAME[$i]} > bowtie2/${NAME[$i]}.onelinestats.txt
+done
+
+stats=bowtie2.stats.tsv
+head -n1 bowtie2/${NAME[0]}.onelinestats.txt > $stats
+for ((i=0; i<${#ID[@]}; i++))
+do
+    tail -n1 bowtie2/${NAME[$i]}.onelinestats.txt >> $stats
+done
+
+exit
 
 Ctrl="bowtie2/HEK293_Control_rep1 bowtie2/HEK293_Control_rep2"
 siCTCF="bowtie2/HEK293_siCTCF_rep1 bowtie2/HEK293_siCTCF_rep2"
