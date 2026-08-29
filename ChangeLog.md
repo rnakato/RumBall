@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.1 (2026.8.XX)
+## 1.2.1 (2026.8.29)
   - Modified ``star.sh`` and ``bowtie2.sh`` to automatically output per-sample mapping stats as ``<outputdir>/<prefix>.onelinestats.txt``.
   - Updated Manual
 
