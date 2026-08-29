@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# DROMPAplus documentation build configuration file, created by
-# sphinx-quickstart on Wed Sep  6 15:58:47 2017.
-#
 # This file is execfile()d with the current directory set to its
 # containing dir.
 #
@@ -55,9 +52,9 @@ author = 'Ryuichiro Nakato'
 # built documents.
 #
 # The short X.Y version.
-version = '1.0'
+version = '1.2'
 # The full version, including alpha/beta/rc tags.
-release = '1.0.0'
+release = '1.2.1'
 
 numfig = True
 
