@@ -68,7 +68,7 @@ fi
 
 ex(){ echo $1; eval $1; }
 
-ex "mkdir -p $odir/log"
+ex "mkdir -p $odir"
 
 ex "STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
      --quantMode TranscriptomeSAM \
@@ -78,8 +78,7 @@ ex "STAR --genomeLoad NoSharedMemory --outSAMtype BAM SortedByCoordinate \
 
 ex "samtools index $odir/$prefix.Aligned.sortedByCoord.out.bam"
 
-log=$odir/log/star-$prefix.txt
-ex "parse_starlog.pl $odir/$prefix.Log.final.out > $log"
+ex "parse_starlog.pl $odir/$prefix.Log.final.out > $odir/$prefix.onelinestats.txt"
 ex "rm -rf $odir/$prefix._STARtmp"
 
 ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \

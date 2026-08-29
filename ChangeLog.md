@@ -1,8 +1,12 @@
 # Changelog
 
+## 1.2.1 (2026.8.XX)
+  - Modified ``star.sh`` and ``bowtie2.sh`` to automatically output per-sample mapping stats as ``<outputdir>/<prefix>.onelinestats.txt``.
+  - Updated Manual
+
 ## 1.2.0 (2026.8.28)
   - Modified ``bowtie2.sh`` to use a sorted BAM file instead of an unsorted one by adding the ``--sort-bam-by-coordinate`` option to RSEM.
-  - Modified the ``02_star.sh`` and ``04_bowtie2.sh`` scripts in the ``tutorial/`` directory to output mapping stats.
+  - Modified ``tutorial/02_star.sh`` and ``tutorial/04_bowtie2.sh`` to combine the per-sample mapping stats into ``star.stats.tsv`` and ``bowtie2.stats.tsv``, respectively.
 
 ## 1.1.0 (2026.6.28)
   - Added ``download_Ecoli.sh`` and ``download_Lambdaphage.sh``.

@@ -11,8 +11,8 @@ Make index for kallisto:
 
 .. code-block:: bash
 
-    build=GRCh38  # specify the build that you need
-    Ddir=Ensembl-$build/
+    build=hg38  # specify the build that you need
+    Ddir=Referencedata_$build
     ncore=12  # number of CPUs
     build-index-RNAseq.sh -p $ncore kallisto $build $Ddir
 
@@ -23,9 +23,7 @@ Run kallisto:
     ID=("SRR710092" "SRR710093" "SRR710094" "SRR710095")
     NAME=("HEK293_Control_rep1" "HEK293_Control_rep2" "HEK293_siCTCF_rep1" "HEK293_siCTCF_rep2")
 
-    index=$Ddir/kallisto-indexes/genome
     ncore=12  # number of CPUs
-    mkdir -p log
     for ((i=0; i<${#ID[@]}; i++))
     do
         echo ${NAME[$i]}
@@ -56,17 +54,14 @@ Add the ``-k`` option to ``DESeq2.sh`` and ``edgeR.sh`` to use the output of ``k
 
 .. code-block:: bash
 
-    Ctrl="kallisto/HEK293_Control_rep1 kallisto/HEK293_Control_rep2"
-    siCTCF="kallisto/HEK293_siCTCF_rep1 kallisto/HEK293_siCTCF_rep2"
-
     # For DESeq2
-    mkdir -p Matrix_edgeR_kallisto
-    kallisto_merge.sh "$Ctrl $siCTCF" Matrix_deseq2_kallisto/HEK293 $Ddir
+    mkdir -p Matrix_deseq2_kallisto
+    kallisto_merge.sh "$s" Matrix_deseq2_kallisto/HEK293 $Ddir
     DESeq2.sh -k Matrix_deseq2_kallisto/HEK293 2:2 Control:siCTCF Human
 
     # For edgeR
-    mkdir -p Matrix_deseq2_kallisto
-    kallisto_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_kallisto/HEK293 $Ddir
+    mkdir -p Matrix_edgeR_kallisto
+    kallisto_merge.sh "$s" Matrix_edgeR_kallisto/HEK293 $Ddir
     edgeR.sh -k Matrix_edgeR_kallisto/HEK293 2:2 Control:siCTCF Human
 
 .. note::

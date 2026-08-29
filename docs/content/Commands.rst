@@ -87,7 +87,8 @@ star.sh: execute STAR and RSEM
     - mapfile for genes (star/\*.Aligned.toTranscriptome.out.bam)
     - gene expression data (star/\*.genes.results)
     - transcript expression data (star/\*.isoforms.results)
-    - mapping stats (log/star-\*.txt)
+    - raw STAR mapping log (star/\*.Log.final.out)
+    - parsed mapping statistics (star/\*.onelinestats.txt)
 
 log example:
 
@@ -95,6 +96,43 @@ log example:
 
    "Sequenced","Uniquely mapped","(%)","Mapped to multiple loci","(%)","Mapped to too many loci","(%)","Unmapped (too many mismatches)","Unmapped (too short)","Unmapped (other)","chimeric reads","(%)","Splices total","Annotated","(%)","Non-canonical","(%)","Mismatch rate per base (%)","Deletion rate per base (%)","Insertion rate per base (%)"
    "29446992","27430449","93.15","1012811","3.44","5253","0.02","0%","3%","0%","0","0","18960488","18725703","98.76","30590","0.16","0.19","0.01","0.01"
+
+
+bowtie2.sh: execute Bowtie2 and RSEM
+------------------------------------------------
+
+``bowtie2.sh`` maps reads with Bowtie2 and estimates gene and transcript expression with RSEM.
+Bowtie2 requires less memory than STAR but takes considerably longer to run.
+Therefore, it is recommended to use as many CPU cores as are available.
+
+.. code-block:: bash
+
+    bowtie2.sh [Options] <single|paired> <prefix> <fastq> <Ddir> <strandedness>
+       <single|paired>: single-end or paired-end reads
+       <prefix>: prefix of output files
+       <fastq>: FASTQ files (should be quoted if paired-end)
+       <Ddir>: directory of index and GTF files
+       <strandedness [none|forward|reverse]>: strandedness of input FASTQ files
+       Options:
+          -d outputdir: output directory (default: "bowtie2/")
+          -p ncore: number of CPU cores (default: 12)
+       Example:
+          bowtie2.sh -p 24 paired HeLa_rep1 \
+              "HeLa_rep1_1.fastq.gz HeLa_rep1_2.fastq.gz" \
+              Referencedata_hg38 reverse
+
+- Output
+
+    - coordinate-sorted genome BAM: ``bowtie2/<prefix>.genome.sorted.bam``
+    - BAM index: ``bowtie2/<prefix>.genome.sorted.bam.bai``
+    - gene expression data: ``bowtie2/<prefix>.genes.results``
+    - transcript expression data: ``bowtie2/<prefix>.isoforms.results``
+    - raw Bowtie2 mapping log: ``bowtie2/<prefix>.log``
+    - parsed mapping statistics: ``bowtie2/<prefix>.onelinestats.txt``
+    - RSEM model plot: ``bowtie2/<prefix>.quals.pdf``
+
+From RumBall v1.2.0, ``bowtie2.sh`` produces a coordinate-sorted BAM file.
+The intermediate unsorted ``<prefix>.genome.bam`` file is removed.
 
 
 rsem_merge.sh: merge expression data of multiple samples
@@ -109,7 +147,7 @@ rsem_merge.sh: merge expression data of multiple samples
         Options:
             -s <strings for sed>: specify strings that you want to remove from sample labels (e.g., "HeLa_", multiple strings should be separated by spaces)
         Example:
-            rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/HEK293
+            rsem_merge.sh "star/Ctrl1 star/Ctrl2 star/siCTCF1 star/siCTCF2" Matrix_edgeR/HEK293 Referencedata_hg38
 
 - Output
 

@@ -31,12 +31,12 @@ Then download and generate the reference dataset including genome, gene annotati
 
 .. code-block:: bash
 
-    build=GRCh38  # specify the build (Ensembl) that you need
-    Ddir=Ensembl-$build/
+    build=hg38  # specify the build that you need
+    Ddir=Referencedata_$build/
     mkdir -p log
 
     # Download genome and gtf
-    download_genomedata.sh $build $Ddir 2>&1 | tee log/Ensembl-$build
+    download_genomedata.sh $build $Ddir 2>&1 | tee log/Referencedata_$build
 
     # make index for STAR-RSEM
     ncore=12 # number of CPUs
@@ -69,7 +69,7 @@ Mapping reads by STAR
 
 .. code-block:: bash
 
-    Ddir=Ensembl-GRCh38
+    Ddir=Referencedata_hg38
     mkdir -p log
     star.sh paired HEK293_Control_rep1 "fastq/SRR710092_1.fastq.gz fastq/SRR710092_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_Control_rep1
     star.sh paired HEK293_Control_rep2 "fastq/SRR710093_1.fastq.gz fastq/SRR710093_2.fastq.gz" $Ddir reverse > log/star.sh.HEK293_Control_rep2
@@ -89,19 +89,20 @@ Of course you can also use a shell loop:
         echo ${NAME[$i]}
         fq1=fastq/${ID[$i]}_1.fastq.gz
         fq2=fastq/${ID[$i]}_2.fastq.gz
-        star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.star.sh
+        star.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/star.sh.${NAME[$i]}
     done
 
-You can summarize the mapping stats into a single line using ``parse_starlog.pl``:
+``star.sh`` automatically parses the mapping statistics for each sample and saves them in ``star/<sample>.onelinestats.txt``. Combine these files into a single table as follows. The combined statistics are saved in ``star.stats.tsv``:
 
 .. code-block:: bash
 
     NAME=("HEK293_Control_rep1" "HEK293_Control_rep2" "HEK293_siCTCF_rep1" "HEK293_siCTCF_rep2")
 
-    mkdir -p log
+    stats=star.stats.tsv
+    head -n1 star/${NAME[0]}.onelinestats.txt > $stats
     for ((i=0; i<${#NAME[@]}; i++))
     do
-        parse_starlog.pl star/${NAME[$i]}.Log.final.out > star/${NAME[$i]}.onelinestats.txt
+        tail -n1 star/${NAME[$i]}.onelinestats.txt >> $stats
     done
 
 
@@ -139,6 +140,19 @@ Mapping reads by Bowtie2
 Because STAR requires large amounts of memory for mapping, it is not suitable for a non-high performance computing environment.
 Bowtie2 needs less memory with comparable mapping accuracy, although it is slower than STAR. Here is an example using Bowtie2.
 
+First, build the RSEM-Bowtie2 index:
+
+.. code-block:: bash
+
+    build=hg38
+    Ddir=Referencedata_$build
+    ncore=24
+    build-index-RNAseq.sh -p $ncore rsem-bowtie2 $build $Ddir
+
+Then map the reads:
+
+Bowtie2 uses less memory than STAR but takes considerably longer to run. Therefore, it is recommended to use as many CPU cores as are available. The following example uses 24 cores.
+
 .. code-block:: bash
 
     ID=("SRR710092" "SRR710093" "SRR710094" "SRR710095")
@@ -150,21 +164,21 @@ Bowtie2 needs less memory with comparable mapping accuracy, although it is slowe
         echo ${NAME[$i]}
         fq1=fastq/${ID[$i]}_1.fastq.gz
         fq2=fastq/${ID[$i]}_2.fastq.gz
-        bowtie2.sh paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/${NAME[$i]}.bowtie2.sh
+        bowtie2.sh -p $ncore paired ${NAME[$i]} "$fq1 $fq2" $Ddir reverse > log/bowtie2.sh.${NAME[$i]}
     done
 
-The results are stored in the ``bowtie2`` directory. The mapping statistics are in the log files  ``bowtie2/${NAME[$i]}.log``. Additionally, the log files are parsed by ``parsebowtielog2.pl`` to output a summary table of all samples:
+The results are stored in the ``bowtie2`` directory. From RumBall v1.2.0, the genome-aligned reads are stored in the coordinate-sorted BAM file ``bowtie2/<prefix>.genome.sorted.bam``, together with its BAM index. The unsorted ``bowtie2/<prefix>.genome.bam`` file is removed after sorting. ``bowtie2.sh`` automatically parses the mapping statistics for each sample and saves them in ``bowtie2/<sample>.onelinestats.txt``. Combine these files into a single table as follows:
 
 .. code-block:: bash
 
-    mkdir -p log
+    stats=bowtie2.stats.tsv
+    head -n1 bowtie2/${NAME[0]}.onelinestats.txt > $stats
     for ((i=0; i<${#ID[@]}; i++))
     do
-        parsebowtielog2.pl -p $odir/${NAME[$i]}.log
+        tail -n1 bowtie2/${NAME[$i]}.onelinestats.txt >> $stats
     done
 
-
-The ``-p`` option is needed if the reads are paired-end.
+The combined mapping statistics are saved in ``bowtie2.stats.tsv``.
 
 
 Differential analysis
@@ -186,4 +200,3 @@ The differential analysis step is the same with the STAR example above:
     mkdir -p Matrix_edgeR_bowtie2
     rsem_merge.sh "$Ctrl $siCTCF" Matrix_edgeR_bowtie2/HEK293 $Ddir
     edgeR.sh Matrix_edgeR_bowtie2/HEK293 2:2 Control:siCTCF Human
-

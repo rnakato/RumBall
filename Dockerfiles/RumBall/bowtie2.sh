@@ -57,7 +57,7 @@ index_rsem=$Ddir/rsem-star-indexes/genome/rsem/index
 
 ex(){ echo $1; eval $1; }
 
-ex "mkdir -p $odir/log"
+ex "mkdir -p $odir"
 
 ex "rsem-calculate-expression -p $ncore $pair --bowtie2 \
                           --estimate-rspd  \
@@ -80,7 +80,7 @@ ex "rsem-calculate-expression $pair --alignments --estimate-rspd -p $ncore \
                           $index_rsem \
                           $odir/$prefix"
 
-log=$odir/log/bowtie2-$prefix.txt
+log=$odir/$prefix.onelinestats.txt
 ex "parsebowtielog2.pl -p $odir/$prefix.log $prefix > $log"
 
 ex "rsem-plot-model $odir/$prefix $odir/$prefix.quals.pdf"

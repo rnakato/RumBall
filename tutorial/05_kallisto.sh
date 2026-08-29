@@ -13,17 +13,16 @@ NAME=(
     "HEK293_siCTCF_rep2"
 )
 
-sing="apptainer exec --bind /work,/work2,/work3 /work3/SingularityImages/rumball.1.1.0.sif"
+sing="apptainer exec rumball.sif"
 
 Ddir=Referencedata_hg38
 
-mkdir -p log kallisto
+mkdir -p kallisto
 for ((i=0; i<${#ID[@]}; i++))
 do
     echo ${NAME[$i]}
     fq1=fastq/${ID[$i]}_1.fastq.gz
     fq2=fastq/${ID[$i]}_2.fastq.gz
-    index=$Ddir/kallisto-indexes/genome
     $sing kallisto.sh -p 64 ${NAME[$i]} "$fq1 $fq2" $Ddir reverse
 done
 

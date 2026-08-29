@@ -1,4 +1,4 @@
-sing="apptainer exec --bind /work,/work2,/work3 /work/SingularityImages/rumball.1.1.0.sif"
+sing="apptainer exec rumball.sif"
 
 Ddir=Referencedata_hg38
 

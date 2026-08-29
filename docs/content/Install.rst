@@ -7,7 +7,7 @@ This image contains various tools for RNA-seq analysis as below:
 - Mapping tools
    - `BWA <https://bio-bwa.sourceforge.net/>`_ v0.7.17
    - `Bowtie <https://bowtie-bio.sourceforge.net/manual.shtml>`_ v1.3.1
-   - `Bowtie2 <https://bowtie-bio.sourceforge.net/bowtie2/index.shtml>`_ v2.5.3
+   - `Bowtie2 <https://bowtie-bio.sourceforge.net/bowtie2/index.shtml>`_ v2.5.4
    - `chromap <https://github.com/haowenz/chromap>`_ v0.3.2
 
 - Mapping tools for RNA-seq
@@ -34,8 +34,8 @@ This image contains various tools for RNA-seq analysis as below:
    - `FastQC <https://www.bioinformatics.babraham.ac.uk/projects/fastqc/>`_ v0.11.9
 
 - Utility tools
-   - `SRAtoolkit <https://github.com/ncbi/sra-tools>`_ v3.1.1
-   - `SAMtools <http://www.htslib.org/>`_ v1.21
+   - `SRA Toolkit <https://github.com/ncbi/sra-tools>`_ v3.4.1
+   - `SAMtools <http://www.htslib.org/>`_ v1.22.1
    - `BEDtools <https://bedtools.readthedocs.io/en/latest/>`_ v2.31.0
 
 
